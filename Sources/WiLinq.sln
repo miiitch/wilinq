@@ -6,31 +6,19 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WiLinq.Wiql", "Fissum.Wiql\WiLinq.Wiql.fsproj", "{45087980-E0A6-4D64-8E74-287936522A8B}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
-		SccProjectUniqueName0 = Fissum.Linq\\wilinq.LinqProvider.csproj
-		SccProjectName0 = Fissum.Linq
-		SccLocalPath0 = Fissum.Linq
-		SccProjectUniqueName1 = Fissum.Wiql\\WiLinq.Wiql.fsproj
-		SccProjectName1 = Fissum.Wiql
-		SccLocalPath1 = Fissum.Wiql
-		SccLocalPath2 = .
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x86 = Debug|x86
-		Release|x86 = Release|x86
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Debug|x86.ActiveCfg = Debug|x86
-		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Debug|x86.Build.0 = Debug|x86
-		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Release|x86.ActiveCfg = Release|x86
-		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Release|x86.Build.0 = Release|x86
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Debug|x86.ActiveCfg = Debug|x86
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Debug|x86.Build.0 = Debug|x86
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Release|x86.ActiveCfg = Release|x86
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Release|x86.Build.0 = Release|x86
+		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45087980-E0A6-4D64-8E74-287936522A8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45087980-E0A6-4D64-8E74-287936522A8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45087980-E0A6-4D64-8E74-287936522A8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45087980-E0A6-4D64-8E74-287936522A8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
