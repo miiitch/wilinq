@@ -1,16 +1,15 @@
-
 namespace Properties
 
 open System.Reflection;
 open System;
 
 
-[<assembly: AssemblyProduct("Fissum")>]
-[<assembly: AssemblyCopyright("Copyright © Michel Perfetti 2006-2011")>]
+[<assembly: AssemblyProduct("WiLinq")>]
+[<assembly: AssemblyCopyright("Copyright © Michel Perfetti 2013")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
-[<assembly: AssemblyVersion("1.1.0.*")>]
-[<assembly: AssemblyFileVersion("1.1.0.0")>]
+[<assembly: AssemblyVersion("1.0.0.*")>]
+[<assembly: AssemblyFileVersion("1.0.0.0")>]
 [<assembly: AssemblyCompany("Michel Perfetti")>]
 
 ()

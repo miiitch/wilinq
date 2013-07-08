@@ -91,7 +91,6 @@
     <Compile Include="Extensions\WorkItemBaseHelper.cs" />
     <Compile Include="Extensions\WorkItemCreatorProviderAttribute.cs" />
     <Compile Include="Extensions\WorkItemValueConverter.cs" />
-    <Compile Include="FieldUtility.cs" />
     <Compile Include="ICustomWorkItemHelper.cs" />
     <Compile Include="ILinqResolver.cs" />
     <Compile Include="IWorkItemLinqQueryProvider.cs" />
@@ -102,10 +101,10 @@
     <Compile Include="QueryExtender.cs" />
     <Compile Include="Extensions\WorkItemBase.cs" />
     <Compile Include="QueryTranslator.cs" />
+    <Compile Include="QueryType.cs" />
     <Compile Include="SystemField.cs" />
     <Compile Include="TFSWorkItemExtensions.cs" />
     <Compile Include="TFSWorkItemHelper.cs" />
-    <Compile Include="TypeSystem.cs" />
     <Compile Include="WhereClauseTranslator.cs" />
     <Compile Include="WhereLocationEnum.cs" />
     <Compile Include="Wiql\BooleanOperationStatement.cs" />
@@ -134,7 +133,7 @@
     <Compile Include="WorkItemLinqQueryProvider.cs" />
     <Compile Include="Extensions\WorkItemPropertyUtility.cs" />
     <Compile Include="Extensions\WorkItemValueConverterRepository.cs" />
-    <Compile Include="WorkItemQuery.cs" />
+    <Compile Include="TPCQuery.cs" />
     <Compile Include="Extensions\WorkItemTypeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
