@@ -1,0 +1,73 @@
+﻿{
+module public Lexer
+open System
+open Parser
+open ParserHelpers
+open Microsoft.FSharp.Text.Lexing
+
+let lexeme lexbuf =
+    LexBuffer<char>.LexemeString lexbuf
+
+
+}
+
+
+
+// These are some regular expression definitions
+let digit = ['0'-'9']
+let alphanum =  ['a'-'z' 'A'-'Z' '0'-'9' '.' ]+
+let param = '@'alphanum
+let field = '[' alphanum ']'
+let sourcefield = ['s''S']['o''O']['u''U']['r''R']['c''C']['e''E'] ".[" alphanum ']'
+let targetfield = ['t''T']['a''A']['r''R']['g''G']['e''E']['t''T'] ".[" alphanum ']'
+let whitespace = [' ' '\t' ]
+let newline = ('\n' | '\r' '\n')
+let quote ='\''
+let string_sq = quote ( quote quote | [^ '\''])* quote
+let string_dq = '\"' ( '\"' '\"' | [^ '\"'])* '\"'
+
+rule tokenize = parse
+| whitespace	{ tokenize lexbuf }
+| newline       { tokenize lexbuf }
+| "-"			{ MINUS }
+| "("			{ LPAREN }
+| ")"			{ RPAREN }
+| '>' { GREATER }
+| '<' { LESS }
+| ">=" { GT }
+| "<=" { LT }
+| "<>" { DIFF }
+| "=" { EQUAL }
+| ['i''I']['n''N'] { IN }
+| ['N''n']['O''o']['t''T'] { NOT }
+| ',' { SEMI }
+| ['a''A']['n''N']['d''D'] { AND }
+| ['o''O']['r''R'] { OR }
+| ['f''F']['r''R']['o''O']['m''M'] { FROM }
+| ['w''W']['o''O']['r''R']['k''K']['i''I']['t''T']['e''E']['m''M']['s''S'] { WORKITEMS }
+| ['w''W']['o''O']['r''R']['k''K']['i''I']['t''T']['e''E']['m''M']['l''L']['i''I']['n''N']['k''K']['s''S'] { WORKITEMLINKS }
+| ['s''S']['e''E']['l''L']['e''E']['c''C']['t''T']  { SELECT }
+| ['w''W']['h''H']['e''E']['r''R']['e''E']  { WHERE }
+| ['o''O']['r''R']['d''D']['e''E']['r''R'] { ORDER }
+| ['b''B']['y''Y'] {BY}
+| ['a''A']['s''S']['c''C'] { ASC }
+| ['d''D']['e''E']['s''S']['c''C'] { DESC}
+| ['a''A']['s''S']['o''O']['f''F']  { ASOF }
+| ['m''M']['o''O']['d''D']['e''E'] {MODE}
+| ['u''U']['n''N']['d''D']['e''E']['r''R'] {UNDER}
+| ['d''D']['o''O']['e''E']['s''S']['n''N']['o''O']['t''T']['c''C']['o''O']['n''N']['t''T']['a''A']['i''I']['n''N'] { DOESNOTCONTAIN }
+| ['r''R']['e''E']['c''C']['u''U']['r''R']['s''S']['i''I']['v''V']['e''E'] {RECURSIVE }
+| ['m''M']['u''U']['s''S']['t''T']['c''C']['o''O']['n''N']['t''T']['a''A']['i''I']['n''N'] {MUSTCONTAIN }
+| field { FIELD (trimField (lexeme lexbuf)) }
+| sourcefield { SOURCEFIELD (trimField ((lexeme lexbuf).Substring(7))) }
+| targetfield { TARGETFIELD (trimField ((lexeme lexbuf).Substring(7))) }
+| param { PARAMETER ((lexeme lexbuf).Substring(1)) }
+| string_sq { STRING (removeDoubledQuotes ((lexeme lexbuf).Trim('\''))) }
+| string_dq { STRING (removeDoubledDoubleQuotes ((lexeme lexbuf).Trim('\"'))) }
+
+
+// Numberic constants
+| digit+									{ INT (Int32.Parse(lexeme lexbuf)) }
+| digit+('.'digit+)?(['e''E']digit+)?		{ FLOAT (Double.Parse(lexeme lexbuf)) }
+// EOF
+| eof   { EOF }

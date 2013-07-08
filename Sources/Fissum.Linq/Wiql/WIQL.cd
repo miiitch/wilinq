@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Fissum.Linq.Wiql.WhereStatement" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\WhereStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.BooleanOperationStatement" Collapsed="true">
+    <Position X="6.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CgAAAAAAAAAAAAAAAAAAAAAEAAAAAAAACQCAAAAAAAA=</HashCode>
+      <FileName>Wiql\BooleanOperationStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.DateValueStatement" Collapsed="true">
+    <Position X="17.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Wiql\DateValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.FieldOperationStatement" Collapsed="true">
+    <Position X="8.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAEAAAAAAAAAQAgAAAAgAA=</HashCode>
+      <FileName>Wiql\FieldOperationStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.IntegerValueStatement" Collapsed="true">
+    <Position X="15.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Wiql\IntegerValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.ListValueStatement" Collapsed="true">
+    <Position X="20" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Wiql\ListValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.MeValueStatement" Collapsed="true">
+    <Position X="24.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\MeValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.ParameterValueStatement" Collapsed="true">
+    <Position X="11" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\ParameterValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.ProjectValueStatement" Collapsed="true">
+    <Position X="13.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\ProjectValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.Query" Collapsed="true">
+    <Position X="31.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAEAAAEAAgAIAACAAAAAAACAgAA=</HashCode>
+      <FileName>Wiql\Query.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.QueryIssue" Collapsed="true">
+    <Position X="33.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\QueryIssue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.OrderStatement" Collapsed="true">
+    <Position X="29" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Wiql\QueryOrder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.Statement" Collapsed="true">
+    <Position X="17.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.StringValueStatement" Collapsed="true">
+    <Position X="22.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEggAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Wiql\StringValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.TodayValueStatement" Collapsed="true">
+    <Position X="26.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\TodayValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.ValueStatement" Collapsed="true">
+    <Position X="19" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAgAAAAAFAAAACAAAAggAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\ValueStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fissum.Linq.Wiql.QueryVisitor" Collapsed="true">
+    <Position X="31.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAEAAAQAAAgAAAAAAAAAAAAAAABAAIAAAAA=</HashCode>
+      <FileName>Wiql\QueryVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Fissum.Linq.Wiql.BooleanOperationStatementType" Collapsed="true">
+    <Position X="31.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\BooleanOperationStatementType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Fissum.Linq.Wiql.FieldOperationStatementType" Collapsed="true">
+    <Position X="33.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAgAAAAgAAAEAgACUAABAAAAAAAAAAQAAE=</HashCode>
+      <FileName>Wiql\FieldOperationStatementType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Fissum.Linq.Wiql.FieldType" Collapsed="true">
+    <Position X="31.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAICAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\FieldType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Fissum.Linq.Wiql.QueryMode" Collapsed="true">
+    <Position X="33.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAIAAAAIEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Wiql\QueryMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
