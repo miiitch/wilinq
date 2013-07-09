@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiLinq.LinqProvider", "Fissum.Linq\WiLinq.LinqProvider.csproj", "{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiLinq.LinqProvider", "WiLinq.LinqProvider\WiLinq.LinqProvider.csproj", "{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WiLinq.Wiql", "Fissum.Wiql\WiLinq.Wiql.fsproj", "{45087980-E0A6-4D64-8E74-287936522A8B}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WiLinq.Wiql", "Wilinq.Wiql\WiLinq.Wiql.fsproj", "{45087980-E0A6-4D64-8E74-287936522A8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
