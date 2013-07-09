@@ -5,6 +5,6 @@ using System;
 [assembly: AssemblyCopyright("Copyright © Michel Perfetti 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.*")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
 [assembly: AssemblyCompany("Michel Perfetti")]
