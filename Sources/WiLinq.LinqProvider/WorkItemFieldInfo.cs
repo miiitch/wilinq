@@ -8,28 +8,37 @@ using System.Linq.Expressions;
 
 namespace WiLinq.LinqProvider
 {
-    public class WorkItemFieldInfo
-    {
-        public string Name { get; set; }
-        public Type Type { get; set; }
+	public class WorkItemFieldInfo
+	{
+		public string Name { get; set; }
+		public Type Type { get; set; }
 
 
-        public static WorkItemFieldInfo CreateStringField(string name)
-        {
-            return new WorkItemFieldInfo()
-            {
-                Name = name,
-                Type = typeof(string)
-            };
-        }
+		public static WorkItemFieldInfo CreateIntField(string name)
+		{
+			return new WorkItemFieldInfo()
+			{
+				Name = name,
+				Type = typeof(int)
+			};
+		}
 
-        internal static WorkItemFieldInfo CreateDateField(string name)
-        {
-            return new WorkItemFieldInfo()
-            {
-                Name = name,
-                Type = typeof(DateTime)
-            };
-        }
-    }
+		public static WorkItemFieldInfo CreateStringField(string name)
+		{
+			return new WorkItemFieldInfo()
+			{
+				Name = name,
+				Type = typeof(string)
+			};
+		}
+
+		internal static WorkItemFieldInfo CreateDateField(string name)
+		{
+			return new WorkItemFieldInfo()
+			{
+				Name = name,
+				Type = typeof(DateTime)
+			};
+		}
+	}
 }
