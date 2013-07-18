@@ -99,7 +99,7 @@
     <Compile Include="TFSWorkItemExtensions.cs" />
     <Compile Include="TFSWorkItemHelper.cs" />
     <Compile Include="WhereClauseTranslator.cs" />
-    <Compile Include="WhereLocationEnum.cs" />
+    <Compile Include="WhereLocation.cs" />
     <Compile Include="Wiql\BooleanOperationStatement.cs" />
     <Compile Include="Wiql\BooleanOperationStatementType.cs" />
     <Compile Include="Wiql\DateValueStatement.cs" />

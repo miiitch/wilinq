@@ -52,6 +52,19 @@ namespace WiLinq.Tests
 
 			var result = projectWIQuery.ToList();
 		}
+		
+		[Test]
+		public void QueryWithFieldMethod()
+		{
+			var projectWiQuery = from workitem in _project.WorkItemSet()
+								 where workitem.Title.Contains("Build")
+								 && workitem.Field<string>("System.AssignedTo") == "Michel Perfetti"
+								 select workitem;		
+
+			var result = projectWiQuery.ToList();
+		}
+
+	
 
 	}
 }

@@ -33,6 +33,10 @@ namespace WiLinq.LinqProvider
 				{
 					case "Title":
 						return WorkItemFieldInfo.CreateStringField(SystemField.Title);
+					case "State":
+						return WorkItemFieldInfo.CreateStringField(SystemField.State);
+					case "WorkItemType":
+						return WorkItemFieldInfo.CreateStringField(SystemField.WorkItemType);
 					case "ChangedBy":
 						return WorkItemFieldInfo.CreateStringField(SystemField.ChangedBy);
 					case "ChangedDate":

@@ -33,7 +33,7 @@ namespace WiLinq.LinqProvider
 
         public const string Project = "System.TeamProject";
 
-        public const String Revision = "System.Rev";
+        public const string Revision = "System.Rev";
 
         public const string State = "System.State";
 
