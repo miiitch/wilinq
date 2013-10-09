@@ -1,5 +1,10 @@
-msbuild wilinq.sln /p:Configuration="Release" /p:Platform=AnyCPU /Rebuild
-
+rmdir ..\GeneratedPackages
+rmdir /s /q ..\BuildOutput
+mkdir ..\BuildOutput
 mkdir ..\GeneratedPackages
 
-nuget pack WiLinq.nuspec -version 0.1.0.2 -symbols -Verbosity detailed -OutputDirectory ..\GeneratedPackages
+
+msbuild wilinq.sln /p:Configuration="Release" /p:Platform="Any CPU"  /p:GenerateProjectSpecificOutputFolder=true /p:Outdir="..\..\BuildOutput" /t:build
+
+
+.nuget\nuget.exe pack WiLinq.nuspec -version 0.1.1.0 -symbols -Verbosity detailed -OutputDirectory ..\GeneratedPackages

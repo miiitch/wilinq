@@ -24,10 +24,15 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin\Release\WiLinq.LinqProvider.dll" target="lib\net45\WiLinq.LinqProvider.dll" />
-		<file src="bin\Release\WiLinq.LinqProvider.pdb" target="lib\net45\WiLinq.LinqProvider.pdb" />
-		<file src="bin\Release\WiLinq.Wiql.dll" target="lib\net45\WiLinq.Wiql.dll" />
-		<file src="bin\Release\WiLinq.Wiql.pdb" target="lib\net45\WiLinq.Wiql.pdb" />
+		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.LinqProvider.dll" target="lib\net45\WiLinq.LinqProvider.dll" />
+		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.LinqProvider.pdb" target="lib\net45\WiLinq.LinqProvider.pdb" />
+		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.Wiql.dll" target="lib\net45\WiLinq.Wiql.dll" />
+		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.Wiql.pdb" target="lib\net45\WiLinq.Wiql.pdb" />
+    <file src="..\BuildOutput\WiLinq.Codegen\GalaSoft.MvvmLight.Extras.WPF45.dll" target="tools\GalaSoft.MvvmLight.Extras.WPF45.dll" />
+    <file src="..\BuildOutput\WiLinq.Codegen\GalaSoft.MvvmLight.WPF45.dll" target="tools\GalaSoft.MvvmLight.WPF45.dll" />
+    <file src="..\BuildOutput\WiLinq.Codegen\Microsoft.Practices.ServiceLocation.dll" target="tools\Microsoft.Practices.ServiceLocation.dll" />
+    <file src="..\BuildOutput\WiLinq.Codegen\WiLinq.LinqProvider.dll" target="tools\WiLinq.LinqProvider.dll" />
+    <file src="..\BuildOutput\WiLinq.Codegen\WICodeGen.exe" target="tools\WICodeGen.exe" />
 	</files>
 	
 </package>

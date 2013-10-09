@@ -198,7 +198,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T"></typeparam>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static bool Check<T>(this Project project) where T : WorkItemBase,new()
+        public static bool IsSupported<T>(this Project project) where T : WorkItemBase,new()
         {
             if (project == null)
             {
@@ -209,18 +209,5 @@ namespace WiLinq.LinqProvider
         #endregion
     }
 
-
-    public enum QueryLinkMode 
-    { 
-        MustContain, 
-        MayContain, 
-        DoesNotContain 
-    }
-
-    public class WorkItemLinkQueryItem
-    {
-
-
-    }
 
 }
