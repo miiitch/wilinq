@@ -17,6 +17,7 @@ build/
 
 #Nuget Packages
 GeneratedPackages/
+BuildOuput/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
