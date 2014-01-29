@@ -38,6 +38,7 @@ rule tokenize = parse
 | "<=" { LT }
 | "<>" { DIFF }
 | "=" { EQUAL }
+| ['g''G']['r''R']['O''o']['u''U']['p''P'] { GROUP }
 | ['i''I']['n''N'] { IN }
 | ['N''n']['O''o']['t''T'] { NOT }
 | ',' { SEMI }

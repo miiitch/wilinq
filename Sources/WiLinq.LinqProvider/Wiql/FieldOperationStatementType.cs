@@ -13,6 +13,7 @@ namespace WiLinq.LinqProvider.Wiql
         IsLess,
         IsLessOrEqual,
         IsIn,
+        IsInGroup,
         IsDifferent,
         IsUnder,
         IsNotUnder,

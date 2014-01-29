@@ -19,7 +19,7 @@ let parse_error_rich =
 %token <System.Double> FLOAT
 %token LPAREN RPAREN
 %token EOF
-%token GREATER LESS GT LT IN EQUAL DIFF UNDER
+%token GREATER LESS GT LT IN EQUAL DIFF UNDER GROUP
 %token FROM
 %token ORDER BY DESC ASC
 %token WORKITEMS WORKITEMLINKS
@@ -117,6 +117,7 @@ Operator:
 | UNDER		{ WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsUnder }
 | DIFF		{ WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsDifferent }
 | IN		{ WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsIn }
+| IN GROUP  { WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsInGroup }
 
 ValueStatement:
 | INT								{ WiLinq.LinqProvider.Wiql.ValueStatement.Create($1) }

@@ -69,6 +69,9 @@ namespace WiLinq.LinqProvider.Wiql
                 case FieldOperationStatementType.IsIn:
                     op = "in";
                     break;
+                case FieldOperationStatementType.IsInGroup:
+                    op = "in group";
+                    break;
                 case FieldOperationStatementType.IsDifferent:
                     op = "<>";
                     break;
