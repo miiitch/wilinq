@@ -1,12 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using WiLinq.LinqProvider.Extensions;
 
 
 namespace WiLinq.LinqProvider.Extensions
@@ -22,11 +18,14 @@ namespace WiLinq.LinqProvider.Extensions
             public string ReferenceName { get; set; }
             public Type Type { get; set; }
         }
-       
+
+
+        // ReSharper disable StaticFieldInGenericType
         private static string _workItemTypeName;
-        private static bool _typeProcessed = false;
+        private static bool _typeProcessed;
         private static List<PropertyData> _propertyDataList;
-        private static bool _propertyProcessed = false;
+        private static bool _propertyProcessed;
+        // ReSharper restore StaticFieldInGenericType        
 
         public static ICustomWorkItemHelper<T> Provider
         {
@@ -47,21 +46,21 @@ namespace WiLinq.LinqProvider.Extensions
                 return;
             }
             _propertyProcessed = true;
-            _propertyDataList = new List<WorkItemPropertyUtility<T>.PropertyData>();
+            _propertyDataList = new List<PropertyData>();
 
 
-            PropertyInfo[] props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            var props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             foreach (var prop in props)
             {
-                FieldAttribute[] fieldAttribs = prop.GetCustomAttributes(typeof(FieldAttribute), false) as FieldAttribute[];
+                var fieldAttribs = prop.GetCustomAttributes(typeof(FieldAttribute), false) as FieldAttribute[];
 
                 if (fieldAttribs == null || fieldAttribs.Length != 1)
                 {
                     continue;
                 }
 
-                _propertyDataList.Add(new PropertyData() { ReferenceName = fieldAttribs[0].ReferenceName, Type = prop.PropertyType });
+                _propertyDataList.Add(new PropertyData { ReferenceName = fieldAttribs[0].ReferenceName, Type = prop.PropertyType });
             }
         }
 
@@ -75,7 +74,7 @@ namespace WiLinq.LinqProvider.Extensions
                 return;
             }
             _typeProcessed = true;
-            WorkItemTypeAttribute[] modelAttribs = typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
+            var modelAttribs = typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
 
             if (modelAttribs == null || modelAttribs.Length != 1)
             {
@@ -88,7 +87,7 @@ namespace WiLinq.LinqProvider.Extensions
 
         }
 
-     
+
 
         /// <summary>
         /// Gets the name of the work item type.
@@ -121,7 +120,7 @@ namespace WiLinq.LinqProvider.Extensions
             if (type == null)
             {
                 return false;
-            }            
+            }
 
             if (type.Name != WorkItemTypeName)
             {
@@ -151,7 +150,7 @@ namespace WiLinq.LinqProvider.Extensions
                     return false;
                 }
 
-                Type nullableType = typeof(Nullable<>).MakeGenericType(new Type[] { matchingField.SystemType });
+                var nullableType = typeof(Nullable<>).MakeGenericType(new[] { matchingField.SystemType });
                 if (propData.Type == nullableType)
                 {
                     continue;
@@ -168,6 +167,8 @@ namespace WiLinq.LinqProvider.Extensions
         /// <returns></returns>
         public static bool CheckProjectUsability(Project project)
         {
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (WorkItemType wiType in project.WorkItemTypes)
             {
                 if (wiType.Name == WorkItemTypeName)

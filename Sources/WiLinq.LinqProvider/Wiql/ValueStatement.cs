@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace WiLinq.LinqProvider.Wiql
@@ -43,10 +42,7 @@ namespace WiLinq.LinqProvider.Wiql
             {
                 return Today;
             }
-            else
-            {
-                return new TodayValueStatement(delta);
-            }
+            return new TodayValueStatement(delta);
         }
 
         public static ValueStatement Create(int value)
@@ -66,15 +62,15 @@ namespace WiLinq.LinqProvider.Wiql
 
             if (parameterName.Equals("me",StringComparison.InvariantCultureIgnoreCase))
             {
-                return ValueStatement.Me;
+                return Me;
             }
-            else if (parameterName.Equals("project",StringComparison.InvariantCultureIgnoreCase))
+            if (parameterName.Equals("project",StringComparison.InvariantCultureIgnoreCase))
             {
-                return ValueStatement.Project;
+                return Project;
             }
-            else if (parameterName.Equals("today", StringComparison.InvariantCultureIgnoreCase))
+            if (parameterName.Equals("today", StringComparison.InvariantCultureIgnoreCase))
             {
-                return ValueStatement.Today;
+                return Today;
             }
             return new ParameterValueStatement(parameterName);
         }

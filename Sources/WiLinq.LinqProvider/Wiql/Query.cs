@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace WiLinq.LinqProvider.Wiql
 {
@@ -44,26 +42,19 @@ namespace WiLinq.LinqProvider.Wiql
 #endif
 		public string ToQuery()
 		{
-			StringBuilder builder = new StringBuilder();
+			var builder = new StringBuilder();
 
 
 			builder.Append("select ");
 
-			string fields = string.Join(", ", Fields.Select(field => string.Format("[{0}]", field)).ToArray());
+			var fields = string.Join(", ", Fields.Select(field => string.Format("[{0}]", field)).ToArray());
 
 			builder.Append(fields);
 			builder.Append(" from ");
 
-			if (Mode == QueryMode.Default)
-			{
-				builder.Append("WorkItems");
-			}
-			else
-			{
-				builder.Append("WorkItemLinks");
-			}
+		    builder.Append(Mode == QueryMode.Default ? "WorkItems" : "WorkItemLinks");
 
-			var whereStringStatements = WhereStatements.Select(statement => string.Format(" where {0} ", statement.ConvertToQueryValue()));
+		    var whereStringStatements = WhereStatements.Select(statement => string.Format(" where {0} ", statement.ConvertToQueryValue()));
 			foreach (var st in whereStringStatements)
 			{
 				builder.Append(st);

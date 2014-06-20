@@ -1,26 +1,19 @@
-﻿using Microsoft.TeamFoundation.Client;
+﻿using System.Windows.Forms;
+using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Linq;
 using System.Windows;
+using WiLinq.CodeGen.ViewModels;
 
 namespace WiLinq.CodeGen
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
 
-        protected override void OnLoadCompleted(System.Windows.Navigation.NavigationEventArgs e)
-        {
-            base.OnLoadCompleted(e);
-           
-        }
-
+    
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -29,7 +22,7 @@ namespace WiLinq.CodeGen
 
                 var result = picker.ShowDialog();
 
-                if (result != System.Windows.Forms.DialogResult.OK)
+                if (result != DialogResult.OK)
                 {
                     
                     return;
@@ -41,11 +34,11 @@ namespace WiLinq.CodeGen
                 var store = tpc.GetService<WorkItemStore>();
                 var project = store.Projects.Cast<Project>().First(_ => _.Name == picker.SelectedProjects[0].Name);
 
-                this.MainWindow = new MainWindow()
+                MainWindow = new MainWindow
                 {
-                    DataContext = new ViewModels.LinqCodeGenerationViewModel(project)
+                    DataContext = new LinqCodeGenerationViewModel(project)
                 };
-                this.MainWindow.Show();
+                MainWindow.Show();
             }
         }
     }

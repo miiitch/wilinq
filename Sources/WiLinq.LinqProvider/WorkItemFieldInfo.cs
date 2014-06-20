@@ -1,10 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Linq.Expressions;
 
 namespace WiLinq.LinqProvider
 {
@@ -16,7 +10,7 @@ namespace WiLinq.LinqProvider
 
 		public static WorkItemFieldInfo CreateIntField(string name)
 		{
-			return new WorkItemFieldInfo()
+			return new WorkItemFieldInfo
 			{
 				Name = name,
 				Type = typeof(int)
@@ -25,7 +19,7 @@ namespace WiLinq.LinqProvider
 
 		public static WorkItemFieldInfo CreateStringField(string name)
 		{
-			return new WorkItemFieldInfo()
+			return new WorkItemFieldInfo
 			{
 				Name = name,
 				Type = typeof(string)
@@ -34,7 +28,7 @@ namespace WiLinq.LinqProvider
 
 		internal static WorkItemFieldInfo CreateDateField(string name)
 		{
-			return new WorkItemFieldInfo()
+			return new WorkItemFieldInfo
 			{
 				Name = name,
 				Type = typeof(DateTime)

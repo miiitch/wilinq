@@ -1,20 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using GalaSoft.MvvmLight.Command;
-using System.CodeDom.Compiler;
-using Microsoft.CSharp;
-using Microsoft.VisualBasic;
-using System.IO;
 using GalaSoft.MvvmLight;
 using WiLinq.CodeGen.CodeGeneration;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace WiLinq.CodeGen.ViewModels
 {
     internal class ModelClassDefinitionViewModel : ViewModelBase
     {
-        ModelClassDefinition _model;
+        readonly ModelClassDefinition _model;
 
 
         public List<PropertyDefinitionViewModel> Properties { get; private set; }

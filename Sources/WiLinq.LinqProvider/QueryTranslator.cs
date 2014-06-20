@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using WiLinq.LinqProvider.Extensions;
 
@@ -20,7 +16,7 @@ namespace WiLinq.LinqProvider
         /// Object containing the query being built.
         /// </summary>
         private QueryBuilder _builder;
-        private ILinqResolver _resolver;
+        private readonly ILinqResolver _resolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryTranslator"/> class.
@@ -39,7 +35,7 @@ namespace WiLinq.LinqProvider
         {
             _builder = new QueryBuilder(QueryType.WorkItem);
             
-            this.Visit(expression);
+            Visit(expression);
 
             return _builder;
         }
@@ -75,16 +71,16 @@ namespace WiLinq.LinqProvider
             if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "Where")
             {
                 Visit(m.Arguments[0]);
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
+                var lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
 
                 ProcessWhereClause(lambda);
 
                 return m;
             }
-            else if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "Select")
+            if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "Select")
             {
                 Visit(m.Arguments[0]);
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
+                var lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
                 if (_builder.SelectLambda != null)
                 {
                     throw new InvalidOperationException("Cannot support two select clause");
@@ -93,38 +89,38 @@ namespace WiLinq.LinqProvider
                 _builder.SelectMethod = m.Method;
                 return m;
             }
-            else if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "ThenBy")
+            if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "ThenBy")
             {
                 Visit(m.Arguments[0]);
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
+                var lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
                 ProcessOrderClause(lambda, true);
                 return m;
 
             }
-            else if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "ThenByDescending")
+            if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "ThenByDescending")
             {
                 Visit(m.Arguments[0]);
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
+                var lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
                 ProcessOrderClause(lambda, false);
                 return m;
             }
-            else if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "OrderBy")
+            if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "OrderBy")
             {
                 
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
+                var lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
                 ProcessOrderClause(lambda, true);
                 Visit(m.Arguments[0]);
                 return m;
 
             }
-            else if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "OrderByDescending")
+            if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "OrderByDescending")
             {                
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
+                var lambda = (LambdaExpression)StripQuotes(m.Arguments[1]);
                 ProcessOrderClause(lambda, false);
                 Visit(m.Arguments[0]);
                 return m;
             }
-            else if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "OfType")
+            if (m.Method.DeclaringType == typeof(Queryable) && m.Method.Name == "OfType")
             {
                 Visit(m.Arguments[0]);
                 return m;
@@ -160,16 +156,20 @@ namespace WiLinq.LinqProvider
         /// <param name="lambda">The lambda.</param>
         private void ProcessWhereClause(LambdaExpression lambda)
         {
-            if ((lambda.Parameters.Count != 1) ||
-               (!(lambda.Parameters[0] is ParameterExpression)) ||
+            if (lambda.Parameters.Count == 0)
+            {
+                throw new InvalidOperationException("invalid where clase");
+
+            }
+            if ((lambda.Parameters.Count != 1) ||            
                (!IsAWorkItem(lambda.Parameters[0].Type)))
             {
                 throw new InvalidOperationException("invalid where clase");
             }
 
-            WhereClauseTranslator whereTranslator = new WhereClauseTranslator(_resolver,null);
+            var whereTranslator = new WhereClauseTranslator(_resolver,null);
 
-            string whereClause = whereTranslator.Translate(lambda.Body, _builder,lambda.Parameters[0].Name);
+            var whereClause = whereTranslator.Translate(lambda.Body, _builder,lambda.Parameters[0].Name);
             _builder.AddWhereClause(whereClause);
         }
 
@@ -179,16 +179,20 @@ namespace WiLinq.LinqProvider
         /// <param name="lambda">The lambda.</param>
         /// <param name="isAscending">if set to <c>true</c> [is ascending].</param>
         private void ProcessOrderClause(LambdaExpression lambda, bool isAscending)
-        {            
-            if ((lambda.Parameters.Count != 1) ||
-                (!(lambda.Parameters[0] is ParameterExpression)) ||
+        {
+            if (lambda.Parameters.Count == 0)
+            {
+                throw new InvalidOperationException("invalid order clase");
+
+            }
+            if ((lambda.Parameters.Count != 1) ||                
                 (!IsAWorkItem(lambda.Parameters[0].Type)))
             {
                 throw new InvalidOperationException("invalid order clase");
             }
 
-            Expression body = lambda.Body;
-            MemberExpression me = body as MemberExpression;            
+            var body = lambda.Body;
+            var me = body as MemberExpression;            
             if (me != null)
             {
                 var fieldInfo = _resolver.Resolve(me.Member);
@@ -200,7 +204,7 @@ namespace WiLinq.LinqProvider
                 return;
             }
 
-            MethodCallExpression mc = body as MethodCallExpression;
+            var mc = body as MethodCallExpression;
             if (mc != null)
             {
                 var fieldInfo = _resolver.Resolve(lambda.Parameters[0].Name, mc);

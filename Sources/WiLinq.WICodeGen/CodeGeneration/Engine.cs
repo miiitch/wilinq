@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using WiLinq.LinqProvider.Extensions;
 
@@ -19,8 +18,8 @@ namespace WiLinq.CodeGen.CodeGeneration
     /// </summary>
     public class Engine
     {
-        private List<string> _fieldToIgnoreList;
-        private List<string> _definedPropertyList;
+        private readonly List<string> _fieldToIgnoreList;
+        private readonly List<string> _definedPropertyList;
         private FieldSeparator _fieldSeparator = FieldSeparator.NoSpace;
 
         public FieldSeparator FieldSeparator
@@ -31,10 +30,6 @@ namespace WiLinq.CodeGen.CodeGeneration
             }
             set
             {
-                if (_fieldSeparator == value)
-                {
-                    return;
-                }
                 _fieldSeparator = value;
             }
         }
@@ -57,11 +52,11 @@ namespace WiLinq.CodeGen.CodeGeneration
                 _fieldToIgnoreList.Add(attribs[0].ReferenceName);
             }
 
-            foreach (var ignoreField in 
+            foreach (var ignoreField in
                 typeof(WorkItemBase)
                 .GetCustomAttributes(typeof(IgnoreFieldAttribute), false)
                 .OfType<IgnoreFieldAttribute>())
-            {             
+            {
                 _fieldToIgnoreList.Add(ignoreField.ReferenceName);
             }
         }
@@ -77,12 +72,12 @@ namespace WiLinq.CodeGen.CodeGeneration
             var result = new ModelDefinition();
 
             var q = from wit in project.WorkItemTypes.Cast<WorkItemType>()
-                    let classDef = new ModelClassDefinition()
+                    let classDef = new ModelClassDefinition
                     {
                         WorkItemType = wit.Name,
                         ClassName = Regex.Replace(wit.Name, @"\W", String.Empty),
                         FieldDefinitions = (from field in wit.FieldDefinitions.Cast<FieldDefinition>()
-                                            select new ModelFieldDefinition()
+                                            select new ModelFieldDefinition
                                             {
                                                 Name = field.Name,
                                                 PropertyName = Regex.Replace(field.Name, @"\W", String.Empty),
@@ -102,37 +97,35 @@ namespace WiLinq.CodeGen.CodeGeneration
             return result;
         }
 
-        
 
         /// <summary>
         /// Method used to generate model from a modelDefinition
         /// </summary>
         /// <param name="modeldefinition"></param>
         /// <param name="codeProvider"></param>
+        /// <param name="output"></param>
         /// <returns></returns>        
         public bool GenerateCode(ModelDefinition modeldefinition, CodeDomProvider codeProvider, TextWriter output)
         {
-            CodeCompileUnit unit = new CodeCompileUnit();
-            
+            var unit = new CodeCompileUnit();
+
             // Declare a new namespace called Samples.
-            CodeNamespace codeNamespace = new CodeNamespace(modeldefinition.Namespace);
+            var codeNamespace = new CodeNamespace(modeldefinition.Namespace);
             codeNamespace.Imports.Add(new CodeNamespaceImport("WiLinq.LinqProvider"));
             // Add the new namespace to the compile unit.
             unit.Namespaces.Add(codeNamespace);
 
 
             foreach (var classDefinition in modeldefinition.ClassDefinitions)
-            {                
+            {
 
-                CodeTypeDeclaration wiTypeClass = GenerateWorkItemTypeClass(classDefinition);
+                var wiTypeClass = GenerateWorkItemTypeClass(classDefinition);
                 codeNamespace.Types.Add(wiTypeClass);
 
 
             }
 
-            CodeGeneratorOptions options = new CodeGeneratorOptions();
-            options.BlankLinesBetweenMembers = true;
-            options.IndentString = "  ";
+            var options = new CodeGeneratorOptions {BlankLinesBetweenMembers = true, IndentString = "  "};
 
             try
             {
@@ -149,10 +142,13 @@ namespace WiLinq.CodeGen.CodeGeneration
 
         private CodeTypeDeclaration GenerateWorkItemTypeClass(ModelClassDefinition classDefinition)
         {
-            CodeTypeDeclaration wiTypeClass = new CodeTypeDeclaration(classDefinition.ClassName);
-            wiTypeClass.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            wiTypeClass.IsPartial = true;
-            wiTypeClass.IsClass = true;
+            var wiTypeClass = new CodeTypeDeclaration(classDefinition.ClassName)
+            {
+                // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                IsPartial = true,
+                IsClass = true
+            };
             wiTypeClass.BaseTypes.Add(typeof(WorkItemBase));
 
             wiTypeClass.CustomAttributes.Add(new CodeAttributeDeclaration(
@@ -164,7 +160,7 @@ namespace WiLinq.CodeGen.CodeGeneration
             if (!String.IsNullOrEmpty(classDefinition.Description))
             {
 
-                CodeComment comment = new CodeComment(String.Format("<summary>{0}</summary>", classDefinition.Description), true);
+                var comment = new CodeComment(String.Format("<summary>{0}</summary>", classDefinition.Description), true);
                 wiTypeClass.Comments.Add(new CodeCommentStatement(comment));
             }
 
@@ -195,17 +191,16 @@ namespace WiLinq.CodeGen.CodeGeneration
         /// <param name="fieldDefinition">The field definition.</param>
         private void GenerateField(CodeTypeDeclaration wiTypeClass, ModelFieldDefinition fieldDefinition)
         {
-            var property = new CodeMemberProperty();
-            property.HasGet = true;
+            var property = new CodeMemberProperty {HasGet = true};
 
-            string PropName = GeneratePropertyName(fieldDefinition);
+            var propName = GeneratePropertyName(fieldDefinition);
 
-            property.Name = PropName;
+            property.Name = propName;
 
             var fieldType = fieldDefinition.Type;
             if (!fieldType.IsClass)
             {
-                Type nullableType = typeof(Nullable<>);
+                var nullableType = typeof(Nullable<>);
                 fieldType = nullableType.MakeGenericType(fieldType);
 
             }
@@ -224,7 +219,7 @@ namespace WiLinq.CodeGen.CodeGeneration
                 property.Comments.Add(new CodeCommentStatement(comment));
             }
 
-            var fieldMethod = new CodeMethodReferenceExpression(new CodePropertyReferenceExpression(new CodeThisReferenceExpression(),"WorkItem"), "Field", new CodeTypeReference[] { new CodeTypeReference(fieldType) });
+            var fieldMethod = new CodeMethodReferenceExpression(new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "WorkItem"), "Field", new[] { new CodeTypeReference(fieldType) });
             var fieldMethodInvoke = new CodeMethodInvokeExpression(fieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName) });
 
             property.GetStatements.Add(new CodeMethodReturnStatement(fieldMethodInvoke));
@@ -233,8 +228,8 @@ namespace WiLinq.CodeGen.CodeGeneration
             if (!fieldDefinition.IsReadOnly)
             {
 
-                CodeMethodReferenceExpression setFieldMethod = new CodeMethodReferenceExpression(new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "WorkItem"), "SetField", new CodeTypeReference[] { new CodeTypeReference(fieldType) });
-                CodeMethodInvokeExpression setFielMethodInvoke = new CodeMethodInvokeExpression(setFieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName), new CodePropertySetValueReferenceExpression() });
+                var setFieldMethod = new CodeMethodReferenceExpression(new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "WorkItem"), "SetField", new[] { new CodeTypeReference(fieldType) });
+                var setFielMethodInvoke = new CodeMethodInvokeExpression(setFieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName), new CodePropertySetValueReferenceExpression() });
                 property.SetStatements.Add(setFielMethodInvoke);
             }
             wiTypeClass.Members.Add(property);
@@ -267,7 +262,7 @@ namespace WiLinq.CodeGen.CodeGeneration
                     throw new GenerationException("InvalidSeparatorToken");
             }
 
-            string propName = Regex.Replace(fieldDefinition.Name, @"\W+", replacement);
+            var propName = Regex.Replace(fieldDefinition.Name, @"\W+", replacement);
 
             if (_definedPropertyList.Contains(propName))
             {
@@ -277,12 +272,14 @@ namespace WiLinq.CodeGen.CodeGeneration
             return propName;
         }
 
+/*
         private static void GenerateConstructor(CodeTypeDeclaration wiTypeClass)
         {
-            CodeConstructor constructor = new CodeConstructor();
+            var constructor = new CodeConstructor();
             constructor.Attributes = MemberAttributes.Public;
 
             wiTypeClass.Members.Add(constructor);
         }
+*/
     }
 }

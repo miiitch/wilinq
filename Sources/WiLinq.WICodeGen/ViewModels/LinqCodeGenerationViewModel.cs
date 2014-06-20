@@ -18,10 +18,9 @@ namespace WiLinq.CodeGen.ViewModels
     {
       
         private bool _cSharpCode;
-        private ModelDefinition _modelDefinition;
-        Project _project;
+        private readonly ModelDefinition _modelDefinition;
 
-        Engine _codeGenerationEngine;
+        readonly Engine _codeGenerationEngine;
 
 
         public bool CSharpCode
@@ -34,10 +33,10 @@ namespace WiLinq.CodeGen.ViewModels
             {
                 _cSharpCode = value;
                 RaisePropertyChanged(() => CSharpCode);
-                RaisePropertyChanged(() => VBNetCode);
+                RaisePropertyChanged(() => VbNetCode);
             }
         }
-        public bool VBNetCode
+        public bool VbNetCode
         {
             get
             {
@@ -47,7 +46,7 @@ namespace WiLinq.CodeGen.ViewModels
             {
                 _cSharpCode = !value;
                 RaisePropertyChanged(() => CSharpCode);
-                RaisePropertyChanged(() => VBNetCode);
+                RaisePropertyChanged(() => VbNetCode);
             }
         }
         public string Namespace
@@ -66,38 +65,36 @@ namespace WiLinq.CodeGen.ViewModels
         public ICommand GenerateClassesCommand { get; private set; }
 
         public LinqCodeGenerationViewModel(Project project)
-            : base()
         {
             if (project == null)
-                throw new ArgumentNullException("project", "project is null.");
-            _project = project;
+                throw new ArgumentNullException("project", @"project is null.");
 
             CSharpCode = true;
             _codeGenerationEngine = new Engine();
             _modelDefinition = _codeGenerationEngine.GenerateModelDefinition(project);
             Classes = _modelDefinition.ClassDefinitions.Select(cd => new ModelClassDefinitionViewModel(cd)).ToList();
-            GenerateClassesCommand = new RelayCommand(() => DoGenerateClasses());
+            GenerateClassesCommand = new RelayCommand(DoGenerateClasses);
         }
 
         private void DoGenerateClasses()
         {
-            SaveFileDialog dialog = new SaveFileDialog();
+            var dialog = new SaveFileDialog();
 
             using (dialog)
             {
-                dialog.Title = "Save the generated code";
+                dialog.Title = @"Save the generated code";
                 
-                CodeDomProvider codeProvider = null;
+                CodeDomProvider codeProvider;
                 if (CSharpCode)
                 {
                     dialog.DefaultExt = "cs";
-                    dialog.Filter = "CSharp source file (*.cs)| *.cs";
+                    dialog.Filter = @"CSharp source file (*.cs)| *.cs";
                     codeProvider = new CSharpCodeProvider();
                 }
                 else
                 {
                     dialog.DefaultExt = "vb";
-                    dialog.Filter = "VB.Net source file (*.vb)| *.vb";
+                    dialog.Filter = @"VB.Net source file (*.vb)| *.vb";
                     codeProvider = new VBCodeProvider();
                 }
 
@@ -123,7 +120,7 @@ namespace WiLinq.CodeGen.ViewModels
                     fileStream.Flush();                   
                 }
 
-                MessageBox.Show("Generation successful");
+                MessageBox.Show(@"Generation successful");
             }
             
         }

@@ -1,150 +1,148 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace WiLinq.Tests
 {
-	[TestFixture]
-	public class WiqlParser
-	{
-		[Test]
-		public void Test_Select_WithOneField()
-		{
-			var query = "SELECT [System.ID] from Workitems";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+    [TestFixture]
+    public class WiqlParser
+    {
+        [Test]
+        public void Test_Select_WithOneField()
+        {
+            const string query = "SELECT [System.ID] from Workitems";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_WithTwoFields()
-		{
-			var query = "SELECT [System.ID],[System.CreatedBy] from Workitems";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(2, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-			Assert.AreEqual("System.CreatedBy", output.Fields[1]);
-		}
+        [Test]
+        public void Test_Select_WithTwoFields()
+        {
+            const string query = "SELECT [System.ID],[System.CreatedBy] from Workitems";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(2, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+            Assert.AreEqual("System.CreatedBy", output.Fields[1]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test()
-		{
-			var query = "SELECT [System.ID] from Workitems where [System.ID] > 1";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+        [Test]
+        public void Test_Select_Where_With_One_Test()
+        {
+            const string query = "SELECT [System.ID] from Workitems where [System.ID] > 1";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Parens()
-		{
-			var query = "SELECT [System.ID] from Workitems where ( [System.ID] > 1 )";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Parens()
+        {
+            const string query = "SELECT [System.ID] from Workitems where ( [System.ID] > 1 )";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_Two_Tests()
-		{
-			var query = "SELECT [System.ID] from Workitems where [System.ID] > 1 AND [System.ID] < 3";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+        [Test]
+        public void Test_Select_Where_With_Two_Tests()
+        {
+            const string query = "SELECT [System.ID] from Workitems where [System.ID] > 1 AND [System.ID] < 3";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Parameter_Value()
-		{
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Parameter_Value()
+        {
 
-			var query = "SELECT [System.ID] from Workitems where [System.Project] = @MyProject";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+            const string query = "SELECT [System.ID] from Workitems where [System.Project] = @MyProject";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Parameter_String_With_Quote()
-		{
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Parameter_String_With_Quote()
+        {
 
-			var query = "SELECT [System.ID] from Workitems where [System.Project] = 'He''llo'";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+            const string query = "SELECT [System.ID] from Workitems where [System.Project] = 'He''llo'";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Parameter_String_With_DoubleQuote()
-		{
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Parameter_String_With_DoubleQuote()
+        {
 
-			var query = "SELECT [System.ID] from Workitems where [System.Project] = \"He\"\"llo\"";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+            const string query = "SELECT [System.ID] from Workitems where [System.Project] = \"He\"\"llo\"";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Today()
-		{
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Today()
+        {
 
-			var query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @today";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+            const string query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @today";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Me()
-		{
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Me()
+        {
 
-			var query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @me";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+            const string query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @me";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
 
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Project()
-		{
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Project()
+        {
 
-			var query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @project";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
-        
-		[Test]
-		public void Test_Select_Where_With_One_Test_And_Order_By_One_Field()
-		{
+            const string query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @project";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-			var query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @project order by [System.ID]";
-			var output = Wiql.Parser.Process(query);
-			Assert.AreEqual(1, output.Fields.Count);
-			Assert.AreEqual("System.ID", output.Fields[0]);
-		}
+        [Test]
+        public void Test_Select_Where_With_One_Test_And_Order_By_One_Field()
+        {
 
-        	[Test]
-		public void Test_Select_Query_In_Group_Statement()
-		{
+            const string query = "SELECT [System.ID] from Workitems where [System.CreateDate] = @project order by [System.ID]";
+            var output = Wiql.Parser.Process(query);
+            Assert.AreEqual(1, output.Fields.Count);
+            Assert.AreEqual("System.ID", output.Fields[0]);
+        }
 
-            var query = "SELECT [System.ID] from Workitems where  [System.WorkItemType] IN GROUP 'Bug Category' ";
-			var output = Wiql.Parser.Process(query);		
-		}
+        [Test]
+        public void Test_Select_Query_In_Group_Statement()
+        {
 
-		[Test]
-		public void Test_Query_In_Statement()
-		{
+            const string query = "SELECT [System.ID] from Workitems where  [System.WorkItemType] IN GROUP 'Bug Category' ";
+            // ReSharper disable once UnusedVariable
+            var output = Wiql.Parser.Process(query);
+        }
 
-			var query = @"SELECT [System.Id], [System.WorkItemType], [Microsoft.VSTS.Common.Rank], [System.State], [System.AssignedTo], [System.Title] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.State] IN ('Active', 'Pending', 'Proposed', 'Requested')  ORDER BY [Microsoft.VSTS.Common.Rank], [System.WorkItemType], [System.Id]";			
-			var output = Wiql.Parser.Process(query);
+        [Test]
+        public void Test_Query_In_Statement()
+        {
 
-		}
+            const string query = @"SELECT [System.Id], [System.WorkItemType], [Microsoft.VSTS.Common.Rank], [System.State], [System.AssignedTo], [System.Title] FROM WorkItems WHERE [System.TeamProject] = @project AND [System.State] IN ('Active', 'Pending', 'Proposed', 'Requested')  ORDER BY [Microsoft.VSTS.Common.Rank], [System.WorkItemType], [System.Id]";
+            // ReSharper disable once UnusedVariable
+            var output = Wiql.Parser.Process(query);
 
-		[Test]
-	    [TestCase("select [System.Id], [Microsoft.VSTS.Common.Priority], [System.State], [System.AssignedTo], [System.Title] from WorkItems where [System.TeamProject] = @project and [System.IterationPath] under 'AgileProject\\Iteration 1' and [System.WorkItemType] = 'Test Case' and [System.State] <> 'Closed' order by [Microsoft.VSTS.Common.Priority], [System.Id]")]
+        }
+
+        [Test]
+        [TestCase("select [System.Id], [Microsoft.VSTS.Common.Priority], [System.State], [System.AssignedTo], [System.Title] from WorkItems where [System.TeamProject] = @project and [System.IterationPath] under 'AgileProject\\Iteration 1' and [System.WorkItemType] = 'Test Case' and [System.State] <> 'Closed' order by [Microsoft.VSTS.Common.Priority], [System.Id]")]
         [TestCase("select [System.Id], [Microsoft.VSTS.Common.Priority], [System.State], [System.AssignedTo], [System.Title] from WorkItems where [System.TeamProject] = @project and [System.IterationPath] under 'AgileProject2\\Iteration 1' and [System.WorkItemType] = 'Test Case' and [System.State] <> 'Closed' order by [Microsoft.VSTS.Common.Priority], [System.Id]")]
         [TestCase("select [System.Id], [Microsoft.VSTS.Common.Priority], [System.State], [System.AssignedTo], [System.Title] from WorkItems where [System.TeamProject] = @project and [System.IterationPath] under 'AgileProject3\\Iteration 1' and [System.WorkItemType] = 'Test Case' and [System.State] <> 'Closed' order by [Microsoft.VSTS.Common.Priority], [System.Id]")]
         [TestCase("select [System.Id], [Microsoft.VSTS.Common.Priority], [System.State], [System.Title] from WorkItems where [System.TeamProject] = @project and [System.AssignedTo] = @me and [System.WorkItemType] = 'Test Case' and [System.State] <> 'Closed' order by [Microsoft.VSTS.Common.Priority], [System.Id]")]
@@ -198,13 +196,13 @@ namespace WiLinq.Tests
         [TestCase("select [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AssignedTo], [Microsoft.VSTS.Scheduling.RemainingWork], [Microsoft.VSTS.Scheduling.CompletedWork], [Microsoft.VSTS.Scheduling.StoryPoints], [Microsoft.VSTS.Common.StackRank], [Microsoft.VSTS.Common.Priority], [Microsoft.VSTS.Common.Activity], [System.IterationPath], [System.AreaPath] from WorkItemLinks where (Source.[System.TeamProject] = @project and Source.[System.AreaPath] under @project and Source.[System.IterationPath] under 'AgileProject3\\Iteration 1' and (Source.[System.WorkItemType] = 'User Story' or Source.[System.WorkItemType] = 'Task')) and [System.Links.LinkType] = 'System.LinkTypes.Hierarchy-Forward' and Target.[System.WorkItemType] = 'Task' order by [Microsoft.VSTS.Common.StackRank], [Microsoft.VSTS.Common.Priority] mode (Recursive)")]
         [TestCase("select [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AssignedTo], [Microsoft.VSTS.Scheduling.RemainingWork], [Microsoft.VSTS.Scheduling.CompletedWork], [Microsoft.VSTS.Scheduling.StoryPoints], [Microsoft.VSTS.Common.StackRank], [Microsoft.VSTS.Common.Priority], [Microsoft.VSTS.Common.Activity], [System.IterationPath], [System.AreaPath] from WorkItemLinks where (Source.[System.TeamProject] = @project and Source.[System.AreaPath] under @project and Source.[System.IterationPath] under 'AgileProject3\\Iteration 2' and (Source.[System.WorkItemType] = 'User Story' or Source.[System.WorkItemType] = 'Task')) and [System.Links.LinkType] = 'System.LinkTypes.Hierarchy-Forward' and Target.[System.WorkItemType] = 'Task' order by [Microsoft.VSTS.Common.StackRank], [Microsoft.VSTS.Common.Priority] mode (Recursive)")]
         [TestCase("select [System.Id], [System.WorkItemType], [System.Title], [System.State], [System.AssignedTo], [Microsoft.VSTS.Scheduling.RemainingWork], [Microsoft.VSTS.Scheduling.CompletedWork], [Microsoft.VSTS.Scheduling.StoryPoints], [Microsoft.VSTS.Common.StackRank], [Microsoft.VSTS.Common.Priority], [Microsoft.VSTS.Common.Activity], [System.IterationPath], [System.AreaPath] from WorkItemLinks where (Source.[System.TeamProject] = @project and Source.[System.AreaPath] under @project and Source.[System.IterationPath] under 'AgileProject3\\Iteration 3' and (Source.[System.WorkItemType] = 'User Story' or Source.[System.WorkItemType] = 'Task')) and [System.Links.LinkType] = 'System.LinkTypes.Hierarchy-Forward' and Target.[System.WorkItemType] = 'Task' order by [Microsoft.VSTS.Common.StackRank], [Microsoft.VSTS.Common.Priority] mode (Recursive)")]
-		public void Test_Parsing(string wiql)
-		{
+        public void Test_Parsing(string wiql)
+        {
 
-			var output = Wiql.Parser.Process(wiql);
-			Assert.IsNotNull(output);
-		}
+            var output = Wiql.Parser.Process(wiql);
+            Assert.IsNotNull(output);
+        }
 
 
-	}
+    }
 }

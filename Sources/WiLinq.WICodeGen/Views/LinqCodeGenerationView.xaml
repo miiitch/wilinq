@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm ="clr-namespace:WiLinq.CodeGen.ViewModels"
              mc:Ignorable="d"
-             Height="500"
-             Width="600">
+             d:DataContext="{d:DesignInstance Type=vm:LinqCodeGenerationViewModel}"
+                Height="500"
+             Width="600" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
@@ -45,7 +47,7 @@
                               IsChecked="{Binding Path=CSharpCode}" />
                 <RadioButton  Content="VB.Net"
                               GroupName="Language"
-                              IsChecked="{Binding Path=VBNetCode}"
+                              IsChecked="{Binding Path=VbNetCode}"
                               Margin="5,0" />
             </StackPanel>
 
@@ -59,12 +61,12 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                         <CheckBox IsChecked="{Binding Path=Generate}" />
                         <TextBlock Text="{Binding Path=WorkItemType}" />
-                    </StackPanel>                    
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Grid Margin="3">
+                    <Grid Margin="3" d:DataContext="{d:DesignInstance Type=vm:ModelClassDefinitionViewModel}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition />
@@ -73,8 +75,8 @@
                                  Background="#DDEFF9"
                                  BorderThickness="1"
                                  BorderBrush="#5AC5FF">
-                            <Grid Grid.Row="0"
-                                  Margin="6">
+                            <Grid
+                                Margin="6">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="30" />
                                     <RowDefinition Height="30" />
@@ -123,7 +125,6 @@
                                             </Grid.RowDefinitions>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="{Binding ReferenceName}"
-                                                           Grid.Row="0"
                                                            VerticalAlignment="Center"
                                                            FontWeight="Bold" />
                                                 <Image Source="..\Media\Read_16.png"
@@ -142,7 +143,7 @@
                                                            FontStyle="Italic" />
                                             </StackPanel>
                                             <Grid Grid.Row="1"
-                                                  Margin="10,0,0,0">                                           
+                                                  Margin="10,0,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="100" />
                                                     <ColumnDefinition />
@@ -169,7 +170,7 @@
                         </ScrollViewer>
 
                     </Grid>
-                  
+
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

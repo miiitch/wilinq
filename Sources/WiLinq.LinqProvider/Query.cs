@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 
 namespace WiLinq.LinqProvider
 {
-    internal class Query<T> : IQueryable<T>, IQueryable, IEnumerable<T>, IEnumerable, IOrderedQueryable<T>, IOrderedQueryable       
+    internal class Query<T> : IOrderedQueryable<T>       
     {
-        IWorkItemLinqQueryProvider _provider;
-        Expression _expression;
+        readonly IWorkItemLinqQueryProvider _provider;
+        readonly Expression _expression;
         DateTime? _asOfDate;
 
         public Query(IWorkItemLinqQueryProvider provider)
@@ -24,9 +22,9 @@ namespace WiLinq.LinqProvider
 
             }
 
-            this._provider = provider;
+            _provider = provider;
 
-            this._expression = Expression.Constant(this);
+            _expression = Expression.Constant(this);
         }
 
         public Query(IWorkItemLinqQueryProvider provider, Expression expression)
@@ -47,8 +45,8 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentOutOfRangeException("expression");
             }
 
-            this._provider = provider;
-            this._expression = expression;
+            _provider = provider;
+            _expression = expression;
 
         }
 
@@ -57,7 +55,7 @@ namespace WiLinq.LinqProvider
         Expression IQueryable.Expression
         {
 
-            get { return this._expression; }
+            get { return _expression; }
 
         }
 
@@ -75,7 +73,7 @@ namespace WiLinq.LinqProvider
         IQueryProvider IQueryable.Provider
         {
 
-            get { return this._provider; }
+            get { return _provider; }
 
         }
 
@@ -84,7 +82,7 @@ namespace WiLinq.LinqProvider
         public IEnumerator<T> GetEnumerator()
         {
 
-            return ((IEnumerable<T>)this._provider.Execute(this._expression)).GetEnumerator();
+            return ((IEnumerable<T>)_provider.Execute(_expression)).GetEnumerator();
 
         }
 
@@ -93,7 +91,7 @@ namespace WiLinq.LinqProvider
         IEnumerator IEnumerable.GetEnumerator()
         {
 
-            return ((IEnumerable)this._provider.Execute(this._expression)).GetEnumerator();
+            return ((IEnumerable)_provider.Execute(_expression)).GetEnumerator();
 
         }
 
@@ -102,13 +100,13 @@ namespace WiLinq.LinqProvider
         public override string ToString()
         {
 
-            return this._provider.GetQueryText(this._expression);
+            return _provider.GetQueryText(_expression);
 
         }
 
         public static TPCQuery TransformAsWorkItemQuery(IQueryable<T> query)
         {
-            Query<T> wiQuery = query as Query<T>;
+            var wiQuery = query as Query<T>;
             if (wiQuery == null)
             {
                 return null;

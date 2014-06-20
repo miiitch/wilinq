@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Linq.Expressions;
 
 namespace WiLinq.LinqProvider.Extensions
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class WorkItemTypeAttribute : Attribute
     {
-        private string _typeName;
+        private readonly string _typeName;
 
         public WorkItemTypeAttribute(string typeName)
         {

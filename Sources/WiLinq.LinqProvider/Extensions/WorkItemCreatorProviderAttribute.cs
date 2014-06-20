@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WiLinq.LinqProvider.Extensions
 {
@@ -11,7 +8,7 @@ namespace WiLinq.LinqProvider.Extensions
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class WorkItemCreatorProviderAttribute : Attribute
     {
-        private Type _creator;
+        private readonly Type _creator;
 
         public WorkItemCreatorProviderAttribute(Type creator)
         {

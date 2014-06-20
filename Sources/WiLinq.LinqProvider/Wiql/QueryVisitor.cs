@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace WiLinq.LinqProvider.Wiql
 {
@@ -71,7 +69,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         protected virtual OrderStatement VisitOrderStatement(OrderStatement orderStatement)
         {
-            return new OrderStatement()
+            return new OrderStatement
             {
                 Field = orderStatement.Field,
                 IsAscending = orderStatement.IsAscending

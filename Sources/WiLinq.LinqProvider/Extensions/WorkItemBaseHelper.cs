@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -14,7 +12,7 @@ namespace WiLinq.LinqProvider.Extensions
 
         public T CreateItem(WorkItem workitem)
         {
-            var ret = new T()
+            var ret = new T
             {
                 WorkItem = workitem
             };
@@ -25,30 +23,27 @@ namespace WiLinq.LinqProvider.Extensions
 
         #region ILinqResolver Members
 
-        public WorkItemFieldInfo Resolve(System.Reflection.MemberInfo memberInfo)
+        public WorkItemFieldInfo Resolve(MemberInfo memberInfo)
         {
-            if (memberInfo is PropertyInfo)
-            {
-                var pInfo = (PropertyInfo)memberInfo;
-
-                var attributes = pInfo.GetCustomAttributes(typeof(FieldAttribute), true) as FieldAttribute[];
-
-                if (attributes.Length != 1)
-                {
-                    throw new InvalidOperationException("Metadata missing on property " + pInfo.Name);
-                }
-                return new WorkItemFieldInfo()
-                {
-                     Name = attributes[0].ReferenceName,
-                     Type = pInfo.PropertyType
-
-                };
-
-            }
-            else
+            var propertyInfo = memberInfo as PropertyInfo;
+            if (propertyInfo == null)
             {
                 throw new NotImplementedException();
             }
+            var pInfo = propertyInfo;
+
+            var attributes = pInfo.GetCustomAttributes(typeof(FieldAttribute), true) as FieldAttribute[];
+
+            if (attributes == null || attributes.Length != 1)
+            {
+                throw new InvalidOperationException("Metadata missing on property " + pInfo.Name);
+            }
+            return new WorkItemFieldInfo
+            {
+                Name = attributes[0].ReferenceName,
+                Type = pInfo.PropertyType
+
+            };
         }
 
         public WorkItemFieldInfo Resolve(string workItemParameterName, MethodCallExpression methodCall)
@@ -60,18 +55,26 @@ namespace WiLinq.LinqProvider.Extensions
         {
             if (methodCall.Method.Name == "IsUnderIteration")
             {
-                string refName = SystemField.IterationPath;
-                string op = isInNotBlock ? "not under" : "under";
+                const string refName = SystemField.IterationPath;
+                var op = isInNotBlock ? "not under" : "under";
                 var valEx = methodCall.Arguments[0] as ConstantExpression;
+                if (valEx == null)
+                {
+                    throw new InvalidOperationException();
+                }
                 var val = valEx.Value as string;
                 return new Tuple<string, string, string>(refName, op, val);
 
             }
-            else if (methodCall.Method.Name == "IsUnderArea")
+            if (methodCall.Method.Name == "IsUnderArea")
             {
-                string refName = SystemField.AreaPath;
-                string op = isInNotBlock ? "not under" : "under";
-                var valEx = methodCall.Arguments[0] as ConstantExpression;
+                const string refName = SystemField.AreaPath;
+                var op = isInNotBlock ? "not under" : "under";
+                var valEx = methodCall.Arguments[0] as ConstantExpression;                
+                if (valEx == null)
+                {
+                    throw new InvalidOperationException();
+                }
                 var val = valEx.Value as string;
                 return new Tuple<string, string, string>(refName, op, val);
             }

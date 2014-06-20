@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace  WiLinq.LinqProvider.Extensions
 {
     public static class WorkItemValueConverterRepository
     {
-        private static Dictionary<Type, WorkItemValueConverter> _converterDictionary = new Dictionary<Type, WorkItemValueConverter>();
+        private static readonly Dictionary<Type, WorkItemValueConverter> _converterDictionary = new Dictionary<Type, WorkItemValueConverter>();
 
         static WorkItemValueConverterRepository()
         {
@@ -33,7 +30,7 @@ namespace  WiLinq.LinqProvider.Extensions
 
         internal static WorkItemValueConverter GetConverter(Type type)
         {
-            WorkItemValueConverter result = null;
+            WorkItemValueConverter result;
 
             _converterDictionary.TryGetValue(type, out result);
 

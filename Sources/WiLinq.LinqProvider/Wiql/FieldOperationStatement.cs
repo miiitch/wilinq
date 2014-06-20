@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace WiLinq.LinqProvider.Wiql
 {
@@ -29,7 +27,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         protected internal override string ConvertToQueryValue()
         {
-            string field = string.Format("[{0}]",this.Field);
+            var field = string.Format("[{0}]",Field);
             switch (FieldType)
             {
                 case FieldType.Default:                    

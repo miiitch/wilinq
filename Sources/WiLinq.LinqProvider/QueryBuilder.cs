@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -16,21 +14,21 @@ namespace WiLinq.LinqProvider
     /// </summary>
     internal class QueryBuilder
     {
-        private const string MACROFORMAT = "P{0}";
-        private const string DEFAULTCOLUMN = "[System.Id]";
+        private const string MACRO_FORMAT = "P{0}";
+        private const string DEFAULT_COLUMN = "[System.Id]";
 
-        private List<string> _selectFieldList = null;
-        private List<string> _whereList = new List<string>();
-        private List<string> _orderbyList = new List<string>();
-        private int _macroIndex = 0;
-        private QueryType _queryType;
+        private readonly List<string> _selectFieldList = null;
+        private readonly List<string> _whereList = new List<string>();
+        private readonly List<string> _orderbyList = new List<string>();
+        private int _macroIndex;
+        private readonly QueryType _queryType;
         private QueryLinkMode _queryLinkMode;
         
 
         private TPCQuery _query;
         
 
-        private Dictionary<string, object> _macroDictionnary = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _macroDictionnary = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
@@ -76,7 +74,7 @@ namespace WiLinq.LinqProvider
         /// <returns></returns>
         public string GenerateMacro(object value)
         {
-            string macroName = String.Format(MACROFORMAT,_macroIndex);
+            var macroName = String.Format(MACRO_FORMAT,_macroIndex);
             _macroIndex++;
             _macroDictionnary.Add(macroName, value);
             return "@" + macroName;
@@ -95,7 +93,7 @@ namespace WiLinq.LinqProvider
             {
                 return _query;
             }
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             
             if (project != null)
             {
@@ -105,7 +103,7 @@ namespace WiLinq.LinqProvider
             builder.Append("SELECT ");
             if (_selectFieldList == null)
             {
-                builder.Append(DEFAULTCOLUMN);
+                builder.Append(DEFAULT_COLUMN);
             }
             else
             {
@@ -156,7 +154,7 @@ namespace WiLinq.LinqProvider
                 }
             }
 
-            string wiql = builder.ToString();
+            var wiql = builder.ToString();
 
             _query = new TPCQuery(tpc, wiql, _macroDictionnary, _queryType);
             return _query;

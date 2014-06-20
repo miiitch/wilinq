@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Linq.Expressions;
@@ -12,14 +10,15 @@ namespace WiLinq.LinqProvider
 {
     internal class WorkItemLinqQueryProvider<T> : IWorkItemLinqQueryProvider where T:class
     {
-        TfsTeamProjectCollection _tpc;
-        Project _project;
+        readonly TfsTeamProjectCollection _tpc;
+        readonly Project _project;
+        readonly ICustomWorkItemHelper<T> _creatorProvider;
         DateTime? _asOfDate;
-        ICustomWorkItemHelper<T> _creatorProvider;
+        
 
-        IQueryable<S> IQueryProvider.CreateQuery<S>(Expression expression)
+        IQueryable<TOutput> IQueryProvider.CreateQuery<TOutput>(Expression expression)
         {
-            return new Query<S>(this, expression);
+            return new Query<TOutput>(this, expression);
         }
 
         IQueryable IQueryProvider.CreateQuery(Expression expression)
@@ -27,20 +26,19 @@ namespace WiLinq.LinqProvider
             throw new NotSupportedException();
         }
 
-        S IQueryProvider.Execute<S>(Expression expression)
+        TOutput IQueryProvider.Execute<TOutput>(Expression expression)
         {
-            return (S)this.Execute(expression);
+            return (TOutput)Execute(expression);
         }
 
         object IQueryProvider.Execute(Expression expression)
         {
 
-            return this.Execute(expression);
+            return Execute(expression);
 
         }
 
         public WorkItemLinqQueryProvider(TfsTeamProjectCollection tpc, Project project, ICustomWorkItemHelper<T> creatorProvider)
-            : base()
         {
             if (tpc == null)
             {
@@ -77,29 +75,17 @@ namespace WiLinq.LinqProvider
             throw new NotImplementedException();
         }
 
-        private List<TResult> ApplySelect<TResult>(T[] wiArray, Func<T, TResult> deleg)
-        {
-            List<TResult> result = new List<TResult>();
-
-            foreach (var wi in wiArray)
-            {
-                result.Add(deleg(wi));
-            }
-
-            return result;
-        }
-
         public object Execute(Expression expression)
         {
            
-            QueryTranslator translator = new QueryTranslator(_creatorProvider);
-            QueryBuilder queryBuilder = translator.Translate(expression);
+            var translator = new QueryTranslator(_creatorProvider);
+            var queryBuilder = translator.Translate(expression);
 
             ConfigureExtraFilters(queryBuilder);
 
-            TPCQuery query = queryBuilder.BuildQuery(_tpc, _project, _asOfDate);
+            var query = queryBuilder.BuildQuery(_tpc, _project, _asOfDate);
 
-            WorkItem[] tmpResult = query.GetWorkItems();
+            var tmpResult = query.GetWorkItems();
 
             T[] wiResult;
             if (_creatorProvider != null)
@@ -121,17 +107,15 @@ namespace WiLinq.LinqProvider
             {
                 return wiResult;
             }
-            else
-            {
-                Delegate deleg = queryBuilder.SelectLambda.Compile();
 
-                MethodInfo applySelect = this.GetType().GetMethod("ApplySelect", BindingFlags.NonPublic | BindingFlags.Instance);
+            var deleg = queryBuilder.SelectLambda.Compile();
 
-                MethodInfo applySelectGeneric = applySelect.MakeGenericMethod(deleg.Method.ReturnType);
+            var applySelect = GetType().GetMethod("ApplySelect", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                object resultList = applySelectGeneric.Invoke(this, new object[] { wiResult, deleg });
-                return resultList;
-            }
+            var applySelectGeneric = applySelect.MakeGenericMethod(deleg.Method.ReturnType);
+
+            var resultList = applySelectGeneric.Invoke(this, new object[] { wiResult, deleg });
+            return resultList;
         }
 
         private void ConfigureExtraFilters(QueryBuilder queryBuilder)
@@ -141,7 +125,7 @@ namespace WiLinq.LinqProvider
                 queryBuilder.AddWhereClause(SystemField.Project + " = @project");
             }
 
-            WorkItemTypeAttribute[] attribs = typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
+            var attribs = typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
 
             if (attribs != null && attribs.Length == 1)
             {
@@ -169,6 +153,7 @@ namespace WiLinq.LinqProvider
                 _asOfDate = value;
             }
         }
+        // ReSharper disable once InconsistentNaming
         public TfsTeamProjectCollection TPC
         {
             get

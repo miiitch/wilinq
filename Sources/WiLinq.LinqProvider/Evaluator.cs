@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 
 namespace WiLinq.LinqProvider
 {
@@ -31,7 +27,7 @@ namespace WiLinq.LinqProvider
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(Expression expression)
         {
-            return PartialEval(expression, Evaluator.CanBeEvaluatedLocally);
+            return PartialEval(expression, CanBeEvaluatedLocally);
         }
 
 
@@ -51,18 +47,18 @@ namespace WiLinq.LinqProvider
 
         class SubtreeEvaluator : ExpressionVisitor
         {
-            HashSet<Expression> candidates;
+            readonly HashSet<Expression> _candidates;
 
             internal SubtreeEvaluator(HashSet<Expression> candidates)
             {
 
-                this.candidates = candidates;
+                _candidates = candidates;
 
             }
 
             internal Expression Eval(Expression exp)
             {
-                return this.Visit(exp);
+                return Visit(exp);
             }
 
 
@@ -75,9 +71,9 @@ namespace WiLinq.LinqProvider
                     return null;
                 }
 
-                if (this.candidates.Contains(exp))
+                if (_candidates.Contains(exp))
                 {
-                    return this.Evaluate(exp);
+                    return Evaluate(exp);
                 }
 
                 return base.Visit(exp);
@@ -95,7 +91,7 @@ namespace WiLinq.LinqProvider
 
                 }
 
-                    MemberExpression me = e as MemberExpression;
+                    var me = e as MemberExpression;
 
                 if (me != null)
                 {
@@ -105,11 +101,11 @@ namespace WiLinq.LinqProvider
                     }
                 }
 
-                LambdaExpression lambda = Expression.Lambda(e);
+                var lambda = Expression.Lambda(e);
 
-                Delegate fn = lambda.Compile();
+                var fn = lambda.Compile();
 
-                object originalValue = fn.DynamicInvoke(null);
+                var originalValue = fn.DynamicInvoke(null);
             
 
                 return Expression.Constant(originalValue, e.Type);
@@ -130,19 +126,18 @@ namespace WiLinq.LinqProvider
 
         private class Nominator : ExpressionVisitor
         {
+            readonly Func<Expression, bool> _fnCanBeEvaluated;
 
-            Func<Expression, bool> fnCanBeEvaluated;
+            HashSet<Expression> _candidates;
 
-            HashSet<Expression> candidates;
-
-            bool cannotBeEvaluated;
+            bool _cannotBeEvaluated;
 
 
 
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
 
-                this.fnCanBeEvaluated = fnCanBeEvaluated;
+                _fnCanBeEvaluated = fnCanBeEvaluated;
 
             }
 
@@ -151,11 +146,11 @@ namespace WiLinq.LinqProvider
             internal HashSet<Expression> Nominate(Expression expression)
             {
 
-                this.candidates = new HashSet<Expression>();
+                _candidates = new HashSet<Expression>();
 
-                this.Visit(expression);
+                Visit(expression);
 
-                return this.candidates;
+                return _candidates;
 
             }
 
@@ -163,38 +158,34 @@ namespace WiLinq.LinqProvider
 
             public override Expression Visit(Expression expression)
             {
+                if (expression == null) return null;
 
-                if (expression != null)
+                var saveCannotBeEvaluated = _cannotBeEvaluated;
+
+                _cannotBeEvaluated = false;
+
+                base.Visit(expression);
+
+                if (!_cannotBeEvaluated)
                 {
 
-                    bool saveCannotBeEvaluated = this.cannotBeEvaluated;
-
-                    this.cannotBeEvaluated = false;
-
-                    base.Visit(expression);
-
-                    if (!this.cannotBeEvaluated)
+                    if (_fnCanBeEvaluated(expression))
                     {
 
-                        if (this.fnCanBeEvaluated(expression))
-                        {
-
-                            this.candidates.Add(expression);
-
-                        }
-
-                        else
-                        {
-
-                            this.cannotBeEvaluated = true;
-
-                        }
+                        _candidates.Add(expression);
 
                     }
 
-                    this.cannotBeEvaluated |= saveCannotBeEvaluated;
+                    else
+                    {
+
+                        _cannotBeEvaluated = true;
+
+                    }
 
                 }
+
+                _cannotBeEvaluated |= saveCannotBeEvaluated;
 
                 return expression;
 

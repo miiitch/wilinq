@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace WiLinq.LinqProvider.Wiql
 {
     public sealed  class BooleanOperationStatement : WhereStatement
     {
-        private const string STR_And = "And";
-        private const string STR_Or = "Or";
+        private const string STR_AND = "And";
+        private const string STR_OR = "Or";
         public WhereStatement Left {  get; private set; }
         public WhereStatement Right { get; private set; }
         public BooleanOperationStatementType Type {  get; private set; }
@@ -31,10 +29,10 @@ namespace WiLinq.LinqProvider.Wiql
             switch (Type)
             {
                 case BooleanOperationStatementType.And:
-                    op = STR_And;
+                    op = STR_AND;
                     break;
                 case BooleanOperationStatementType.Or:
-                    op = STR_Or;
+                    op = STR_OR;
                     break;
                 default:
                     throw new NotSupportedException();

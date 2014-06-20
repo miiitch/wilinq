@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Linq.Expressions;
 
 namespace WiLinq.LinqProvider.Extensions
 {
@@ -20,11 +15,6 @@ namespace WiLinq.LinqProvider.Extensions
     [IgnoreField(SystemField.NodeName)]
     public abstract class WorkItemBase
     {
-        public WorkItemBase()
-        {
-
-        }
-
         private WorkItem _workItem;
 
         public WorkItem WorkItem
@@ -63,9 +53,9 @@ namespace WiLinq.LinqProvider.Extensions
             {
                 return _workItem.Field<string>(SystemField.AssignedTo);
             }
-            set
+            set 
             {
-                var isValid = _workItem.SetField(SystemField.AssignedTo, value);
+                _workItem.SetField(SystemField.AssignedTo, value);
             }
         }
 
@@ -170,7 +160,7 @@ namespace WiLinq.LinqProvider.Extensions
             }
             set
             {
-                WorkItem.History = null;
+                WorkItem.History = value;
             }
         }
 

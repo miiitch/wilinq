@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace WiLinq.LinqProvider.Wiql
 {
@@ -11,10 +9,10 @@ namespace WiLinq.LinqProvider.Wiql
         /// <summary>
         /// Initializes a new instance of the StringValueStatement class.
         /// </summary>
-        internal StringValueStatement(string value):base()
+        internal StringValueStatement(string value)
         {
             if (value == null)
-                throw new ArgumentNullException("value is null.", "value");
+                throw new ArgumentNullException("value", "value");
             Value = value;
         }
         internal StringValueStatement():this(string.Empty)

@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using WiLinq.LinqProvider.Extensions;
@@ -49,19 +45,19 @@ namespace WiLinq.LinqProvider
         /// Extends the project for a specific work item type LINQ Query.
         /// </summary>
         /// <typeparam name="T">Type of work item</typeparam>
-        /// <typeparam name="U">Related creator provider</typeparam>
+        /// <typeparam name="THelper">Related creator provider</typeparam>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static IQueryable<T> SetOf<T, U>(this Project project)
+        public static IQueryable<T> SetOf<T, THelper>(this Project project)
             where T : WorkItemBase
-            where U : ICustomWorkItemHelper<T>, new()
+            where THelper : ICustomWorkItemHelper<T>, new()
         {
             if (project == null)
             {
                 throw new ArgumentNullException("project");
             }           
 
-            return new Query<T>(new WorkItemLinqQueryProvider<T>(project,new U()));
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(project,new THelper()));
         }
 
         /// <summary>
@@ -111,7 +107,7 @@ namespace WiLinq.LinqProvider
 
             var whereSourceTranslator = new WhereClauseTranslator(new TFSWorkItemHelper(), "Source");
 
-            string sourceFilter = whereSourceTranslator.Translate(sourceLambda.Body, qb, sourceLambda.Parameters[0].Name);
+            var sourceFilter = whereSourceTranslator.Translate(sourceLambda.Body, qb, sourceLambda.Parameters[0].Name);
 
             if (!string.IsNullOrEmpty(sourceFilter))
             {
@@ -119,9 +115,9 @@ namespace WiLinq.LinqProvider
             }
 
 
-            var whereTargetTranslator = new WhereClauseTranslator(new TFSWorkItemHelper(), "Source");
+            var whereTargetTranslator = new WhereClauseTranslator(new TFSWorkItemHelper(), "Target");
 
-            string targetFilter = whereTargetTranslator.Translate(sourceLambda.Body, qb, sourceLambda.Parameters[0].Name);
+            var targetFilter = whereTargetTranslator.Translate(sourceLambda.Body, qb, targetLambda.Parameters[0].Name);
 
             if (!string.IsNullOrEmpty(targetFilter))
             {
@@ -129,8 +125,7 @@ namespace WiLinq.LinqProvider
             }
 
             qb.AddQueryLinkMode(mode);
-
-            var store = tpc.GetService(typeof(WorkItemStore)) as WorkItemStore;
+            
 
             var q = qb.BuildQuery(tpc, null, null);
             
@@ -182,7 +177,7 @@ namespace WiLinq.LinqProvider
                 throw new InvalidOperationException(String.Format("Type '{0}' does not have a the needed attributes", typeof(T)));
             }
 
-            var ret = new T()
+            var ret = new T
             {
                 WorkItem = wi
             };

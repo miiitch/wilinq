@@ -48,9 +48,8 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.TeamFoundation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -77,12 +76,12 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CodeGeration\Engine.cs" />
-    <Compile Include="CodeGeration\FieldSeparator.cs" />
-    <Compile Include="CodeGeration\GenerationException.cs" />
-    <Compile Include="CodeGeration\ModelClassDefinition.cs" />
-    <Compile Include="CodeGeration\ModelDefinition.cs" />
-    <Compile Include="CodeGeration\ModelFieldDefinition.cs" />
+    <Compile Include="CodeGeneration\Engine.cs" />
+    <Compile Include="CodeGeneration\FieldSeparator.cs" />
+    <Compile Include="CodeGeneration\GenerationException.cs" />
+    <Compile Include="CodeGeneration\ModelClassDefinition.cs" />
+    <Compile Include="CodeGeneration\ModelDefinition.cs" />
+    <Compile Include="CodeGeneration\ModelFieldDefinition.cs" />
     <Compile Include="ViewModels\LinqCodeGenerationViewModel.cs" />
     <Compile Include="ViewModels\ModelClassDefinitionViewModel.cs" />
     <Compile Include="ViewModels\PropertyDefinitionViewModel.cs" />

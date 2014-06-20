@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WiLinq.CodeGen.CodeGeneration
 {
@@ -15,7 +12,7 @@ namespace WiLinq.CodeGen.CodeGeneration
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerationException"/> class.
         /// </summary>
-        public GenerationException(): base()
+        public GenerationException()
         {
 
         }

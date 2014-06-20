@@ -1,107 +1,101 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace WiLinq.LinqProvider
 {
-	internal sealed class TFSWorkItemHelper : ICustomWorkItemHelper<WorkItem>
-	{
+    // ReSharper disable once InconsistentNaming
+    internal sealed class TFSWorkItemHelper : ICustomWorkItemHelper<WorkItem>
+    {
 
-		#region ICustomWorkItemHelper<WorkItem> Members
+        #region ICustomWorkItemHelper<WorkItem> Members
 
-		public WorkItem CreateItem(WorkItem workitem)
-		{
-			return workitem;
-		}
+        public WorkItem CreateItem(WorkItem workitem)
+        {
+            return workitem;
+        }
 
-		public WorkItemFieldInfo Resolve(MemberInfo memberInfo)
-		{
-			if (memberInfo.MemberType == MemberTypes.Property)
-			{
-				var prop = memberInfo as PropertyInfo;
-				if (prop == null)
-				{
-					throw new InvalidOperationException();
-				}
+        public WorkItemFieldInfo Resolve(MemberInfo memberInfo)
+        {
+            if (memberInfo.MemberType == MemberTypes.Property)
+            {
+                var prop = memberInfo as PropertyInfo;
+                if (prop == null)
+                {
+                    throw new InvalidOperationException();
+                }
 
-				switch (prop.Name)
-				{
-					case "Title":
-						return WorkItemFieldInfo.CreateStringField(SystemField.Title);
-					case "State":
-						return WorkItemFieldInfo.CreateStringField(SystemField.State);
-					case "WorkItemType":
-						return WorkItemFieldInfo.CreateStringField(SystemField.WorkItemType);
-					case "ChangedBy":
-						return WorkItemFieldInfo.CreateStringField(SystemField.ChangedBy);
-					case "ChangedDate":
-						return WorkItemFieldInfo.CreateDateField(SystemField.ChangedDate);
-					case "CreatedBy":
-						return WorkItemFieldInfo.CreateStringField(SystemField.CreatedBy);
-					case "CreatedDate":
-						return WorkItemFieldInfo.CreateDateField(SystemField.CreatedDate);
-					case "Description":
-						return WorkItemFieldInfo.CreateStringField(SystemField.Description);
-					case "Reason":
-						return WorkItemFieldInfo.CreateStringField(SystemField.Reason);
-					case "Id":
-						return WorkItemFieldInfo.CreateIntField(SystemField.Id);
-					default:
-						return null;
-				}
-			}
-			else
-			{
-				return null;
-			}
-		}
+                switch (prop.Name)
+                {
+                    case "Title":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.Title);
+                    case "State":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.State);
+                    case "WorkItemType":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.WorkItemType);
+                    case "ChangedBy":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.ChangedBy);
+                    case "ChangedDate":
+                        return WorkItemFieldInfo.CreateDateField(SystemField.ChangedDate);
+                    case "CreatedBy":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.CreatedBy);
+                    case "CreatedDate":
+                        return WorkItemFieldInfo.CreateDateField(SystemField.CreatedDate);
+                    case "Description":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.Description);
+                    case "Reason":
+                        return WorkItemFieldInfo.CreateStringField(SystemField.Reason);
+                    case "Id":
+                        return WorkItemFieldInfo.CreateIntField(SystemField.Id);
+                    default:
+                        return null;
+                }
+            }
+            return null;
+        }
 
- 
-		public WorkItemFieldInfo Resolve(string workItemParameterName, MethodCallExpression methodCall)
-		{
-			if (methodCall.Method.DeclaringType == typeof(TFSWorkItemExtensions) && 
-				methodCall.Method.Name == "Field" && 
-				methodCall.Arguments.Count == 2 && 
-				methodCall.Method.IsGenericMethod)
-			{
-				var wiParam = methodCall.Arguments[0] as ParameterExpression;
-				if (wiParam == null || wiParam.Name != workItemParameterName)
-				{
-					throw new InvalidOperationException("Invalid Expression");
-				}
 
-				var fieldName = methodCall.Arguments[1] as ConstantExpression;
+        public WorkItemFieldInfo Resolve(string workItemParameterName, MethodCallExpression methodCall)
+        {
+            if (methodCall.Method.DeclaringType == typeof(TFSWorkItemExtensions) &&
+                methodCall.Method.Name == "Field" &&
+                methodCall.Arguments.Count == 2 &&
+                methodCall.Method.IsGenericMethod)
+            {
+                var wiParam = methodCall.Arguments[0] as ParameterExpression;
+                if (wiParam == null || wiParam.Name != workItemParameterName)
+                {
+                    throw new InvalidOperationException("Invalid Expression");
+                }
 
-				if (fieldName == null && fieldName.Type == typeof(string))
-				{
-					throw new InvalidOperationException("Invalid Expression");
-				}
+                var fieldName = methodCall.Arguments[1] as ConstantExpression;
 
-				var returnType = methodCall.Method.GetGenericArguments()[0];
+                if (fieldName == null || fieldName.Type != typeof(string))
+                {
+                    throw new InvalidOperationException("Invalid Expression");
+                }
 
-				return new WorkItemFieldInfo()
-				{
-					Name = fieldName.Value as string,
-					Type = returnType
-				};
+                var returnType = methodCall.Method.GetGenericArguments()[0];
 
-			}
-			return null;
-		}
+                return new WorkItemFieldInfo
+                {
+                    Name = fieldName.Value as string,
+                    Type = returnType
+                };
 
-		public Tuple<string, string, string> Resolve(MethodCallExpression methodCall, bool isInNotBlock)
-		{
-			throw new NotImplementedException();
-		}
-		#endregion
-	}
+            }
+            return null;
+        }
+
+        public Tuple<string, string, string> Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+    }
 
 
 
-	
+
 }

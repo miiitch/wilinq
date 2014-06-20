@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Linq.Expressions;
-using System.Reflection;
+﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace WiLinq.LinqProvider
 {
-    public interface ICustomWorkItemHelper<T> : ILinqResolver
+    public interface ICustomWorkItemHelper<out T> : ILinqResolver
         where T: class
     {
         T CreateItem(WorkItem workitem);        

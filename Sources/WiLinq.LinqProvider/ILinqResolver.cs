@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -18,6 +13,7 @@ namespace WiLinq.LinqProvider
         /// Resolve method on methodcall on the workitem type itself
         /// </summary>
         /// <param name="methodCall"></param>
+        /// <param name="isInNotBlock"></param>
         /// <returns></returns>
         Tuple<string, string, string> Resolve(MethodCallExpression methodCall, bool isInNotBlock);
     }

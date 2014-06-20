@@ -1,23 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Linq.Expressions;
 
 namespace WiLinq.LinqProvider
 {
     /// <summary>
     /// This is the result of a WI Linq Query.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     internal class TPCQuery
     {
 
-        private string _wiql;
-        private TfsTeamProjectCollection _tpc;
-        Dictionary<string, object> _defaultParameters;
-        private QueryType _type;
+        private readonly string _wiql;
+        private readonly TfsTeamProjectCollection _tpc;
+        readonly Dictionary<string, object> _defaultParameters;
+        private readonly QueryType _type;
 
         public TPCQuery(TfsTeamProjectCollection tpc, string wiql, Dictionary<string, object> defaultParameters, QueryType type)
         {

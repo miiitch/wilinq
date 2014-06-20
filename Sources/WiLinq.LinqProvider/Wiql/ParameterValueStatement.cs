@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class ParameterValueStatement : ValueStatement
     {
-        private string _parameterName;
+        private readonly string _parameterName;
 
-        internal ParameterValueStatement(string parameterName):base()
+        internal ParameterValueStatement(string parameterName)
         {
             _parameterName = parameterName;
         }
