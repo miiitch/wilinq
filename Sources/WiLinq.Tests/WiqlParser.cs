@@ -132,6 +132,15 @@ namespace WiLinq.Tests
         }
 
         [Test]
+        public void Test_Select_Query_Not_In_Group_Statement()
+        {
+
+            const string query = "SELECT [System.ID] from Workitems where  [System.WorkItemType] NOT IN GROUP 'Bug Category' ";
+            // ReSharper disable once UnusedVariable
+            var output = Wiql.Parser.Process(query);
+        }
+
+        [Test]
         public void Test_Query_In_Statement()
         {
 

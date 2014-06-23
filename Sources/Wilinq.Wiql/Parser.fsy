@@ -118,6 +118,7 @@ Operator:
 | DIFF		{ WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsDifferent }
 | IN		{ WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsIn }
 | IN GROUP  { WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsInGroup }
+| NOT IN GROUP  { WiLinq.LinqProvider.Wiql.FieldOperationStatementType.IsNotInGroup }
 
 ValueStatement:
 | INT								{ WiLinq.LinqProvider.Wiql.ValueStatement.Create($1) }
