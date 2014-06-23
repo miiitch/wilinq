@@ -3,15 +3,15 @@
 	<metadata>
 		<id>Wilinq</id>
 		<version>$version$</version>
-		<title>Linq provider for TFS 2012 workitems</title>
+		<title>Linq provider for TFS 2013 workitems</title>
 		<authors>Michel Perfetti</authors>
 		<owners>Michel Perfetti</owners>
 		<licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
 		<projectUrl>https://wilinq.codeplex.com</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>WiLinq is a workitem linq provider targeting TFS 2012 API</description>
+		<description>WiLinq is a workitem linq provider targeting TFS 2013 API</description>
 		<releaseNotes>Development version</releaseNotes>
-		<copyright>Copyright 2013</copyright>
+		<copyright>Copyright 2014</copyright>
 		<tags>Linq WorkItem TFS</tags>
 		<dependencies>
 			<group targetFramework="net45">
