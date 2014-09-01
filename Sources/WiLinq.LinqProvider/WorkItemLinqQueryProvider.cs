@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -62,6 +63,10 @@ namespace WiLinq.LinqProvider
 
         }
 
+        private IEnumerable<TResult> ApplySelect<TResult>(T[] workItems, Func<T, TResult> select)
+        {
+            return workItems.Select(select);
+        }
 
         public string GetQueryText(Expression expression)
         {

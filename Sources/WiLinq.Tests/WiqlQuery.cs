@@ -16,12 +16,33 @@ namespace WiLinq.Tests
         [TestFixtureSetUp]
         public void SetUp()
         {
-            const string collectionUrl = "http://localhost:8080/tfs/DefaultCollection";
+            var collectionUrl = Environment.GetEnvironmentVariable("WILINQ_TEST_TPCURL");
+
+            if (string.IsNullOrWhiteSpace(collectionUrl))
+            {
+                collectionUrl = "http://localhost:8080/tfs/DefaultCollection";
+            }
+
+
 
             _tpc = new TfsTeamProjectCollection(new Uri(collectionUrl));
 
             _tpc.Authenticate();
-            _project = _tpc.GetService<WorkItemStore>().Projects.Cast<Project>().First();
+
+            var projectName = Environment.GetEnvironmentVariable("WILINQ_TEST_PROJECTNAME");
+
+            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+            if (string.IsNullOrWhiteSpace(projectName))
+            {
+                _project = _tpc.GetService<WorkItemStore>().Projects.Cast<Project>().First();
+            }
+            else
+            {
+
+                _project = _tpc.GetService<WorkItemStore>().Projects.Cast<Project>().First(_ => _.Name == projectName);
+            }
+
+
 
         }
 
@@ -36,6 +57,17 @@ namespace WiLinq.Tests
 
             // ReSharper disable once UnusedVariable
             var result = allWiQuery.ToList();
+        }
+
+        [Test]
+        public void ProjectQueryAllWorkitems()
+        {
+            //all workitems;
+            var projectWiQuery = from workitem in _project.WorkItemSet()
+                                 select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = projectWiQuery.ToList();
         }
 
         [Test]
