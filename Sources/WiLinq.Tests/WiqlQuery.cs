@@ -83,11 +83,42 @@ namespace WiLinq.Tests
         }
 
         [Test]
-        public void QueryWithFieldMethod()
+        public void Query_With_Field_Value_As_A_WI_Field()
+        {
+            var projectWiQuery = from workitem in _project.WorkItemSet()
+                                 where workitem.CreatedBy ==workitem.ChangedBy
+                                 select workitem;
+            // ReSharper disable once UnusedVariable
+            var result = projectWiQuery.ToList();
+        }
+
+        [Test]
+        public void Query_With_Field_Value_As_AWI_Field_With_Field_Method()
+        {
+            var projectWiQuery = from workitem in _project.WorkItemSet()
+                                 where workitem.CreatedBy == workitem.Field<string>("System.AssignedTo")
+                                 select workitem;
+            // ReSharper disable once UnusedVariable
+            var result = projectWiQuery.ToList();
+        }
+
+        [Test]
+        public void Query_With_Field_Method()
         {
             var projectWiQuery = from workitem in _project.WorkItemSet()
                                  where workitem.Title.Contains("Build")
-                                 && workitem.Field<string>("System.AssignedTo") == "Michel Perfetti"
+                                 && workitem.Field<string>("System.AssignedTo") == "John Doe"
+                                 select workitem;
+            // ReSharper disable once UnusedVariable
+            var result = projectWiQuery.ToList();
+        }
+
+
+        [Test]
+        public void Query_With_QueryConstant_Me()
+        {
+            var projectWiQuery = from workitem in _project.WorkItemSet()
+                                 where workitem.CreatedBy == QueryConstant.Me                                 
                                  select workitem;
             // ReSharper disable once UnusedVariable
             var result = projectWiQuery.ToList();

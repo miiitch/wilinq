@@ -282,10 +282,6 @@ namespace WiLinq.LinqProvider
 
             if ((param != null) && (param.Name == _parameterName))
             {
-                if (CurrentLocation != WhereLocation.LeftOperatorClause)
-                {
-                    throw new NotSupportedException("Member position not supported");
-                }
 
                 if (_resolver == null)
                 {
@@ -366,128 +362,153 @@ namespace WiLinq.LinqProvider
             }
             // ReSharper restore ConditionIsAlwaysTrueOrFalse
             // ReSharper restore HeuristicUnreachableCode
-            if (CurrentLocation == WhereLocation.LeftOperatorClause)
+            switch (CurrentLocation)
             {
-                var fieldInfo = _resolver.Resolve(_parameterName, m);
-                if (fieldInfo != null)
-                {
-                    if (_prefix != null)
+                case WhereLocation.LeftOperatorClause:
                     {
-                        _builder.AppendFormat("[{0}].[{1}]", _prefix, fieldInfo.Name);
-                    }
-                    else
-                    {
-                        _builder.Append(fieldInfo.Name);
-                    }
-                }
-                else
-                {
-                    throw new NotSupportedException("Invalid expression");
-                }
-
-            }
-            else
-            {
-
-
-                var handled = false;
-                var argCount = m.Arguments.Count;
-
-                if (m.Object == null)
-                {
-                    if (m.Method.Name == "Is" &&
-                        m.Arguments.Count == 1 &&
-                        IsWhereParameter(m.Arguments[0]) &&
-                        m.Method.DeclaringType == typeof(QueryExtender) &&
-                        m.Method.IsGenericMethod)
-                    {
-                        var genericParameters = m.Method.GetGenericArguments();
-                        if (genericParameters.Length != 1)
+                        var fieldInfo = _resolver.Resolve(_parameterName, m);
+                        if (fieldInfo != null)
                         {
-                            throw new InvalidOperationException("Invalid 'Is' operator");
-                        }
-                        var wiType = genericParameters[0];
-                        if (wiType == typeof(WorkItem))
-                        {
-                            throw new InvalidOperationException("Invalid usage of 'Is': it cannot be used with the class Fissum.TeamSystem.WorkItem");
-                        }
-                        if (wiType.IsSubclassOf(typeof(WorkItem)))
-                        {
-
-                            var wiPropUtilityType = typeof(WorkItemPropertyUtility<>).MakeGenericType(wiType);
-
-                            var wiTypeNamePropInfo = wiPropUtilityType.GetProperty("WorkItemTypeName", BindingFlags.Static | BindingFlags.Public);
-
-                            var wiTypeName = wiTypeNamePropInfo.GetValue(null, null) as string;
-
-                            var op = !IsInNotBlock ? "==" : "<>";
-
-                            var test = String.Format("{0} {1} {2}", SystemField.WorkItemType, op, _queryBuilder.GenerateMacro(wiTypeName));
-
-                            _builder.Append(test);
-                            handled = true;
+                            if (_prefix != null)
+                            {
+                                _builder.AppendFormat("[{0}].[{1}]", _prefix, fieldInfo.Name);
+                            }
+                            else
+                            {
+                                _builder.Append(fieldInfo.Name);
+                            }
                         }
                         else
                         {
-                            throw new InvalidOperationException("Invalid 'Is' operator");
+                            throw new NotSupportedException("Invalid expression");
                         }
+
                     }
-                }
-                else
-                {
-                    var me = m.Object as MemberExpression;
-
-
-                    if (me != null && IsWhereParameter(me.Expression))
+                    break;
+                case WhereLocation.RightOperatorClause:
                     {
-                        //processing "wi.op(arg)" pattern
-                        if (me.Type == typeof(string))
+                        var handled = true;
+                        var fieldInfo = _resolver.Resolve(_parameterName, m);
+                        if (fieldInfo != null)
                         {
-                            if (m.Method.Name == "Contains" && argCount == 1)
+                            if (_prefix != null)
                             {
-                                var op = IsInNotBlock ? "not contains" : "contains";
-                                BuildOperationFromMethodCall(m, me, op, true);
-                                handled = true;
+                                _builder.AppendFormat("[{0}].[{1}]", _prefix, fieldInfo.Name);
                             }
-                        }
-                        else if (me.Type == typeof(Node))
-                        {
-                            if (m.Method.Name == "IsUnder" && argCount == 1)
+                            else
                             {
-                                var op = IsInNotBlock ? "not under" : "under";
-                                BuildOperationFromMethodCall(m, me, op, true);
-                                handled = true;
+                                _builder.Append(fieldInfo.Name);
                             }
                         }
                     }
-                    else
+                    break;
+                case WhereLocation.ElseWhere:
                     {
-                        var call = m;
-                        if (IsWhereParameter(call.Object))
+                        var handled = false;
+
+
+
+                        var argCount = m.Arguments.Count;
+
+                        if (m.Object == null)
                         {
-                            var resolved = _resolver.Resolve(call, IsInNotBlock);
-
-                            if (resolved != null)
+                            if (m.Method.Name == "Is" &&
+                                m.Arguments.Count == 1 &&
+                                IsWhereParameter(m.Arguments[0]) &&
+                                m.Method.DeclaringType == typeof(QueryExtender) &&
+                                m.Method.IsGenericMethod)
                             {
-                                handled = true;
+                                var genericParameters = m.Method.GetGenericArguments();
+                                if (genericParameters.Length != 1)
+                                {
+                                    throw new InvalidOperationException("Invalid 'Is' operator");
+                                }
+                                var wiType = genericParameters[0];
+                                if (wiType == typeof(WorkItem))
+                                {
+                                    throw new InvalidOperationException("Invalid usage of 'Is': it cannot be used with the class Fissum.TeamSystem.WorkItem");
+                                }
+                                if (wiType.IsSubclassOf(typeof(WorkItem)))
+                                {
+
+                                    var wiPropUtilityType = typeof(WorkItemPropertyUtility<>).MakeGenericType(wiType);
+
+                                    var wiTypeNamePropInfo = wiPropUtilityType.GetProperty("WorkItemTypeName", BindingFlags.Static | BindingFlags.Public);
+
+                                    var wiTypeName = wiTypeNamePropInfo.GetValue(null, null) as string;
+
+                                    var op = !IsInNotBlock ? "==" : "<>";
+
+                                    var test = String.Format("{0} {1} {2}", SystemField.WorkItemType, op, _queryBuilder.GenerateMacro(wiTypeName));
+
+                                    _builder.Append(test);
+                                    handled = true;
+                                }
+                                else
+                                {
+                                    throw new InvalidOperationException("Invalid 'Is' operator");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var me = m.Object as MemberExpression;
 
 
-                                var test = String.Format("[{0}] {1} {2}", resolved.Item1, resolved.Item2, _queryBuilder.GenerateMacro(resolved.Item3));
+                            if (me != null && IsWhereParameter(me.Expression))
+                            {
+                                //processing "wi.op(arg)" pattern
+                                if (me.Type == typeof(string))
+                                {
+                                    if (m.Method.Name == "Contains" && argCount == 1)
+                                    {
+                                        var op = IsInNotBlock ? "not contains" : "contains";
+                                        BuildOperationFromMethodCall(m, me, op, true);
+                                        handled = true;
+                                    }
+                                }
+                                else if (me.Type == typeof(Node))
+                                {
+                                    if (m.Method.Name == "IsUnder" && argCount == 1)
+                                    {
+                                        var op = IsInNotBlock ? "not under" : "under";
+                                        BuildOperationFromMethodCall(m, me, op, true);
+                                        handled = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var call = m;
+                                if (IsWhereParameter(call.Object))
+                                {
+                                    var resolved = _resolver.Resolve(call, IsInNotBlock);
 
-                                _builder.Append(test);
+                                    if (resolved != null)
+                                    {
+                                        handled = true;
+
+
+                                        var test = String.Format("[{0}] {1} {2}", resolved.Item1, resolved.Item2, _queryBuilder.GenerateMacro(resolved.Item3));
+
+                                        _builder.Append(test);
+                                    }
+
+                                }
                             }
 
+
+
                         }
+                        if (!handled)
+                        {
+                            throw new NotSupportedException(String.Format("MethodCall: {0}", m.Method.Name));
+                        }
+
                     }
-
-
-
-                }
-                if (!handled)
-                {
-                    throw new NotSupportedException(String.Format("MethodCall: {0}", m.Method.Name));
-                }
-
+                    break;
+                default:
+                    throw new InvalidOperationException();
             }
             return m;
         }
