@@ -9,7 +9,7 @@ open System;
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 [<assembly: AssemblyVersion("0.2.0.*")>]
-[<assembly: AssemblyFileVersion("0.2.0.1")>]
+[<assembly: AssemblyFileVersion("0.2.0.2")>]
 [<assembly: AssemblyCompany("Michel Perfetti")>]
 
 ()

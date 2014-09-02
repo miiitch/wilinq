@@ -16,12 +16,43 @@ namespace WiLinq.LinqProvider
         public static bool SetField<T>(this WorkItem wi, string referenceName, T value)
         {
             var field = wi.Fields[referenceName];
-
-            if (field.FieldDefinition.SystemType != typeof(T))
+            var valueType = typeof(T);
+            if (field.FieldDefinition.SystemType == valueType)
             {
-                throw new ArgumentException(String.Format("Invalid type '{0}' for reference field '{1}'", typeof(T), referenceName));
+                field.Value = value;
             }
-            field.Value = value;
+            else
+            {
+                var nullableGenericType = typeof (System.Nullable<>);
+
+                var nullableVersionOfFieldType = nullableGenericType.MakeGenericType(field.FieldDefinition.SystemType);
+
+                if (valueType == nullableVersionOfFieldType)
+                {
+                    var objectValue = (object)value;
+
+                    if (objectValue == null)
+                    {
+                        field.Value = value;
+                    }
+                    else
+                    {                                                
+                        var propertyInfo = nullableVersionOfFieldType.GetProperty("Value");
+
+                        var realValue = propertyInfo.GetValue(objectValue);
+
+                        field.Value = realValue;
+                    }
+
+
+                }
+                else
+                {
+                    throw new ArgumentException(String.Format("Invalid type '{0}' for reference field '{1}'", typeof(T), referenceName));
+
+                }
+
+            }
             return field.IsValid;
         }
     }
