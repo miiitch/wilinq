@@ -202,6 +202,50 @@ namespace WiLinq.LinqProvider
             return WorkItemPropertyUtility<T>.CheckProjectUsability(project);
         }
         #endregion
+
+        /// <summary>
+        /// Returns a typed workitem for the specific project
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="project"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static T Get<T>(this Project project, int id) where T : WorkItemBase, new()
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException("project");
+            }
+
+            if (!project.IsSupported<T>())
+            {
+                throw new ArgumentException(string.Format("{0} is not supported in {1}",typeof(T).FullName,project.Name),"project");
+            }
+
+            var wi = project.Store.GetWorkItem(id);
+
+            if (wi == null)
+            {
+                return null;
+            }
+
+            if (wi.Project.Name != project.Name)
+            {
+                throw new ArgumentException(string.Format("Workitem #{0} is not in project '{1}'",id,project.Name),"id");
+            }
+
+            if (!wi.Is<T>())
+            {
+                throw new ArgumentException(string.Format("Workitem #{0} is of type '{1}'", id, typeof(T).FullName), "id");
+            }
+
+            var result = new T()
+            {
+                WorkItem = wi
+            };
+            return result;
+
+        }
     }
 
 
