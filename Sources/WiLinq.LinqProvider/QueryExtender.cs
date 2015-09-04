@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using WiLinq.LinqProvider.Extensions;
@@ -75,10 +76,39 @@ namespace WiLinq.LinqProvider
 
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(String.Format("Type '{0}' does not have a the required attributes", typeof(T)));
+                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the required attributes", typeof(T)));
             }
 
             return new Query<T>(new WorkItemLinqQueryProvider<T>(project, WorkItemPropertyUtility<T>.Provider));
+        }
+
+      
+
+        public static T New<T>(this Project project) where T : WorkItemBase, new()
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException("project");
+            }
+
+            if (!WorkItemPropertyUtility<T>.IsValid)
+            {
+                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the required attributes", typeof(T)));
+            }
+
+
+            var workItemTypeName = WorkItemPropertyUtility<T>.WorkItemTypeName;
+
+            var type = project.WorkItemTypes.Cast<WorkItemType>().FirstOrDefault(_ => _.Name == workItemTypeName);
+
+            if (type == null)
+            {
+                throw new InvalidOperationException(string.Format("Type '{0}' not found for '{1}'", workItemTypeName,typeof(T)));
+            }
+
+            var result = new T() {WorkItem = type.NewWorkItem()};
+
+            return result;
         }
 #if false
         public static IQueryable<T> OfType<T, U>(this IQueryable<U> query)
@@ -153,7 +183,7 @@ namespace WiLinq.LinqProvider
         {
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(String.Format("Type '{0}' does not have a the required attributes", typeof(T)));
+                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the required attributes", typeof(T)));
             }
 
             return wi.Type.Name == WorkItemPropertyUtility<T>.WorkItemTypeName;
@@ -174,7 +204,7 @@ namespace WiLinq.LinqProvider
 
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(String.Format("Type '{0}' does not have a the needed attributes", typeof(T)));
+                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the needed attributes", typeof(T)));
             }
 
             var ret = new T
@@ -246,6 +276,7 @@ namespace WiLinq.LinqProvider
             return result;
 
         }
+
     }
 
 
