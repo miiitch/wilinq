@@ -2,7 +2,7 @@ rmdir ..\GeneratedPackages
 rmdir /s /q ..\BuildOutput
 mkdir ..\BuildOutput
 mkdir ..\GeneratedPackages
-set VERSION=0.2.2.0
+set VERSION=1.0.0.0
 
 msbuild wilinq.sln /p:Configuration="Release" /p:Platform="Any CPU"  /p:GenerateProjectSpecificOutputFolder=true /p:Outdir="..\..\BuildOutput" /t:build
 
