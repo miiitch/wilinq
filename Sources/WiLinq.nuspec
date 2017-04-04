@@ -3,36 +3,30 @@
 	<metadata>
 		<id>Wilinq</id>
 		<version>$version$</version>
-		<title>Linq provider for TFS 2013 workitems</title>
+		<title>Linq provider for VSTS/TFS workitems</title>
 		<authors>Michel Perfetti</authors>
 		<owners>Michel Perfetti</owners>
 		<licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
 		<projectUrl>https://wilinq.codeplex.com</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>WiLinq is a workitem linq provider targeting TFS 2013 API</description>
+		<description>WiLinq is a workitem linq provider targeting VSTS Extended API</description>
 		<releaseNotes>Development version</releaseNotes>
-		<copyright>Copyright 2014</copyright>
-		<tags>Linq WorkItem TFS</tags>
+		<copyright>Copyright 2017</copyright>
+		<tags>Linq WorkItem TFS VSTS</tags>
 		<dependencies>
 			<group targetFramework="net45">
-				<dependency id="FSPowerPack.Community" version="3.0.0.0" />
-				<dependency id="FSPowerPack.Core.Community" version="3.0.0.0" />
-				<dependency id="FSPowerPack.Linq.Community" version="3.0.0.0" />
-				<dependency id="FSPowerPack.Metadata.Community" version="3.0.0.0"  />
-				<dependency id="FSPowerPack.Parallel.Seq.Community" version="3.0.0.0"  />
+				<dependency id="Microsoft.TeamFoundationServer.ExtendedClient" version="14.102.0">
 			</group>
 		</dependencies>
 	</metadata>
 	<files>
 		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.LinqProvider.dll" target="lib\net45\WiLinq.LinqProvider.dll" />
-		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.LinqProvider.pdb" target="lib\net45\WiLinq.LinqProvider.pdb" />
-		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.Wiql.dll" target="lib\net45\WiLinq.Wiql.dll" />
-		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.Wiql.pdb" target="lib\net45\WiLinq.Wiql.pdb" />
-    <file src="..\BuildOutput\WiLinq.Codegen\GalaSoft.MvvmLight.Extras.WPF45.dll" target="tools\GalaSoft.MvvmLight.Extras.WPF45.dll" />
-    <file src="..\BuildOutput\WiLinq.Codegen\GalaSoft.MvvmLight.WPF45.dll" target="tools\GalaSoft.MvvmLight.WPF45.dll" />
-    <file src="..\BuildOutput\WiLinq.Codegen\Microsoft.Practices.ServiceLocation.dll" target="tools\Microsoft.Practices.ServiceLocation.dll" />
-    <file src="..\BuildOutput\WiLinq.Codegen\WiLinq.LinqProvider.dll" target="tools\WiLinq.LinqProvider.dll" />
-    <file src="..\BuildOutput\WiLinq.Codegen\WICodeGen.exe" target="tools\WICodeGen.exe" />
+		<file src="..\BuildOutput\WiLinq.Wiql\WiLinq.LinqProvider.pdb" target="lib\net45\WiLinq.LinqProvider.pdb" />	
+		<file src="..\BuildOutput\WiLinq.Codegen\GalaSoft.MvvmLight.Extras.WPF45.dll" target="tools\GalaSoft.MvvmLight.Extras.WPF45.dll" />
+		<file src="..\BuildOutput\WiLinq.Codegen\GalaSoft.MvvmLight.WPF45.dll" target="tools\GalaSoft.MvvmLight.WPF45.dll" />
+		<file src="..\BuildOutput\WiLinq.Codegen\Microsoft.Practices.ServiceLocation.dll" target="tools\Microsoft.Practices.ServiceLocation.dll" />
+		<file src="..\BuildOutput\WiLinq.Codegen\WiLinq.LinqProvider.dll" target="tools\WiLinq.LinqProvider.dll" />
+		<file src="..\BuildOutput\WiLinq.Codegen\WICodeGen.exe" target="tools\WICodeGen.exe" />
 	</files>
 	
 </package>
