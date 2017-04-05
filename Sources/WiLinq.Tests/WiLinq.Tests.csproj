@@ -234,7 +234,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestFixtureBase.cs" />
-    <Compile Include="WiqlParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WiqlQuery.cs" />
     <Compile Include="WorkItemFields.cs" />
@@ -243,10 +242,6 @@
     <ProjectReference Include="..\WiLinq.LinqProvider\WiLinq.LinqProvider.csproj">
       <Project>{db5dcbaf-13b0-4502-95cc-b61a3d0f9aef}</Project>
       <Name>WiLinq.LinqProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Wilinq.Wiql\WiLinq.Wiql.fsproj">
-      <Project>{45087980-e0a6-4d64-8e74-287936522a8b}</Project>
-      <Name>WiLinq.Wiql</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Provider", "Provider", "{40D3F125-9DE5-4F4D-A354-713820F9FDC2}"
 EndProject
@@ -11,11 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{BA183C19
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiLinq.LinqProvider", "WiLinq.LinqProvider\WiLinq.LinqProvider.csproj", "{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WiLinq.Wiql", "Wilinq.Wiql\WiLinq.Wiql.fsproj", "{45087980-E0A6-4D64-8E74-287936522A8B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiLinq.Tests", "WiLinq.Tests\WiLinq.Tests.csproj", "{E70C84D1-14BF-4B88-9A4C-35ACDF8B7A90}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiLinq.CodeGen", "WiLinq.WICodeGen\WiLinq.CodeGen.csproj", "{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global stuffs", "Global stuffs", "{916327EE-3B57-4DFD-8F10-E5ADFDC135D5}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,26 +30,16 @@ Global
 		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45087980-E0A6-4D64-8E74-287936522A8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E70C84D1-14BF-4B88-9A4C-35ACDF8B7A90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E70C84D1-14BF-4B88-9A4C-35ACDF8B7A90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E70C84D1-14BF-4B88-9A4C-35ACDF8B7A90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E70C84D1-14BF-4B88-9A4C-35ACDF8B7A90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DB5DCBAF-13B0-4502-95CC-B61A3D0F9AEF} = {40D3F125-9DE5-4F4D-A354-713820F9FDC2}
-		{45087980-E0A6-4D64-8E74-287936522A8B} = {40D3F125-9DE5-4F4D-A354-713820F9FDC2}
 		{E70C84D1-14BF-4B88-9A4C-35ACDF8B7A90} = {5028685A-FC55-40B3-972B-F1B158CBEE9F}
-		{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A} = {BA183C19-2990-4046-884C-8B6FB7E92C5A}
 	EndGlobalSection
 EndGlobal
