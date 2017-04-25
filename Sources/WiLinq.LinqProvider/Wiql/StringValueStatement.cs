@@ -30,7 +30,7 @@ namespace WiLinq.LinqProvider.Wiql
         }
         protected internal override string ConvertToQueryValue()
         {
-            return string.Format("'{0}'", Quote(Value));
+            return $"'{Quote(Value)}'";
         }
 
         public override ValueStatement Copy()

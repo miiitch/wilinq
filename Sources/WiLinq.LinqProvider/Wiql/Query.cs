@@ -47,14 +47,14 @@ namespace WiLinq.LinqProvider.Wiql
 
 			builder.Append("select ");
 
-			var fields = string.Join(", ", Fields.Select(field => string.Format("[{0}]", field)).ToArray());
+			var fields = string.Join(", ", Fields.Select(field => $"[{field}]").ToArray());
 
 			builder.Append(fields);
 			builder.Append(" from ");
 
 		    builder.Append(Mode == QueryMode.Default ? "WorkItems" : "WorkItemLinks");
 
-		    var whereStringStatements = WhereStatements.Select(statement => string.Format(" where {0} ", statement.ConvertToQueryValue()));
+		    var whereStringStatements = WhereStatements.Select(statement => $" where {statement.ConvertToQueryValue()} ");
 			foreach (var st in whereStringStatements)
 			{
 				builder.Append(st);

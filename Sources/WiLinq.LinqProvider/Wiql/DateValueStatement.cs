@@ -15,7 +15,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         protected internal override string ConvertToQueryValue()
         {
-            return string.Format("'{0:u}'", Value);
+            return $"'{Value:u}'";
         }
 
         public override ValueStatement Copy()

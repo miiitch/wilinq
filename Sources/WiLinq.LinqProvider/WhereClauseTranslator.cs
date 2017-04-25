@@ -129,7 +129,7 @@ namespace WiLinq.LinqProvider
                 PopNot();
                 return u;
             }
-            throw new NotSupportedException(string.Format("The unary operator '{0}' is not supported", u.NodeType));
+            throw new NotSupportedException($"The unary operator '{u.NodeType}' is not supported");
         }
 
         protected override Expression VisitParameter(ParameterExpression p)
@@ -193,7 +193,7 @@ namespace WiLinq.LinqProvider
                     break;
 
                 default:
-                    throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
+                    throw new NotSupportedException($"The binary operator '{b.NodeType}' is not supported");
             }
 
 
@@ -308,7 +308,7 @@ namespace WiLinq.LinqProvider
                 return m;
             }
 
-            throw new NotSupportedException(string.Format("The member '{0}' is not supported", m.Member.Name));
+            throw new NotSupportedException($"The member '{m.Member.Name}' is not supported");
         }
 
         private void BuildOperationFromMethodCall(MethodCallExpression m, MemberExpression me, string op, bool isFieldOperator)
@@ -327,7 +327,7 @@ namespace WiLinq.LinqProvider
                 PopNot();
             }
             PopLocation();
-            _builder.Append(string.Format(" {0} ", op));
+            _builder.Append($" {op} ");
             if (isNot)
             {
                 PushNot();
@@ -432,7 +432,8 @@ namespace WiLinq.LinqProvider
 
                                     var op = !IsInNotBlock ? "==" : "<>";
 
-                                    var test = string.Format("{0} {1} {2}", SystemField.WorkItemType, op, _queryBuilder.GenerateMacro(wiTypeName));
+                                    var test =
+                                        $"{SystemField.WorkItemType} {op} {_queryBuilder.GenerateMacro(wiTypeName)}";
 
                                     _builder.Append(test);
                                     handled = true;
@@ -482,7 +483,8 @@ namespace WiLinq.LinqProvider
                                         handled = true;
 
 
-                                        var test = string.Format("[{0}] {1} {2}", resolved.Item1, resolved.Item2, _queryBuilder.GenerateMacro(resolved.Item3));
+                                        var test =
+                                            $"[{resolved.Item1}] {resolved.Item2} {_queryBuilder.GenerateMacro(resolved.Item3)}";
 
                                         _builder.Append(test);
                                     }
@@ -495,7 +497,7 @@ namespace WiLinq.LinqProvider
                         }
                         if (!handled)
                         {
-                            throw new NotSupportedException(string.Format("MethodCall: {0}", m.Method.Name));
+                            throw new NotSupportedException($"MethodCall: {m.Method.Name}");
                         }
 
                     }

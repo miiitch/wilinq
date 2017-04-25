@@ -7,7 +7,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         protected internal override string ConvertToQueryValue()
         {
-            return string.Format("[{0}] {1}",Field,IsAscending?"asc":"desc");
+            return $"[{Field}] {(IsAscending ? "asc" : "desc")}";
         }
     }
 }

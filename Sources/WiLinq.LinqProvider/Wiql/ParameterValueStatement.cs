@@ -12,7 +12,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         protected internal override string ConvertToQueryValue()
         {
-            return string.Format("@{0}", _parameterName);
+            return $"@{_parameterName}";
         }
 
 

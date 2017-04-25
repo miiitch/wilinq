@@ -21,7 +21,7 @@ namespace WiLinq.LinqProvider.Wiql
         {
             var q = Value.Select(statement => statement.ConvertToQueryValue()).ToArray();
 
-            var ret = string.Format("({0})",string.Join(",",q));
+            var ret = $"({string.Join(",", q)})";
 
             return ret;
         }

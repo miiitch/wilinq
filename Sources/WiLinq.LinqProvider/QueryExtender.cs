@@ -74,7 +74,7 @@ namespace WiLinq.LinqProvider
 
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the required attributes", typeof(T)));
+                throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
             return new Query<T>(new WorkItemLinqQueryProvider<T>(project, WorkItemPropertyUtility<T>.Provider));
@@ -91,7 +91,7 @@ namespace WiLinq.LinqProvider
 
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the required attributes", typeof(T)));
+                throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
 
@@ -101,7 +101,7 @@ namespace WiLinq.LinqProvider
 
             if (type == null)
             {
-                throw new InvalidOperationException(string.Format("Type '{0}' not found for '{1}'", workItemTypeName,typeof(T)));
+                throw new InvalidOperationException($"Type '{workItemTypeName}' not found for '{typeof(T)}'");
             }
 
             var result = new T() {WorkItem = type.NewWorkItem()};
@@ -181,7 +181,7 @@ namespace WiLinq.LinqProvider
         {
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the required attributes", typeof(T)));
+                throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
             return wi.Type.Name == WorkItemPropertyUtility<T>.WorkItemTypeName;
@@ -202,7 +202,7 @@ namespace WiLinq.LinqProvider
 
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException(string.Format("Type '{0}' does not have a the needed attributes", typeof(T)));
+                throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the needed attributes");
             }
 
             var ret = new T
@@ -247,7 +247,7 @@ namespace WiLinq.LinqProvider
 
             if (!project.IsSupported<T>())
             {
-                throw new ArgumentException(string.Format("{0} is not supported in {1}",typeof(T).FullName,project.Name),nameof(project));
+                throw new ArgumentException($"{typeof(T).FullName} is not supported in {project.Name}",nameof(project));
             }
 
             var wi = project.Store.GetWorkItem(id);
@@ -259,12 +259,12 @@ namespace WiLinq.LinqProvider
 
             if (wi.Project.Name != project.Name)
             {
-                throw new ArgumentException(string.Format("Workitem #{0} is not in project '{1}'",id,project.Name),nameof(id));
+                throw new ArgumentException($"Workitem #{id} is not in project '{project.Name}'",nameof(id));
             }
 
             if (!wi.Is<T>())
             {
-                throw new ArgumentException(string.Format("Workitem #{0} is of type '{1}'", id, typeof(T).FullName), nameof(id));
+                throw new ArgumentException($"Workitem #{id} is of type '{typeof(T).FullName}'", nameof(id));
             }
 
             var result = new T()

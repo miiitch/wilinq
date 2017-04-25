@@ -124,7 +124,7 @@ namespace WiLinq.LinqProvider
                 Visit(m.Arguments[0]);
                 return m;
             }
-            throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
+            throw new NotSupportedException($"The method '{m.Method.Name}' is not supported");
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         protected internal override string ConvertToQueryValue()
         {
-            var field = string.Format("[{0}]",Field);
+            var field = $"[{Field}]";
             switch (FieldType)
             {
                 case FieldType.Default:                    
@@ -89,7 +89,7 @@ namespace WiLinq.LinqProvider.Wiql
                     throw new NotImplementedException();
             }
 
-            return string.Format("{0} {1} {2}", field, op, Value.ConvertToQueryValue());
+            return $"{field} {op} {Value.ConvertToQueryValue()}";
            
         }
     }

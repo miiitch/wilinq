@@ -38,7 +38,7 @@ namespace WiLinq.LinqProvider.Wiql
                     throw new NotSupportedException();
             }
 
-            return string.Format("({0} {1} {2})", Left.ConvertToQueryValue(), op, Right.ConvertToQueryValue());
+            return $"({Left.ConvertToQueryValue()} {op} {Right.ConvertToQueryValue()})";
         }
         
     }
