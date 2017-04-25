@@ -1,5 +1,4 @@
 using System;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace WiLinq.LinqProvider.Extensions
 {

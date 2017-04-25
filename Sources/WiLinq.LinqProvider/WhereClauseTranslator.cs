@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using WiLinq.LinqProvider.Extensions;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace WiLinq.LinqProvider
 {

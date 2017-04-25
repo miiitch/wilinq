@@ -1,5 +1,4 @@
 using System;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Linq.Expressions;
 using System.Reflection;
 

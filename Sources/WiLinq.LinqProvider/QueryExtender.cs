@@ -1,9 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider

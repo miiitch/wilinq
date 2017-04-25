@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using NUnit.Framework;
-using WiLinq.LinqProvider;
 using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.Tests
