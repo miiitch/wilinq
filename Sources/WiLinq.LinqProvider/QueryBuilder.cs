@@ -45,7 +45,7 @@ namespace WiLinq.LinqProvider
         /// <param name="whereClause">The where clause.</param>
         public void AddWhereClause(string whereClause)
         {
-            if (String.IsNullOrEmpty(whereClause))
+            if (string.IsNullOrEmpty(whereClause))
             {
                 throw new ArgumentException("whereClause is null or empty.", "whereClause");
             }
@@ -59,7 +59,7 @@ namespace WiLinq.LinqProvider
         /// <param name="isAscending">if set to <c>true</c> [is ascending].</param>
         public void AddOrderClause(string field, bool isAscending)
         {
-            if (String.IsNullOrEmpty(field))
+            if (string.IsNullOrEmpty(field))
             {
                 throw new ArgumentException("field is null or empty.", "field");
             }
@@ -74,7 +74,7 @@ namespace WiLinq.LinqProvider
         /// <returns></returns>
         public string GenerateMacro(object value)
         {
-            var macroName = String.Format(MACRO_FORMAT,_macroIndex);
+            var macroName = string.Format(MACRO_FORMAT,_macroIndex);
             _macroIndex++;
             _macroDictionnary.Add(macroName, value);
             return "@" + macroName;
@@ -107,7 +107,7 @@ namespace WiLinq.LinqProvider
             }
             else
             {
-                builder.AppendFormat(String.Join(",", _selectFieldList.ToArray()));
+                builder.AppendFormat(string.Join(",", _selectFieldList.ToArray()));
             }
             builder.AppendLine();
             if (_queryType == QueryType.WorkItem)
@@ -122,14 +122,14 @@ namespace WiLinq.LinqProvider
             {
                 builder.Append("WHERE ");
                 builder.Append("(");
-                builder.Append(String.Join(") AND (",_whereList.ToArray()));
+                builder.Append(string.Join(") AND (",_whereList.ToArray()));
                 builder.AppendLine(")");                
             }
 
             if (_orderbyList.Count > 0)
             {                
                 builder.Append(" ORDER BY ");
-                builder.AppendLine(String.Join(", ", _orderbyList.ToArray()));
+                builder.AppendLine(string.Join(", ", _orderbyList.ToArray()));
             }
             if (asOf.HasValue)
             {

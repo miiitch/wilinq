@@ -9,7 +9,7 @@ namespace WiLinq.LinqProvider.Extensions
 
         public WorkItemTypeAttribute(string typeName)
         {
-            if (String.IsNullOrEmpty(typeName))
+            if (string.IsNullOrEmpty(typeName))
                 throw new ArgumentException("typeName is null or empty.", "typeName");
             _typeName = typeName;
         }

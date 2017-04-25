@@ -14,7 +14,7 @@ namespace WiLinq.LinqProvider.Wiql
         /// </summary>
         public FieldOperationStatement(string field, FieldOperationStatementType type, ValueStatement value, FieldType fieldType)
         {
-            if (String.IsNullOrEmpty(field))
+            if (string.IsNullOrEmpty(field))
                 throw new ArgumentException("field is null or empty.", "field");
             if (value == null)
                 throw new ArgumentNullException("value", "value is null.");

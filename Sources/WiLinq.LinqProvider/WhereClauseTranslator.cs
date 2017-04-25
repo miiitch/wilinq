@@ -334,7 +334,7 @@ namespace WiLinq.LinqProvider
                 PopNot();
             }
             PopLocation();
-            _builder.Append(String.Format(" {0} ", op));
+            _builder.Append(string.Format(" {0} ", op));
             if (isNot)
             {
                 PushNot();
@@ -439,7 +439,7 @@ namespace WiLinq.LinqProvider
 
                                     var op = !IsInNotBlock ? "==" : "<>";
 
-                                    var test = String.Format("{0} {1} {2}", SystemField.WorkItemType, op, _queryBuilder.GenerateMacro(wiTypeName));
+                                    var test = string.Format("{0} {1} {2}", SystemField.WorkItemType, op, _queryBuilder.GenerateMacro(wiTypeName));
 
                                     _builder.Append(test);
                                     handled = true;
@@ -489,7 +489,7 @@ namespace WiLinq.LinqProvider
                                         handled = true;
 
 
-                                        var test = String.Format("[{0}] {1} {2}", resolved.Item1, resolved.Item2, _queryBuilder.GenerateMacro(resolved.Item3));
+                                        var test = string.Format("[{0}] {1} {2}", resolved.Item1, resolved.Item2, _queryBuilder.GenerateMacro(resolved.Item3));
 
                                         _builder.Append(test);
                                     }
@@ -502,7 +502,7 @@ namespace WiLinq.LinqProvider
                         }
                         if (!handled)
                         {
-                            throw new NotSupportedException(String.Format("MethodCall: {0}", m.Method.Name));
+                            throw new NotSupportedException(string.Format("MethodCall: {0}", m.Method.Name));
                         }
 
                     }

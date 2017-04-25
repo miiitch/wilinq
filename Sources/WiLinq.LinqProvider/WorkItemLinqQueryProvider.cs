@@ -134,7 +134,7 @@ namespace WiLinq.LinqProvider
 
             if (attribs != null && attribs.Length == 1)
             {
-                queryBuilder.AddWhereClause(String.Format("{0} = '{1}'", SystemField.WorkItemType, attribs[0].TypeName));
+                queryBuilder.AddWhereClause(string.Format("{0} = '{1}'", SystemField.WorkItemType, attribs[0].TypeName));
             }
         }
 

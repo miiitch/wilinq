@@ -111,7 +111,7 @@ namespace WiLinq.LinqProvider.Extensions
             get
             {
                 ProcessType();
-                return !String.IsNullOrEmpty(_workItemTypeName);
+                return !string.IsNullOrEmpty(_workItemTypeName);
             }
         }
 

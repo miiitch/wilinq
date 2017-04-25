@@ -23,7 +23,7 @@ namespace WiLinq.LinqProvider.Wiql
 
         private string Quote(string value)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 throw new ArgumentException("value is null or empty.", "value");
 
             return value.Replace("'", "''");
