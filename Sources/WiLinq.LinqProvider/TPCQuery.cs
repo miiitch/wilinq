@@ -22,7 +22,7 @@ namespace WiLinq.LinqProvider
         {
             if (tpc == null)
             {
-                throw new ArgumentNullException("tpc");
+                throw new ArgumentNullException(nameof(tpc));
             }
             
             _wiql = wiql;

@@ -58,7 +58,7 @@ namespace WiLinq.LinqProvider.Wiql
         public static ValueStatement CreateParameter(string parameterName)
         {
             if (string.IsNullOrEmpty(parameterName))
-                throw new ArgumentException("parameterName is null or empty.", "parameterName");
+                throw new ArgumentException("parameterName is null or empty.", nameof(parameterName));
 
             if (parameterName.Equals("me",StringComparison.InvariantCultureIgnoreCase))
             {

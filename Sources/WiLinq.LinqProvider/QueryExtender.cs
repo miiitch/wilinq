@@ -22,7 +22,7 @@ namespace WiLinq.LinqProvider
         {
             if (server == null)
             {
-                throw new ArgumentNullException("server");
+                throw new ArgumentNullException(nameof(server));
             }
 
             return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(server,null,new TFSWorkItemHelper()));
@@ -37,7 +37,7 @@ namespace WiLinq.LinqProvider
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }            
             return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(project,new TFSWorkItemHelper()));
         }
@@ -55,7 +55,7 @@ namespace WiLinq.LinqProvider
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }           
 
             return new Query<T>(new WorkItemLinqQueryProvider<T>(project,new THelper()));
@@ -71,7 +71,7 @@ namespace WiLinq.LinqProvider
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }           
 
             if (!WorkItemPropertyUtility<T>.IsValid)
@@ -88,7 +88,7 @@ namespace WiLinq.LinqProvider
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }
 
             if (!WorkItemPropertyUtility<T>.IsValid)
@@ -227,7 +227,7 @@ namespace WiLinq.LinqProvider
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }
             return WorkItemPropertyUtility<T>.CheckProjectUsability(project);
         }
@@ -244,12 +244,12 @@ namespace WiLinq.LinqProvider
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }
 
             if (!project.IsSupported<T>())
             {
-                throw new ArgumentException(string.Format("{0} is not supported in {1}",typeof(T).FullName,project.Name),"project");
+                throw new ArgumentException(string.Format("{0} is not supported in {1}",typeof(T).FullName,project.Name),nameof(project));
             }
 
             var wi = project.Store.GetWorkItem(id);
@@ -261,12 +261,12 @@ namespace WiLinq.LinqProvider
 
             if (wi.Project.Name != project.Name)
             {
-                throw new ArgumentException(string.Format("Workitem #{0} is not in project '{1}'",id,project.Name),"id");
+                throw new ArgumentException(string.Format("Workitem #{0} is not in project '{1}'",id,project.Name),nameof(id));
             }
 
             if (!wi.Is<T>())
             {
-                throw new ArgumentException(string.Format("Workitem #{0} is of type '{1}'", id, typeof(T).FullName), "id");
+                throw new ArgumentException(string.Format("Workitem #{0} is of type '{1}'", id, typeof(T).FullName), nameof(id));
             }
 
             var result = new T()

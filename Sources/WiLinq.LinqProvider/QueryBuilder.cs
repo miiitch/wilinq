@@ -47,7 +47,7 @@ namespace WiLinq.LinqProvider
         {
             if (string.IsNullOrEmpty(whereClause))
             {
-                throw new ArgumentException("whereClause is null or empty.", "whereClause");
+                throw new ArgumentException("whereClause is null or empty.", nameof(whereClause));
             }
             _whereList.Add(whereClause);
         }
@@ -61,7 +61,7 @@ namespace WiLinq.LinqProvider
         {
             if (string.IsNullOrEmpty(field))
             {
-                throw new ArgumentException("field is null or empty.", "field");
+                throw new ArgumentException("field is null or empty.", nameof(field));
             }
 
             _orderbyList.Add(field + (isAscending ? " asc" : " desc"));

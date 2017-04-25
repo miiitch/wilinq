@@ -14,12 +14,12 @@ namespace WiLinq.LinqProvider.Extensions
         {
             if (obj == null)
             {
-                throw new ArgumentNullException("obj", "obj is null.");
+                throw new ArgumentNullException(nameof(obj), "obj is null.");
             }
             var project = obj as Project;
             if (project == null)
             {
-                throw new ArgumentException("obj is not a Project", "obj");
+                throw new ArgumentException("obj is not a Project", nameof(obj));
             }
 
             return project.Name;

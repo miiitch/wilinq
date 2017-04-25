@@ -229,7 +229,7 @@ namespace WiLinq.LinqProvider.Extensions
          public bool IsUnderArea(string areaPath)
          {
              if (string.IsNullOrEmpty(areaPath))
-                 throw new ArgumentException("areaPath is null or empty.", "areaPath");
+                 throw new ArgumentException("areaPath is null or empty.", nameof(areaPath));
 
              return areaPath.Contains(Area);
          }
@@ -237,7 +237,7 @@ namespace WiLinq.LinqProvider.Extensions
          public bool IsUnderIteration(string iterationPath)
          {
              if (string.IsNullOrEmpty(iterationPath))
-                 throw new ArgumentException("iterationPath is null or empty.", "iterationPath");
+                 throw new ArgumentException("iterationPath is null or empty.", nameof(iterationPath));
 
              return iterationPath.Contains(Iteration);
          }

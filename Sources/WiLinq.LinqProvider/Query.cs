@@ -18,7 +18,7 @@ namespace WiLinq.LinqProvider
             if (provider == null)
             {
 
-                throw new ArgumentNullException("provider");
+                throw new ArgumentNullException(nameof(provider));
 
             }
 
@@ -31,18 +31,18 @@ namespace WiLinq.LinqProvider
         {
             if (provider == null)
             {
-                throw new ArgumentNullException("provider");
+                throw new ArgumentNullException(nameof(provider));
             }            
 
             if (expression == null)
             {
-                throw new ArgumentNullException("expression");
+                throw new ArgumentNullException(nameof(expression));
             }
 
       
             if (!typeof(IQueryable<T>).IsAssignableFrom(expression.Type))
             {
-                throw new ArgumentOutOfRangeException("expression");
+                throw new ArgumentOutOfRangeException(nameof(expression));
             }
 
             _provider = provider;

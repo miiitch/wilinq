@@ -13,7 +13,7 @@ namespace WiLinq.LinqProvider.Extensions
         public WorkItemCreatorProviderAttribute(Type creator)
         {
             if (creator == null)
-                throw new ArgumentNullException("creator", "creator is null.");
+                throw new ArgumentNullException(nameof(creator), "creator is null.");
 
             _creator = creator;
         }

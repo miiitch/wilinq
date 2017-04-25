@@ -17,7 +17,7 @@ namespace  WiLinq.LinqProvider.Extensions
         {
             if (converter == null)
             {
-                throw new ArgumentNullException("converter", "converter is null.");
+                throw new ArgumentNullException(nameof(converter), "converter is null.");
             }
 
             if (_converterDictionary.ContainsKey(converter.RelatedType))

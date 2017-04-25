@@ -13,7 +13,7 @@ namespace WiLinq.LinqProvider.Wiql
         public ListValueStatement(List<ValueStatement> value)
         {
             if (value == null)
-                throw new ArgumentNullException("value", "value is null.");
+                throw new ArgumentNullException(nameof(value), "value is null.");
             Value = value;
         }
 

@@ -12,7 +12,7 @@ namespace WiLinq.LinqProvider.Wiql
         internal StringValueStatement(string value)
         {
             if (value == null)
-                throw new ArgumentNullException("value", "value");
+                throw new ArgumentNullException(nameof(value), "value");
             Value = value;
         }
         internal StringValueStatement():this(string.Empty)
@@ -24,7 +24,7 @@ namespace WiLinq.LinqProvider.Wiql
         private string Quote(string value)
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("value is null or empty.", "value");
+                throw new ArgumentException("value is null or empty.", nameof(value));
 
             return value.Replace("'", "''");
         }

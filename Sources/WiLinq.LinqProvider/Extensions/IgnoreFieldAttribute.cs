@@ -13,7 +13,7 @@ namespace WiLinq.LinqProvider.Extensions
         public IgnoreFieldAttribute(string referenceName)
         {
             if (string.IsNullOrEmpty(referenceName))
-                throw new ArgumentException("referenceName is null or empty.", "referenceName");
+                throw new ArgumentException("referenceName is null or empty.", nameof(referenceName));
             ReferenceName = referenceName;
         }
     }
