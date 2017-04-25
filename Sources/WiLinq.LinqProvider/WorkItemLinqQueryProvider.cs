@@ -145,10 +145,7 @@ namespace WiLinq.LinqProvider
 
         public DateTime? AsOfDate
         {
-            get
-            {
-                return _asOfDate;
-            }
+            get => _asOfDate;
             set
             {
                 if (_asOfDate.HasValue)
@@ -159,20 +156,8 @@ namespace WiLinq.LinqProvider
             }
         }
         // ReSharper disable once InconsistentNaming
-        public TfsTeamProjectCollection TPC
-        {
-            get
-            {
-                return _tpc;
-            }
-        }
-        public Project Project
-        {
-            get
-            {
-                return _project;
-            }
-        }
+        public TfsTeamProjectCollection TPC => _tpc;
 
+        public Project Project => _project;
     }
 }

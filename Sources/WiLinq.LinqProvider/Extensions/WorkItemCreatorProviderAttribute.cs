@@ -18,12 +18,6 @@ namespace WiLinq.LinqProvider.Extensions
             _creator = creator;
         }
 
-        public Type CreatorType
-        {
-            get
-            {
-                return _creator;
-            }
-        }
+        public Type CreatorType => _creator;
     }
 }

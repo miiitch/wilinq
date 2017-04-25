@@ -23,13 +23,7 @@ namespace WiLinq.LinqProvider
         private readonly ILinqResolver _resolver;
 
 
-        private bool IsInNotBlock
-        {
-            get
-            {
-                return _notBlockStack.Peek();
-            }
-        }
+        private bool IsInNotBlock => _notBlockStack.Peek();
 
         private WhereLocation CurrentLocation
         {

@@ -20,27 +20,15 @@ namespace WiLinq.Tests
             [Field("Microsoft.VSTS.Scheduling.TargetDate")]
             public DateTime? TargetDate
             {
-                get
-                {
-                    return this.WorkItem.Field<DateTime?>("Microsoft.VSTS.Scheduling.TargetDate");
-                }
-                set
-                {
-                    this.WorkItem.SetField<DateTime?>("Microsoft.VSTS.Scheduling.TargetDate", value);
-                }
+                get => this.WorkItem.Field<DateTime?>("Microsoft.VSTS.Scheduling.TargetDate");
+                set => this.WorkItem.SetField<DateTime?>("Microsoft.VSTS.Scheduling.TargetDate", value);
             }
 
             [Field("Microsoft.VSTS.Common.BusinessValue")]
             public int? BusinessValue
             {
-                get
-                {
-                    return this.WorkItem.Field<int?>("Microsoft.VSTS.Common.BusinessValue");
-                }
-                set
-                {
-                    this.WorkItem.SetField<int?>("Microsoft.VSTS.Common.BusinessValue", value);
-                }
+                get => this.WorkItem.Field<int?>("Microsoft.VSTS.Common.BusinessValue");
+                set => this.WorkItem.SetField<int?>("Microsoft.VSTS.Common.BusinessValue", value);
             }
 
 

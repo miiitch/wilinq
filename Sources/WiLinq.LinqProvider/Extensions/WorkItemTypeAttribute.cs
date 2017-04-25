@@ -14,12 +14,6 @@ namespace WiLinq.LinqProvider.Extensions
             _typeName = typeName;
         }
 
-        public string TypeName
-        {
-            get
-            {
-                return _typeName;
-            }
-        }
+        public string TypeName => _typeName;
     }
 }

@@ -14,69 +14,35 @@ namespace WiLinq.LinqProvider
 
         public Query(IWorkItemLinqQueryProvider provider)
         {
-
-            if (provider == null)
-            {
-
-                throw new ArgumentNullException(nameof(provider));
-
-            }
-
-            _provider = provider;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
             _expression = Expression.Constant(this);
         }
 
         public Query(IWorkItemLinqQueryProvider provider, Expression expression)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }            
+            _expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-      
             if (!typeof(IQueryable<T>).IsAssignableFrom(expression.Type))
             {
                 throw new ArgumentOutOfRangeException(nameof(expression));
             }
 
-            _provider = provider;
-            _expression = expression;
+            
+          
 
         }
 
 
 
-        Expression IQueryable.Expression
-        {
-
-            get { return _expression; }
-
-        }
+        Expression IQueryable.Expression => _expression;
 
 
-
-        Type IQueryable.ElementType
-        {
-
-            get { return typeof(T); }
-
-        }
+        Type IQueryable.ElementType => typeof(T);
 
 
-
-        IQueryProvider IQueryable.Provider
-        {
-
-            get { return _provider; }
-
-        }
-
+        IQueryProvider IQueryable.Provider => _provider;
 
 
         public IEnumerator<T> GetEnumerator()

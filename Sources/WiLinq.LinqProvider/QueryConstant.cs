@@ -9,24 +9,12 @@ namespace WiLinq.LinqProvider
         /// Matches the "@Me" field in a WIQL query
         /// </summary>
         /// <value>Never Used</value>
-        public static string Me
-        {
-            get
-            {
-                throw new InvalidOperationException("This property is not intended to be used outside a LINQ To Wiql Query");
-            }
-        }
+        public static string Me => throw new InvalidOperationException("This property is not intended to be used outside a LINQ To Wiql Query");
 
         /// <summary>
         /// Matches the "@Today" field in a WIQL query
         /// </summary>
         /// <value>Never Used</value>
-        public static DateTime Today
-        {
-            get
-            {
-                throw new InvalidOperationException("This property is not intended to be used outside a LINQ To Wiql Query");
-            }
-        }
+        public static DateTime Today => throw new InvalidOperationException("This property is not intended to be used outside a LINQ To Wiql Query");
     }
 }

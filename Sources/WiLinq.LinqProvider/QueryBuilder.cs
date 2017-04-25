@@ -184,13 +184,7 @@ namespace WiLinq.LinqProvider
         /// Gets the query.
         /// </summary>
         /// <value>The query.</value>
-        public TPCQuery Query
-        {
-            get
-            {
-                return _query;
-            }          
-        }
+        public TPCQuery Query => _query;
 
 
         internal void AddQueryLinkMode(QueryLinkMode mode)

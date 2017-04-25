@@ -5,10 +5,7 @@ namespace WiLinq.LinqProvider.Extensions
 {
     internal sealed class ProjectToWorkItemValueConverter : WorkItemValueConverter
     {
-        public override Type RelatedType
-        {
-            get { return typeof(Project); }
-        }
+        public override Type RelatedType => typeof(Project);
 
         public override object Resolve(object obj)
         {

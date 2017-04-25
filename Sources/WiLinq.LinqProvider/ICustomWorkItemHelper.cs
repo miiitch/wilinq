@@ -1,4 +1,5 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 namespace WiLinq.LinqProvider
 {
