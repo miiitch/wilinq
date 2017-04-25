@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using WiLinq.LinqProvider.Extensions;
 
@@ -14,16 +16,16 @@ namespace WiLinq.LinqProvider
         /// <summary>
         /// Extends the server for a LINQ Query on the work item store.
         /// </summary>
-        /// <param name="server">The server.</param>
+        /// <param name="workItemTrackingHttpClient">The server.</param>
         /// <returns></returns>
-        public static IQueryable<WorkItem> WorkItemSet(this TfsTeamProjectCollection server)
+        public static WorkItemAsyncQuery<WorkItem> WorkItemSet(this WorkItemTrackingHttpClient workItemTrackingHttpClient)
         {
-            if (server == null)
+            if (IQueryable == null)
             {
-                throw new ArgumentNullException(nameof(server));
+                throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
             }
 
-            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(server,null,new TFSWorkItemHelper()));
+            return new IQueryable<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,null,new TFSWorkItemHelper()));
         }
 
         /// <summary>
@@ -31,13 +33,13 @@ namespace WiLinq.LinqProvider
         /// </summary>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static IQueryable<WorkItem> WorkItemSet(this Project project)
+        public static IQueryable<WorkItem> WorkItemSet(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
         {
             if (project == null)
             {
                 throw new ArgumentNullException(nameof(project));
             }            
-            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(project,new TFSWorkItemHelper()));
+            return new IQueryable<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,project, new TFSWorkItemHelper()));
         }
 
         /// <summary>
@@ -45,9 +47,10 @@ namespace WiLinq.LinqProvider
         /// </summary>
         /// <typeparam name="T">Type of work item</typeparam>
         /// <typeparam name="THelper">Related creator provider</typeparam>
+        /// <param name="workItemTrackingHttpClient"></param>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static IQueryable<T> SetOf<T, THelper>(this Project project)
+        public static IQueryable<T> SetOf<T, THelper>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
             where T : WorkItemBase
             where THelper : ICustomWorkItemHelper<T>, new()
         {
@@ -56,7 +59,7 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }           
 
-            return new Query<T>(new WorkItemLinqQueryProvider<T>(project,new THelper()));
+            return new IQueryable<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient,project, new THelper()));
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T">Type of work item</typeparam>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static IQueryable<T> SetOf<T>(this Project project) where T : WorkItemBase, new()
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project) where T : WorkItemBase, new()
         {
             if (project == null)
             {
@@ -76,12 +79,12 @@ namespace WiLinq.LinqProvider
             {
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
-
-            return new Query<T>(new WorkItemLinqQueryProvider<T>(project, WorkItemPropertyUtility<T>.Provider));
+            
+            return new IQueryable<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, project, WorkItemPropertyUtility<T>.Provider));
         }
 
-      
 
+#if false
         public static T New<T>(this Project project) where T : WorkItemBase, new()
         {
             if (project == null)
@@ -93,7 +96,7 @@ namespace WiLinq.LinqProvider
             {
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
-
+            
 
             var workItemTypeName = WorkItemPropertyUtility<T>.WorkItemTypeName;
 
@@ -108,6 +111,8 @@ namespace WiLinq.LinqProvider
 
             return result;
         }
+#endif
+
 #if false
         public static IQueryable<T> OfType<T, U>(this IQueryable<U> query)
             where T : U, new()
@@ -117,7 +122,7 @@ namespace WiLinq.LinqProvider
             return new Query<T>(new WorkItemLinqQueryProvider<T>(wiQP.TPC,wiQP.Project, WorkItemPropertyUtility<T>.Provider));
         }
 #endif
-
+#if false
         public static WorkItemLinkInfo [] QueryLinks(
             this TfsTeamProjectCollection tpc,
             Expression<Predicate<WorkItem>> sourcePredicate,
@@ -168,8 +173,9 @@ namespace WiLinq.LinqProvider
         {
             throw new NotImplementedException();
         }
+#endif
 
-        #region Type conversions
+#region Type conversions
 
         /// <summary>
         /// Check if a work item is of a the specified type
@@ -184,7 +190,7 @@ namespace WiLinq.LinqProvider
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
-            return wi.Type.Name == WorkItemPropertyUtility<T>.WorkItemTypeName;
+            return wi.Field<string>(SystemField.WorkItemType) == WorkItemPropertyUtility<T>.WorkItemTypeName;
         }
 
         /// <summary>
@@ -221,7 +227,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T"></typeparam>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static bool IsSupported<T>(this Project project) where T : WorkItemBase,new()
+        public static bool IsSupported<T>(this ProjectInfo project) where T : WorkItemBase,new()
         {
             if (project == null)
             {
@@ -229,7 +235,7 @@ namespace WiLinq.LinqProvider
             }
             return WorkItemPropertyUtility<T>.CheckProjectUsability(project);
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Returns a typed workitem for the specific project
@@ -238,7 +244,7 @@ namespace WiLinq.LinqProvider
         /// <param name="project"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static T Get<T>(this Project project, int id) where T : WorkItemBase, new()
+        public static T Get<T>(this ProjectInfo project, int id) where T : WorkItemBase, new()
         {
             if (project == null)
             {

@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using WiLinq.LinqProvider.Wiql;
 
 namespace WiLinq.LinqProvider
 {
@@ -11,19 +14,14 @@ namespace WiLinq.LinqProvider
     {
 
         private readonly string _wiql;
-        private readonly TfsTeamProjectCollection _tpc;
+        private readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
         readonly Dictionary<string, object> _defaultParameters;
         private readonly QueryType _type;
 
-        public TPCQuery(TfsTeamProjectCollection tpc, string wiql, Dictionary<string, object> defaultParameters, QueryType type)
+        public TPCQuery(WorkItemTrackingHttpClient workItemTrackingHttpClient, string wiql, Dictionary<string, object> defaultParameters, QueryType type)
         {
-            if (tpc == null)
-            {
-                throw new ArgumentNullException(nameof(tpc));
-            }
-            
             _wiql = wiql;
-            _tpc = tpc;            
+            _workItemTrackingHttpClient = workItemTrackingHttpClient ?? throw new ArgumentNullException(nameof(workItemTrackingHttpClient));            
             _defaultParameters = defaultParameters;
             _type = type;
         }
@@ -35,12 +33,6 @@ namespace WiLinq.LinqProvider
             var query = new Query(store, _wiql, _defaultParameters);
 
             return query.RunLinkQuery();
-        }
-
-        private WorkItemStore GetWorkItemStore()
-        {
-            var store = _tpc.GetService(typeof(WorkItemStore)) as WorkItemStore;
-            return store;
         }
 
         public WorkItem[] GetWorkItems()

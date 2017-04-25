@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 
 namespace WiLinq.LinqProvider
 {
@@ -85,7 +87,7 @@ namespace WiLinq.LinqProvider
         /// <param name="project">The project.</param>
         /// <param name="asOf">As of.</param>
         /// <returns></returns>
-        public TPCQuery BuildQuery(TfsTeamProjectCollection tpc, Project project, DateTime? asOf)
+        public TPCQuery BuildQuery(WorkItemTrackingHttpClient tpc, ProjectInfo project, DateTime? asOf)
         {            
             if (_query != null)
             {

@@ -1,3 +1,4 @@
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -461,6 +462,7 @@ namespace WiLinq.LinqProvider
                                         handled = true;
                                     }
                                 }
+#if false
                                 else if (me.Type == typeof(Node))
                                 {
                                     if (m.Method.Name == "IsUnder" && argCount == 1)
@@ -470,6 +472,7 @@ namespace WiLinq.LinqProvider
                                         handled = true;
                                     }
                                 }
+#endif
                             }
                             else
                             {
@@ -508,7 +511,7 @@ namespace WiLinq.LinqProvider
             return m;
         }
 
-        #region Not Supported Expressions
+#region Not Supported Expressions
 
         protected override MemberBinding VisitMemberBinding(MemberBinding node)
         {
@@ -648,7 +651,7 @@ namespace WiLinq.LinqProvider
         {
             throw new NotSupportedException("VisitTry");
         }
-        #endregion
+#endregion
 
     }
 

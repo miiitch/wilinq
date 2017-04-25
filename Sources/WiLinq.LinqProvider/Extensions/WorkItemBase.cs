@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 namespace WiLinq.LinqProvider.Extensions
 {
@@ -37,7 +38,7 @@ namespace WiLinq.LinqProvider.Extensions
         }
 
         [Field(SystemField.Id)]
-        public int Id => _workItem.Id;
+        public int? Id => _workItem.Id;
 
         [Field(SystemField.AssignedTo)]
         public string AssignedTo
@@ -49,80 +50,66 @@ namespace WiLinq.LinqProvider.Extensions
         [Field(SystemField.Title)]
         public string Title
         {
-            get => WorkItem.Title;
-            set => WorkItem.Title = value;
+            get => _workItem.Field<string>(SystemField.Title);
+            set => _workItem.SetField(SystemField.Title, value);
         }
 
         [Field(SystemField.ChangedDate)]
-        public DateTime ChangedDate => WorkItem.ChangedDate;
+        public DateTime? ChangedDate => _workItem.Field<DateTime?>(SystemField.ChangedDate);
 
         /// <summary>
         /// Gets the created by value of the work item.
         /// </summary>
         /// <value>The created by.</value>
         [Field(SystemField.CreatedBy)]
-        public string CreatedBy => WorkItem.CreatedBy;
+        public string CreatedBy => _workItem.Field<string>(SystemField.CreatedBy);
 
         /// <summary>
         /// Gets the changed by value of the work item.
         /// </summary>
         /// <value>The changed by.</value>
         [Field(SystemField.ChangedBy)]
-        public string ChangedBy => WorkItem.ChangedBy;
+        public string ChangedBy => _workItem.Field<string>(SystemField.ChangedBy);
 
         /// <summary>
         /// Gets the created date.
         /// </summary>
         /// <value>The created date.</value>
         [Field(SystemField.CreatedDate)]
-        public DateTime CreatedDate => WorkItem.CreatedDate;
+        public DateTime? CreatedDate => _workItem.Field<DateTime?>(SystemField.CreatedDate);
 
 
-        /// <summary>
-        /// Gets the project.
-        /// </summary>
-        /// <value>The project.</value>
-        [Field(SystemField.Project)]
-        public Project Project => WorkItem.Project;
 
+    
         [Field(SystemField.Description)]
         public string Description
         {
-            get => WorkItem.Description;
-            set => WorkItem.Description = value;
+            get => _workItem.Field<string>(SystemField.Description);
+            set => _workItem.SetField(SystemField.Description, value);
         }
 
-        /// <summary>
-        /// Gets the history of the work item.
-        /// </summary>
-        /// <value>The history.</value>
-        [Field(SystemField.History)]
-        public string History
-        {
-            get => WorkItem.History;
-            set => WorkItem.History = value;
-        }
+
 
         [Field(SystemField.Reason)]
         public string Reason
         {
-            get => WorkItem.Reason;
-            set => WorkItem.Reason = value;
+            get => _workItem.Field<string>(SystemField.Reason);
+            set => _workItem.SetField(SystemField.Reason, value);
         }
 
-        [Field(SystemField.WorkItemType)]
-        public string Type => WorkItem.Type.Name;
+        //[Field(SystemField.WorkItemType)]
+        //public string Type => WorkItem.Type.Name;
 
         [Field(SystemField.State)]
         public string State
         {
-            get => WorkItem.State;
-             set => WorkItem.State = value;
-         }
+            get => _workItem.Field<string>(SystemField.State);
+            set => _workItem.SetField(SystemField.State, value);
+        }
 
          [Field(SystemField.Revision)]
-         public int Revision => WorkItem.Rev;
-
+         public int? Revision => WorkItem.Rev;
+#if false
         [Field(SystemField.AreaPath)]
          public string Area => WorkItem.AreaPath;
 
@@ -144,5 +131,6 @@ namespace WiLinq.LinqProvider.Extensions
 
              return iterationPath.Contains(Iteration);
          }
+#endif
     }
 }

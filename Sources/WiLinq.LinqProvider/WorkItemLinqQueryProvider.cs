@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider
 {
     internal class WorkItemLinqQueryProvider<T> : IWorkItemLinqQueryProvider where T:class
     {
-        readonly TfsTeamProjectCollection _tpc;
-        readonly Project _project;
+        readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
+        readonly ProjectInfo _project;
         readonly ICustomWorkItemHelper<T> _creatorProvider;
         DateTime? _asOfDate;
         
 
         IQueryable<TOutput> IQueryProvider.CreateQuery<TOutput>(Expression expression)
         {
-            return new Query<TOutput>(this, expression);
+            return new WorkItemAsyncQuery<TOutput>(this, expression);
         }
 
         IQueryable IQueryProvider.CreateQuery(Expression expression)
@@ -37,26 +40,17 @@ namespace WiLinq.LinqProvider
 
         }
 
-        public WorkItemLinqQueryProvider(TfsTeamProjectCollection tpc, Project project, ICustomWorkItemHelper<T> creatorProvider)
+        public WorkItemLinqQueryProvider(WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project, ICustomWorkItemHelper<T> creatorProvider)
         {
-            if (tpc == null)
-            {
-                throw new ArgumentNullException(nameof(tpc));
-            }
-
-            _tpc = tpc;
+            _workItemTrackingHttpClient = workItemTrackingHttpClient ?? throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
             _project = project;
             _creatorProvider = creatorProvider;
         }
 
-        public WorkItemLinqQueryProvider(Project project, ICustomWorkItemHelper<T> creatorProvider)
-            : this(project.Store.TeamProjectCollection, project, creatorProvider)
-        {
+  
 
-        }
-
-        public WorkItemLinqQueryProvider(TfsTeamProjectCollection tpc)
-            : this(tpc, null, null)
+        public WorkItemLinqQueryProvider(WorkItemTrackingHttpClient workItemTrackingHttpClient)
+            : this(workItemTrackingHttpClient, null, null)
         {
 
         }
@@ -86,7 +80,7 @@ namespace WiLinq.LinqProvider
 
             ConfigureExtraFilters(queryBuilder);
 
-            var query = queryBuilder.BuildQuery(_tpc, _project, _asOfDate);
+            var query = queryBuilder.BuildQuery(_workItemTrackingHttpClient, _project, _asOfDate);
 
             var tmpResult = query.GetWorkItems();
 
@@ -153,9 +147,9 @@ namespace WiLinq.LinqProvider
                 _asOfDate = value;
             }
         }
-        // ReSharper disable once InconsistentNaming
-        public TfsTeamProjectCollection TPC => _tpc;
+        
+        public WorkItemTrackingHttpClient WorkItemTrackingHttpClient => _workItemTrackingHttpClient;
 
-        public Project Project => _project;
+        public ProjectInfo Project => _project;
     }
 }

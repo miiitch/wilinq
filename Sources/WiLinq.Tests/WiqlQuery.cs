@@ -1,4 +1,5 @@
 using System.Linq;
+using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
 
@@ -16,14 +17,17 @@ namespace WiLinq.Tests
         public void TPCQuery()
         {
             //all workitems;
-            var allWiQuery = from workitem in TPC.WorkItemSet()
+            var allWiQuery = from workitem in Client.WorkItemSet()
                              where workitem.Id == 3
                              select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = allWiQuery.ToList();
-        }
 
+            Check.That(result).HasSize(1);
+            Check.That(result[0].Id).Equals(3);
+        }
+#if false
         [Test]
         public void ProjectQueryAllWorkitems()
         {
@@ -90,6 +94,6 @@ namespace WiLinq.Tests
         }
 
 
-
+#endif
     }
 }

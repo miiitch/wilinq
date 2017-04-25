@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider

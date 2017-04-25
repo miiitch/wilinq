@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 
 namespace WiLinq.LinqProvider.Extensions
@@ -157,7 +159,7 @@ namespace WiLinq.LinqProvider.Extensions
         /// </summary>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static bool CheckProjectUsability(Project project)
+        public static bool CheckProjectUsability(ProjectInfo project)
         {
 
             // ReSharper disable once LoopCanBeConvertedToQuery
