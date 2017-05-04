@@ -258,12 +258,14 @@ namespace WiLinq.LinqProvider
                 }
             }
 
-            var macro = _queryBuilder.GenerateMacro(value);
+            var encodedValue = QueryBuilder.EncodeValue(value);
 
-            _builder.Append(macro);
+            _builder.Append(encodedValue);
 
             return c;
         }
+
+      
 
         protected override Expression VisitMember(MemberExpression m)
         {
@@ -434,7 +436,7 @@ namespace WiLinq.LinqProvider
                                     var op = !IsInNotBlock ? "==" : "<>";
 
                                     var test =
-                                        $"{SystemField.WorkItemType} {op} {_queryBuilder.GenerateMacro(wiTypeName)}";
+                                        $"{SystemField.WorkItemType} {op} {QueryBuilder.EncodeValue(wiTypeName)}";
 
                                     _builder.Append(test);
                                     handled = true;
@@ -487,7 +489,7 @@ namespace WiLinq.LinqProvider
 
 
                                         var test =
-                                            $"[{resolved.Item1}] {resolved.Item2} {_queryBuilder.GenerateMacro(resolved.Item3)}";
+                                            $"[{resolved.Item1}] {resolved.Item2} {QueryBuilder.EncodeValue(resolved.Item2)}";
 
                                         _builder.Append(test);
                                     }

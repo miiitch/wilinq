@@ -14,6 +14,25 @@ namespace WiLinq.LinqProvider
     /// </summary>
     internal class QueryBuilder
     {
+        internal static string EncodeValue(object value)
+        {
+            switch (value)
+            {
+                case int i:
+                    return i.ToString("D");
+                case double d:
+                    return d.ToString("F");
+                case string s:
+                    return "'"+s.Replace("'", "''")+"'";
+                case bool b:
+                    return b ? "true" : "false";
+                case DateTime dt:
+                    return $"{dt.ToShortDateString()} {dt.ToShortTimeString()}";
+                default:
+                    throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
+            }
+        }
+
         private const string MACRO_FORMAT = "P{0}";
         private const string DEFAULT_COLUMN = "[System.Id]";
 
@@ -26,10 +45,7 @@ namespace WiLinq.LinqProvider
         
 
         private TPCQuery _query;
-        
-
-        private readonly Dictionary<string, object> _macroDictionnary = new Dictionary<string, object>();
-
+     
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
         /// </summary>
@@ -67,19 +83,7 @@ namespace WiLinq.LinqProvider
             _orderbyList.Add(field + (isAscending ? " asc" : " desc"));
         }
 
-        /// <summary>
-        /// Generates a variable name and associate the given value
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public string GenerateMacro(object value)
-        {
-            var macroName = string.Format(MACRO_FORMAT,_macroIndex);
-            _macroIndex++;
-            _macroDictionnary.Add(macroName, value);
-            return "@" + macroName;
-        }
-
+     
         /// <summary>
         /// Builds the query.
         /// </summary>
@@ -129,7 +133,7 @@ namespace WiLinq.LinqProvider
             }
             if (asOf.HasValue)
             {
-                builder.AppendFormat(" ASOF {0}", GenerateMacro(asOf.Value));
+                builder.AppendFormat(" ASOF {0}", QueryBuilder.EncodeValue(asOf.Value));
             }
 
             if (_queryType == QueryType.Link)
