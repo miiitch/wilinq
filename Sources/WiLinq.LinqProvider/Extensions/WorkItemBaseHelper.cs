@@ -1,10 +1,11 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 namespace WiLinq.LinqProvider.Extensions
 {
-    class WorkItemBaseHelper<T> : ICustomWorkItemHelper<T> where T : WorkItemBase, new()
+    internal class WorkItemBaseHelper<T> : ICustomWorkItemHelper<T> where T : WorkItemBase, new()
     {
 
         #region ICustomWorkItemHelper<T> Members

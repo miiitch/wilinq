@@ -8,10 +8,6 @@ namespace WiLinq.Tests
     [TestFixture]
     public class WiqlQuery : TestFixtureBase
     {
-
-
-
-
         [Test]
         // ReSharper disable once InconsistentNaming
         public void TPCQuery()

@@ -18,14 +18,14 @@ namespace WiLinq.LinqProvider
         /// </summary>
         /// <param name="workItemTrackingHttpClient">The server.</param>
         /// <returns></returns>
-        public static WorkItemAsyncQuery<WorkItem> WorkItemSet(this WorkItemTrackingHttpClient workItemTrackingHttpClient)
+        public static IQueryable<WorkItem> WorkItemSet(this WorkItemTrackingHttpClient workItemTrackingHttpClient)
         {
-            if (IQueryable == null)
+            if (workItemTrackingHttpClient == null)
             {
                 throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
             }
 
-            return new IQueryable<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,null,new TFSWorkItemHelper()));
+            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,null,new TFSWorkItemHelper()));
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace WiLinq.LinqProvider
             {
                 throw new ArgumentNullException(nameof(project));
             }            
-            return new IQueryable<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,project, new TFSWorkItemHelper()));
+            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,project, new TFSWorkItemHelper()));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }           
 
-            return new IQueryable<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient,project, new THelper()));
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient,project, new THelper()));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace WiLinq.LinqProvider
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
             
-            return new IQueryable<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, project, WorkItemPropertyUtility<T>.Provider));
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, project, WorkItemPropertyUtility<T>.Provider));
         }
 
 
@@ -219,8 +219,8 @@ namespace WiLinq.LinqProvider
             return ret;
         }
 
-     
 
+#if false
         /// <summary>
         /// Checks if the specified project can used the specified Work Item Type
         /// </summary>
@@ -235,6 +235,7 @@ namespace WiLinq.LinqProvider
             }
             return WorkItemPropertyUtility<T>.CheckProjectUsability(project);
         }
+#endif
 #endregion
 
         /// <summary>
@@ -251,6 +252,8 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }
 
+            throw new NotImplementedException();
+#if false
             if (!project.IsSupported<T>())
             {
                 throw new ArgumentException($"{typeof(T).FullName} is not supported in {project.Name}",nameof(project));
@@ -278,8 +281,9 @@ namespace WiLinq.LinqProvider
                 WorkItem = wi
             };
             return result;
-
+#endif
         }
+
 
     }
 

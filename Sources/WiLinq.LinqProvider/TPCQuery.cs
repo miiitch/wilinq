@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using WiLinq.LinqProvider.Wiql;
@@ -12,20 +14,24 @@ namespace WiLinq.LinqProvider
     // ReSharper disable once InconsistentNaming
     internal class TPCQuery
     {
-
         private readonly string _wiql;
         private readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
-        readonly Dictionary<string, object> _defaultParameters;
+        private string _projectName;
+        private string _teamName;
+            
         private readonly QueryType _type;
 
-        public TPCQuery(WorkItemTrackingHttpClient workItemTrackingHttpClient, string wiql, Dictionary<string, object> defaultParameters, QueryType type)
+        public TPCQuery(WorkItemTrackingHttpClient workItemTrackingHttpClient, string wiql,QueryType type, string projectName, string teamName)
         {
             _wiql = wiql;
-            _workItemTrackingHttpClient = workItemTrackingHttpClient ?? throw new ArgumentNullException(nameof(workItemTrackingHttpClient));            
-            _defaultParameters = defaultParameters;
+            _workItemTrackingHttpClient = workItemTrackingHttpClient ??
+                                          throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
+           
             _type = type;
+            _projectName = projectName;
+            _teamName = teamName;
         }
-
+#if false
         public WorkItemLinkInfo[] GetLinks()
         {
             var store = GetWorkItemStore();
@@ -35,22 +41,32 @@ namespace WiLinq.LinqProvider
             return query.RunLinkQuery();
         }
 
-        public WorkItem[] GetWorkItems()
+#endif
+        public Task<List<WorkItem>> GetWorkItemsAsync()
         {
             if (_type != QueryType.WorkItem)
             {
                 throw new InvalidOperationException("This is not a workitem query");
             }
 
-            var store = GetWorkItemStore();
+            return GetWorkItemsAsyncCore();
 
-         
-            
-            return store.Query(_wiql, _defaultParameters)
-                .Cast<WorkItem>()
-                .ToArray();
+            async Task<List<WorkItem>> GetWorkItemsAsyncCore()
+            {
+                
+                var result = await _workItemTrackingHttpClient.QueryByWiqlAsync(new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql() { Query = _wiql});
+                if (_type == QueryType.WorkItem && result.QueryType !=
+                    Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.QueryType.Flat)
+                {
+                    throw new InvalidOperationException("Invalid query type");
+                }
+
+                var ids = result.WorkItems.Select(_ => _.Id);
+
+                var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
+
+                return workitems;
+            }
         }
-
-
     }
 }

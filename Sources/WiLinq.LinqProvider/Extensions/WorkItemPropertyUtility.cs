@@ -108,7 +108,7 @@ namespace WiLinq.LinqProvider.Extensions
                 return !string.IsNullOrEmpty(_workItemTypeName);
             }
         }
-
+#if false
         public static bool MatchWorkItemType(WorkItemType type)
         {
             if (type == null)
@@ -172,5 +172,6 @@ namespace WiLinq.LinqProvider.Extensions
             }
             return false;
         }
+#endif
     }
 }

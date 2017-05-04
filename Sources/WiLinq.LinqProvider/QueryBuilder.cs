@@ -94,11 +94,7 @@ namespace WiLinq.LinqProvider
                 return _query;
             }
             var builder = new StringBuilder();
-            
-            if (project != null)
-            {
-                _macroDictionnary.Add("project", project.Name);
-            }
+        
 
             builder.Append("SELECT ");
             if (_selectFieldList == null)
@@ -156,7 +152,7 @@ namespace WiLinq.LinqProvider
 
             var wiql = builder.ToString();
 
-            _query = new TPCQuery(tpc, wiql, _macroDictionnary, _queryType);
+            _query = new TPCQuery(tpc, wiql,_queryType,project?.Name,null);
             return _query;
         }
 

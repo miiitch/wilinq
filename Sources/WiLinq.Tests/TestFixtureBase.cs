@@ -17,7 +17,7 @@ namespace WiLinq.Tests
         protected Project Project { get; private set; }
 
         [OneTimeSetUp]
-        public async Task SetUp()
+        public virtual async Task SetUp()
         {
             var collectionUrl = Environment.GetEnvironmentVariable("WILINQ_TEST_TPCURL");
 

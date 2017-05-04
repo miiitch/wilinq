@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -15,12 +16,12 @@ namespace WiLinq.LinqProvider
         readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
         readonly ProjectInfo _project;
         readonly ICustomWorkItemHelper<T> _creatorProvider;
-        DateTime? _asOfDate;
+        private DateTime? _asOfDate;
         
 
         IQueryable<TOutput> IQueryProvider.CreateQuery<TOutput>(Expression expression)
         {
-            return new WorkItemAsyncQuery<TOutput>(this, expression);
+            return new Query<TOutput>(this, expression);
         }
 
         IQueryable IQueryProvider.CreateQuery(Expression expression)
@@ -72,7 +73,11 @@ namespace WiLinq.LinqProvider
             throw new NotImplementedException();
         }
 
-        public object Execute(Expression expression)
+        private object Execute(Expression expression)
+        {
+            return Task.Run(() => ExecuteAync(expression)).Result;
+        }
+        public async Task<object> ExecuteAync(Expression expression)
         {
            
             var translator = new QueryTranslator(_creatorProvider);
@@ -82,7 +87,7 @@ namespace WiLinq.LinqProvider
 
             var query = queryBuilder.BuildQuery(_workItemTrackingHttpClient, _project, _asOfDate);
 
-            var tmpResult = query.GetWorkItems();
+            var tmpResult = await query.GetWorkItemsAsync();
 
             T[] wiResult;
             if (_creatorProvider != null)
@@ -117,10 +122,6 @@ namespace WiLinq.LinqProvider
 
         private void ConfigureExtraFilters(QueryBuilder queryBuilder)
         {
-            if (_project != null)
-            {
-                queryBuilder.AddWhereClause(SystemField.Project + " = @project");
-            }
 
             var attribs = typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
 

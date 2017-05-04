@@ -1,10 +1,11 @@
 using System;
+using Microsoft.TeamFoundation.Core.WebApi;
 
 namespace WiLinq.LinqProvider.Extensions
 {
     internal sealed class ProjectToWorkItemValueConverter : WorkItemValueConverter
     {
-        public override Type RelatedType => typeof(Project);
+        public override Type RelatedType => typeof(ProjectInfo);
 
         public override object Resolve(object obj)
         {
@@ -12,7 +13,7 @@ namespace WiLinq.LinqProvider.Extensions
             {
                 throw new ArgumentNullException(nameof(obj), "obj is null.");
             }
-            var project = obj as Project;
+            var project = obj as ProjectInfo;
             if (project == null)
             {
                 throw new ArgumentException("obj is not a Project", nameof(obj));
