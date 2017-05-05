@@ -14,7 +14,7 @@ namespace WiLinq.LinqProvider
     internal class WorkItemLinqQueryProvider<T> : IWorkItemLinqQueryProvider where T:class
     {
         readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
-        readonly ProjectInfo _project;
+        readonly string _projectName;
         readonly ICustomWorkItemHelper<T> _creatorProvider;
         private DateTime? _asOfDate;
         
@@ -41,10 +41,11 @@ namespace WiLinq.LinqProvider
 
         }
 
-        public WorkItemLinqQueryProvider(WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project, ICustomWorkItemHelper<T> creatorProvider)
+        public WorkItemLinqQueryProvider(WorkItemTrackingHttpClient workItemTrackingHttpClient, string projectName
+            , ICustomWorkItemHelper<T> creatorProvider)
         {
             _workItemTrackingHttpClient = workItemTrackingHttpClient ?? throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
-            _project = project;
+            _projectName = projectName;
             _creatorProvider = creatorProvider;
         }
 
@@ -85,7 +86,7 @@ namespace WiLinq.LinqProvider
 
             ConfigureExtraFilters(queryBuilder);
 
-            var query = queryBuilder.BuildQuery(_workItemTrackingHttpClient, _project, _asOfDate);
+            var query = queryBuilder.BuildQuery(_workItemTrackingHttpClient, _projectName, _asOfDate);
 
             var tmpResult = await query.GetWorkItemsAsync();
 
@@ -151,6 +152,6 @@ namespace WiLinq.LinqProvider
         
         public WorkItemTrackingHttpClient WorkItemTrackingHttpClient => _workItemTrackingHttpClient;
 
-        public ProjectInfo Project => _project;
+     
     }
 }

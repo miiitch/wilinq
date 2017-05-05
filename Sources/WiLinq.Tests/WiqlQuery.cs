@@ -2,27 +2,58 @@ using System.Linq;
 using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
+using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.Tests
 {
     [TestFixture]
-    public class WiqlQuery : TestFixtureBase
+    public class WorkItemLinqQueryShould : TestFixtureBase
     {
         [Test]
-        // ReSharper disable once InconsistentNaming
-        public void TPCQuery()
+       
+        public void Return_Only_One_Element_With_The_Right_Id()
         {
             //all workitems;
-            var allWiQuery = from workitem in Client.WorkItemSet()
-                             where workitem.Id == 3
-                             select workitem;
+            var q = from workitem in Client.WorkItemSet()
+                    where workitem.Id == 3
+                    select workitem;
 
             // ReSharper disable once UnusedVariable
-            var result = allWiQuery.ToList();
+            var result = q.ToList();
 
             Check.That(result).HasSize(1);
             Check.That(result[0].Id).Equals(3);
         }
+        [Test]
+      
+        public void Return_Only_One_Element_Of_Type_Bug_With_The_Right_Id()
+        {
+            //all workitems;
+            var q = from workitem in Client.SetOf<Bug>(Project)
+                    where workitem.Id == 174
+                    select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = q.ToList();
+
+            Check.That(result).HasSize(1);
+            Check.That(result[0].Id).Equals(174);           
+        }
+
+        [Test]
+        public void Return_No_Element_Of_Type_PBI_With_The_Id_Of_Bug()
+        {
+            //all workitems;
+            var q = from workitem in Client.SetOf<Bug>(Project)
+                where workitem.Id == 174
+                select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = q.ToList();
+
+            Check.That(result).IsEmpty();
+        }
+
 #if false
         [Test]
         public void ProjectQueryAllWorkitems()
@@ -91,5 +122,23 @@ namespace WiLinq.Tests
 
 
 #endif
+    }
+
+    [WorkItemType("Bug")]
+    public class Bug : WorkItemBase
+    {
+        public Bug()
+        {
+
+        }
+    }
+
+    [WorkItemType("Product Backlog Item")]
+    public class PBI : WorkItemBase
+    {
+        public PBI()
+        {
+
+        }
     }
 }

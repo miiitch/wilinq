@@ -8,13 +8,14 @@ using Microsoft.VisualStudio.Services.WebApi;
 using NUnit.Framework;
 using NUnit.Framework.Internal.Commands;
 using System.Threading.Tasks;
+using Microsoft.TeamFoundation.Core.WebApi;
 
 namespace WiLinq.Tests
 {
     public class TestFixtureBase
     {
         protected WorkItemTrackingHttpClient Client { get; private set; }
-        protected Project Project { get; private set; }
+        protected TeamProject Project { get; private set; }
 
         [OneTimeSetUp]
         public virtual async Task SetUp()
@@ -25,10 +26,13 @@ namespace WiLinq.Tests
 
             await connection.ConnectAsync();
 
-
-
             Client = await connection.GetClientAsync<WorkItemTrackingHttpClient>();
 
+            var projectHttpClient = await connection.GetClientAsync<ProjectHttpClient>();
+
+            Project = await projectHttpClient.GetProject("WiLinqTestProject");
+
+            
 
 
         }

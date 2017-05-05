@@ -39,7 +39,7 @@ namespace WiLinq.LinqProvider
             {
                 throw new ArgumentNullException(nameof(project));
             }            
-            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,project, new TFSWorkItemHelper()));
+            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient,project.Name, new TFSWorkItemHelper()));
         }
 
         /// <summary>
@@ -59,20 +59,32 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }           
 
-            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient,project, new THelper()));
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient,project.Name, new THelper()));
+        }
+
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient,
+            ProjectInfo projectInfo) where T : WorkItemBase, new()
+        {
+            return SetOf<T>(workItemTrackingHttpClient, projectInfo.Name);
+        }
+
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient,
+            TeamProject teamProject) where T : WorkItemBase, new()
+        {
+            return SetOf<T>(workItemTrackingHttpClient, teamProject.Name);
         }
 
         /// <summary>
         /// Extends the project for a specific work item type LINQ Query.
         /// </summary>
         /// <typeparam name="T">Type of work item</typeparam>
-        /// <param name="project">The project.</param>
+        /// <param name="projectName">The project name</param>
         /// <returns></returns>
-        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project) where T : WorkItemBase, new()
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, string projectName) where T : WorkItemBase, new()
         {
-            if (project == null)
+            if (projectName == null)
             {
-                throw new ArgumentNullException(nameof(project));
+                throw new ArgumentNullException(nameof(projectName));
             }           
 
             if (!WorkItemPropertyUtility<T>.IsValid)
@@ -80,7 +92,7 @@ namespace WiLinq.LinqProvider
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
             
-            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, project, WorkItemPropertyUtility<T>.Provider));
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, projectName, WorkItemPropertyUtility<T>.Provider));
         }
 
 

@@ -91,7 +91,7 @@ namespace WiLinq.LinqProvider
         /// <param name="project">The project.</param>
         /// <param name="asOf">As of.</param>
         /// <returns></returns>
-        public TPCQuery BuildQuery(WorkItemTrackingHttpClient tpc, ProjectInfo project, DateTime? asOf)
+        public TPCQuery BuildQuery(WorkItemTrackingHttpClient tpc, string projectName, DateTime? asOf)
         {            
             if (_query != null)
             {
@@ -156,7 +156,7 @@ namespace WiLinq.LinqProvider
 
             var wiql = builder.ToString();
 
-            _query = new TPCQuery(tpc, wiql,_queryType,project?.Name,null);
+            _query = new TPCQuery(tpc, wiql,_queryType,projectName,null);
             return _query;
         }
 
