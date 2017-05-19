@@ -39,7 +39,6 @@ namespace WiLinq.LinqProvider
         private readonly List<string> _selectFieldList = null;
         private readonly List<string> _whereList = new List<string>();
         private readonly List<string> _orderbyList = new List<string>();
-        private int _macroIndex;
         private readonly QueryType _queryType;
         private QueryLinkMode _queryLinkMode;
         

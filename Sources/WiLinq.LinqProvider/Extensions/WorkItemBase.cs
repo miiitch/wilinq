@@ -17,51 +17,31 @@ namespace WiLinq.LinqProvider.Extensions
     [IgnoreField(SystemField.NodeName)]
     public abstract class WorkItemBase
     {
-        public enum FieldOperation
-        {
-            Add, Replace, Remove
-        };
+        private readonly Dictionary<string, object> _fields;
 
-        private readonly Dictionary<string,(FieldOperation op, object value)> _changeDictionary = new Dictionary<string, (FieldOperation op, object value)>();
-
-
-        private void RegisterChange(string referenceName, FieldOperation fieldOperation, object value)
-        {
-            if (_changeDictionary.TryGetValue(referenceName, out var previousChange))
-            {
-                switch (fieldOperation)
-                {
-                    case FieldOperation.Add when previousChange.op == FieldOperation.Remove:
-                    case FieldOperation.Replace:
-                        _changeDictionary[referenceName] = (FieldOperation.Replace, value);
-                        break;
-                    case FieldOperation.Remove when previousChange.op == FieldOperation.Add:
-                        _changeDictionary.Remove(referenceName);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(fieldOperation), fieldOperation, null);
-                }
-            }
-            else
-            {
-                _changeDictionary.Add(referenceName, (fieldOperation, value));
-            }
-        }
 
         protected T? GetStructField<T>(string referenceName) where T : struct
         {
-            if (_workItem.Fields.TryGetValue(referenceName, out object value))
+            if (_fields.TryGetValue(referenceName, out object fieldValue))
             {
-                return (T?)value;
+                return (T?)fieldValue;
+            }
+            if (_workItem.Fields != null && _workItem.Fields.TryGetValue(referenceName, out fieldValue))
+            {
+                return (T?)fieldValue;
             }
             return null;
         }
 
         protected T GetRefField<T>(string referenceName) where T : class
         {
-            if (_workItem.Fields.TryGetValue(referenceName, out object value))
+            if (_fields.TryGetValue(referenceName, out object fieldValue))
             {
-                return (T)value;
+                return (T)fieldValue;
+            }
+            if (_workItem?.Fields != null && _workItem.Fields.TryGetValue(referenceName, out fieldValue))
+            {
+                return (T)fieldValue;
             }
             return null;
         }
@@ -73,6 +53,7 @@ namespace WiLinq.LinqProvider.Extensions
                 throw new ArgumentException("Can't set Id field");
             }
 
+            // ReSharper disable once MergeConditionalExpression
             SetFieldValue(referenceName, nullableValue.HasValue ? (object)nullableValue.Value : null);
         }
 
@@ -87,50 +68,17 @@ namespace WiLinq.LinqProvider.Extensions
 
         private void SetFieldValue(string referenceName, object nextValue)
         {
-            if (_workItem.Fields.TryGetValue(referenceName, out object currentValue))
-            {
-                if (nextValue != null) 
-                {
-                    if (currentValue.Equals(nextValue))
-                    {
-                        return;
-                    }
-                    _workItem.Fields[referenceName] = nextValue;
-                   RegisterChange(referenceName, FieldOperation.Replace,  nextValue);
-                }
-                else
-                {
-                    _workItem.Fields.Remove(referenceName);
-                    RegisterChange(referenceName, FieldOperation.Remove, null);
-                }
-            }
-            else
-            {
-                if (nextValue == null)
-                {
-                    return;
-                }
-                _workItem.Fields[referenceName] = nextValue;
-                RegisterChange(referenceName, FieldOperation.Add, nextValue);
-            }
+            _fields[referenceName] = nextValue;
         }
 
         private WorkItem _workItem;
 
         protected WorkItemBase()
         {
-
+            _fields = new Dictionary<string, object>();
         }
 
-
-        public List<(string ReferenceName,FieldOperation Operation,object Value)> GetFieldOperations()
-        {
-            return _changeDictionary
-                .Select(_ => (_.Key, _.Value.op, _.Value.value))
-                .ToList();
-        }
-
-        public WorkItem WorkItem
+        internal WorkItem WorkItem
         {
             get
             {
@@ -191,7 +139,20 @@ namespace WiLinq.LinqProvider.Extensions
         [Field(SystemField.CreatedDate)]
         public DateTime? CreatedDate => GetStructField<DateTime>(SystemField.CreatedDate);
 
+        [Field(SystemField.Project)]
+        public string Project
+        {
+            get => GetRefField<string>(SystemField.Project);
+            set => SetRefField<string>(SystemField.Project, value);
+        }
 
+
+        [Field(SystemField.WorkItemType)]
+        public string WorkItemType
+        {
+            get => GetRefField<string>(SystemField.WorkItemType);
+            internal set => SetRefField<string>(SystemField.WorkItemType, value);
+        }
 
 
         [Field(SystemField.Description)]
