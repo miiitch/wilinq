@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace WiLinq.LinqProvider
 {
     internal class Query<T> : IOrderedQueryable<T>       
     {
-        readonly IWorkItemLinqQueryProvider _provider;
-        readonly Expression _expression;
-        DateTime? _asOfDate;
+        private readonly IWorkItemLinqQueryProvider _provider;
+        private readonly Expression _expression;
+        private DateTime? _asOfDate;
 
         public Query(IWorkItemLinqQueryProvider provider)
         {
@@ -33,8 +34,6 @@ namespace WiLinq.LinqProvider
           
 
         }
-
-
 
         Expression IQueryable.Expression => _expression;
 
@@ -61,6 +60,13 @@ namespace WiLinq.LinqProvider
 
         }
 
+
+        public async Task<IEnumerable<T>> ExecuteAsync()
+        {
+           var result = await _provider.ExecuteAync(_expression);
+
+            return (IEnumerable<T>) result;
+        }
 
 
         public override string ToString()

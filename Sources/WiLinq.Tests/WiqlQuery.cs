@@ -3,6 +3,7 @@ using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
 using WiLinq.LinqProvider.Extensions;
+using System.Threading.Tasks;
 
 namespace WiLinq.Tests
 {
@@ -10,7 +11,6 @@ namespace WiLinq.Tests
     public class WorkItemLinqQueryShould : TestFixtureBase
     {
         [Test]
-       
         public void Return_Only_One_Element_With_The_Right_Id()
         {
             //all workitems;
@@ -24,9 +24,24 @@ namespace WiLinq.Tests
             Check.That(result).HasSize(1);
             Check.That(result[0].Id).Equals(3);
         }
+
         [Test]
-      
-        public void Return_Only_One_Element_Of_Type_Bug_With_The_Right_Id()
+        public async Task Return_Only_One_Element_With_The_Right_Id_Async()
+        {
+            //all workitems;
+            var q = from workitem in Client.WorkItemSet()
+                    where workitem.Id == 3
+                    select workitem;
+
+            var result = await q.ToListAsync();
+
+            Check.That(result).HasSize(1);
+            Check.That(result[0].Id).Equals(3);
+        }
+
+        [Test]
+
+        public async Task Return_Only_One_Element_Of_Type_Bug_With_The_Right_Id()
         {
             //all workitems;
             var q = from workitem in Client.SetOf<Bug>(Project)
@@ -34,22 +49,22 @@ namespace WiLinq.Tests
                     select workitem;
 
             // ReSharper disable once UnusedVariable
-            var result = q.ToList();
+            var result = await q.ToListAsync();
 
             Check.That(result).HasSize(1);
-            Check.That(result[0].Id).Equals(174);           
+            Check.That(result[0].Id).Equals(174);
         }
 
         [Test]
-        public void Return_No_Element_Of_Type_PBI_With_The_Id_Of_Bug()
+        public async Task Return_No_Element_Of_Type_PBI_With_The_Id_Of_Bug()
         {
             //all workitems;
             var q = from workitem in Client.SetOf<Bug>(Project)
-                where workitem.Id == 174
-                select workitem;
+                    where workitem.Id == 173
+                    select workitem;
 
             // ReSharper disable once UnusedVariable
-            var result = q.ToList();
+            var result = await q.ToListAsync();
 
             Check.That(result).IsEmpty();
         }
@@ -136,7 +151,7 @@ namespace WiLinq.Tests
             Check.That(bug.WorkItemType).IsEqualTo("Bug");
             Check.That(bug.Project).IsEqualTo(Project.Name);
 
-            
+
         }
     }
 

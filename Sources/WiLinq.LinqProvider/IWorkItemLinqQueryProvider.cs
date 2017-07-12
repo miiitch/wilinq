@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace WiLinq.LinqProvider
 {
@@ -9,5 +10,7 @@ namespace WiLinq.LinqProvider
         string GetQueryText(Expression expression);
         DateTime? AsOfDate { get; set; }
         TPCQuery TransformAsWorkItemQuery(Expression expression);
+
+        Task<object> ExecuteAync(Expression expression);
     }
 }

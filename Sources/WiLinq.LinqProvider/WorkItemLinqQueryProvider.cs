@@ -57,9 +57,9 @@ namespace WiLinq.LinqProvider
 
         }
 
-        private IEnumerable<TResult> ApplySelect<TResult>(T[] workItems, Func<T, TResult> select)
+        private IEnumerable<TResult> ApplySelect<TResult>(IEnumerable<T> workItems, Func<T, TResult> select)
         {
-            return workItems.Select(select);
+            return workItems.Select(select).ToList();
         }
 
         public string GetQueryText(Expression expression)
@@ -90,11 +90,11 @@ namespace WiLinq.LinqProvider
 
             var tmpResult = await query.GetWorkItemsAsync();
 
-            T[] wiResult;
+            List<T> wiResult;
             if (_creatorProvider != null)
             {
                 wiResult = (from wi in tmpResult
-                            select _creatorProvider.CreateItem(wi)).ToArray();
+                            select _creatorProvider.CreateItem(wi)).ToList();
             }
             else
             {
@@ -102,7 +102,7 @@ namespace WiLinq.LinqProvider
                 {
                     throw new InvalidOperationException("creatorProvider required");
                 }
-                wiResult = tmpResult as T[];
+                wiResult = tmpResult as List<T>;
             }
 
 

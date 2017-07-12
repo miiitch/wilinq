@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.VisualStudio.Services.WebApi;
 using WiLinq.LinqProvider.Wiql;
 
 namespace WiLinq.LinqProvider
@@ -62,10 +63,15 @@ namespace WiLinq.LinqProvider
                 }
 
                 var ids = result.WorkItems.Select(_ => _.Id);
-
-                var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
-
-                return workitems;
+                try
+                {
+                    var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
+                    return workitems;
+                }
+                catch (VssServiceResponseException notFoundResponseException) when(notFoundResponseException.Message == "Not Found")
+                {
+                    return new List<WorkItem>();
+                }
             }
         }
     }
