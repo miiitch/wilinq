@@ -14,7 +14,7 @@ namespace WiLinq.Tests
         public void Return_Only_One_Element_With_The_Right_Id()
         {
             //all workitems;
-            var q = from workitem in Client.WorkItemSet()
+            var q = from workitem in Client.All()
                     where workitem.Id == 3
                     select workitem;
 
@@ -29,7 +29,7 @@ namespace WiLinq.Tests
         public async Task Return_Only_One_Element_With_The_Right_Id_Async()
         {
             //all workitems;
-            var q = from workitem in Client.WorkItemSet()
+            var q = from workitem in Client.All()
                     where workitem.Id == 3
                     select workitem;
 
@@ -69,29 +69,41 @@ namespace WiLinq.Tests
             Check.That(result).IsEmpty();
         }
 
+
+        [Test]
+        public async Task ProjectQueryAllWorkitems()
+        {
+            //all workitems;
+            var projectWiQuery = from workitem in Client.All(Project)
+                                 select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+        }
+
+        [Test]
+        public async Task AllWorkitems()
+        {
+            //all workitems;
+            var projectWiQuery = from workitem in Client.All()
+                select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+        }
+
+        [Test]
+        public async Task Query_With_QueryConstant_Me()
+        {
+            var projectWiQuery = from workitem in Client.All()
+                where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
+                select workitem;
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+        }
+
 #if false
-        [Test]
-        public void ProjectQueryAllWorkitems()
-        {
-            //all workitems;
-            var projectWiQuery = from workitem in Project.WorkItemSet()
-                                 select workitem;
 
-            // ReSharper disable once UnusedVariable
-            var result = projectWiQuery.ToList();
-        }
-
-        [Test]
-        public void ProjectQuery()
-        {
-            //all workitems;
-            var projectWiQuery = from workitem in Project.WorkItemSet()
-                                 where workitem.Id == 3
-                                 select workitem;
-
-            // ReSharper disable once UnusedVariable
-            var result = projectWiQuery.ToList();
-        }
 
         [Test]
         public void Query_With_Field_Value_As_A_WI_Field()
@@ -125,15 +137,7 @@ namespace WiLinq.Tests
         }
 
 
-        [Test]
-        public void Query_With_QueryConstant_Me()
-        {
-            var projectWiQuery = from workitem in Project.WorkItemSet()
-                                 where workitem.CreatedBy == QueryConstant.Me
-                                 select workitem;
-            // ReSharper disable once UnusedVariable
-            var result = projectWiQuery.ToList();
-        }
+ 
 
 
 #endif

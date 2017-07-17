@@ -18,7 +18,7 @@ namespace WiLinq.LinqProvider
         /// </summary>
         /// <param name="workItemTrackingHttpClient">The server.</param>
         /// <returns></returns>
-        public static IQueryable<WorkItem> WorkItemSet(this WorkItemTrackingHttpClient workItemTrackingHttpClient)
+        public static IQueryable<WorkItem> All(this WorkItemTrackingHttpClient workItemTrackingHttpClient)
         {
             if (workItemTrackingHttpClient == null)
             {
@@ -33,7 +33,16 @@ namespace WiLinq.LinqProvider
         /// </summary>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static IQueryable<WorkItem> WorkItemSet(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
+        public static IQueryable<WorkItem> All(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient, project.Name, new TFSWorkItemHelper()));
+        }
+
+        public static IQueryable<WorkItem> All(this WorkItemTrackingHttpClient workItemTrackingHttpClient, TeamProject project)
         {
             if (project == null)
             {
@@ -61,6 +70,7 @@ namespace WiLinq.LinqProvider
 
             return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, project.Name, new THelper()));
         }
+
 
         public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient,
             ProjectInfo projectInfo) where T : WorkItemBase, new()
