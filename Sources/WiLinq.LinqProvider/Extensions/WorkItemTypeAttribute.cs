@@ -2,7 +2,7 @@ using System;
 
 namespace WiLinq.LinqProvider.Extensions
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class WorkItemTypeAttribute : Attribute
     {
         private readonly string _typeName;

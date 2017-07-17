@@ -8,13 +8,26 @@ using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.Tests
 {
-#if false
+
     [TestFixture]
-    public class WorkItemFields : TestFixtureBase
+    public class WorkItemOperations : TestFixtureBase
     {
         private WorkItemType _featureType;
 
 
+        [Test]
+        public async Task CreateWorkitem()
+        {
+            var bug = Project.New<Bug>();
+
+            bug.Title = "New bug created during test";
+
+            await Client.Save(bug);
+
+        }
+
+
+#if false
         private class Feature : WorkItemBase
         {
 
@@ -83,7 +96,7 @@ namespace WiLinq.Tests
 
 
         }
-
-    }
 #endif
+    }
+
 }

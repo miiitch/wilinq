@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider
@@ -116,6 +118,36 @@ namespace WiLinq.LinqProvider
         }
 
 
+        public static async Task Save<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, T workitem)
+            where T : WorkItemBase
+        {
+            var patchDocument = workitem.CreatePatchDocument();
+            try
+            {
+                Task<WorkItem> task;
+                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+                if (workitem.Id.HasValue)
+                {
+                    task = workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workitem.Id.Value);
+                }
+                else
+                {
+                    task = workItemTrackingHttpClient.CreateWorkItemAsync(patchDocument, workitem.Project,
+                        workitem.WorkItemType);
+                }
+                var savedOrCreatedWorkItem = await task;
+
+                workitem.CopyValuesFromWorkItem(savedOrCreatedWorkItem);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+
+        }
+
 
         public static T New<T>(this ProjectInfo project) where T : WorkItemBase, new()
         {
@@ -136,9 +168,11 @@ namespace WiLinq.LinqProvider
 
             var typeName = WorkItemPropertyUtility<T>.WorkItemTypeName;
 
-            var result = new T() { WorkItem = new WorkItem() };
-            result.WorkItemType = typeName;
-            result.Project = projectName;
+            var result = new T
+            {
+                WorkItemType = typeName,
+                Project = projectName
+            };
 
 
             return result;
@@ -243,10 +277,9 @@ namespace WiLinq.LinqProvider
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the needed attributes");
             }
 
-            var ret = new T
-            {
-                WorkItem = wi
-            };
+            var ret = new T();
+
+            ret.CopyValuesFromWorkItem(wi);
 
             return ret;
         }

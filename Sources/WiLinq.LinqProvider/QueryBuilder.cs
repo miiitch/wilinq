@@ -27,7 +27,7 @@ namespace WiLinq.LinqProvider
                 case bool b:
                     return b ? "true" : "false";
                 case DateTime dt:
-                    return $"{dt.ToShortDateString()} {dt.ToShortTimeString()}";
+                    return $"'{dt.ToShortDateString()} {dt.ToShortTimeString()}'";
                 default:
                     throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
             }

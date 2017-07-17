@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.VisualStudio.Services.WebApi.Patch;
+using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 
 namespace WiLinq.LinqProvider.Extensions
 {
@@ -17,16 +19,18 @@ namespace WiLinq.LinqProvider.Extensions
     [IgnoreField(SystemField.NodeName)]
     public abstract class WorkItemBase
     {
-        private readonly Dictionary<string, object> _fields;
+        private Dictionary<string, object> _initialFieldValues;
+  
+        private Dictionary<string, object> _fieldValues;
 
 
         protected T? GetStructField<T>(string referenceName) where T : struct
         {
-            if (_fields.TryGetValue(referenceName, out object fieldValue))
+            if (_fieldValues.TryGetValue(referenceName, out object fieldValue))
             {
                 return (T?)fieldValue;
             }
-            if (_workItem.Fields != null && _workItem.Fields.TryGetValue(referenceName, out fieldValue))
+            if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
                 return (T?)fieldValue;
             }
@@ -35,11 +39,11 @@ namespace WiLinq.LinqProvider.Extensions
 
         protected T GetRefField<T>(string referenceName) where T : class
         {
-            if (_fields.TryGetValue(referenceName, out object fieldValue))
+            if (_fieldValues.TryGetValue(referenceName, out object fieldValue))
             {
                 return (T)fieldValue;
             }
-            if (_workItem?.Fields != null && _workItem.Fields.TryGetValue(referenceName, out fieldValue))
+            if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
                 return (T)fieldValue;
             }
@@ -68,51 +72,97 @@ namespace WiLinq.LinqProvider.Extensions
 
         private void SetFieldValue(string referenceName, object nextValue)
         {
-            _fields[referenceName] = nextValue;
+            _fieldValues[referenceName] = nextValue;
         }
-
-        private WorkItem _workItem;
-
+     
         protected WorkItemBase()
         {
-            _fields = new Dictionary<string, object>();
+            _fieldValues = new Dictionary<string, object>();
         }
 
-        internal WorkItem WorkItem
+        internal void CopyValuesFromWorkItem( WorkItem workitem)
         {
-            get
-            {
-                if (_workItem == null)
-                {
-                    throw new InvalidOperationException("Workitem not assigned");
-                }
-                return _workItem;
-            }
-            set
-            {
-                if (_workItem != null)
-                {
-                    throw new InvalidOperationException("Workitem already assigned");
-                }
-                _workItem = value;
-            }
+            _initialFieldValues = workitem.Fields.ToDictionary(_ => _.Key, _ => _.Value);
+            _fieldValues = new Dictionary<string, object>();
+            Revision = workitem.Rev;
+            Id = workitem.Id;
         }
+
+        internal JsonPatchDocument CreatePatchDocument()
+        {
+            var result = new JsonPatchDocument();
+
+            var keys = _fieldValues.Keys.ToList();
+
+            if (_initialFieldValues != null)
+            {
+                keys = keys.Union(_initialFieldValues.Keys).Distinct().OrderBy(_ => _).ToList();
+            }
+
+            keys.Remove(SystemField.WorkItemType);
+            keys.Remove(SystemField.Project);
+
+            foreach (var key in keys)
+            {
+                object value;
+                object initialValue = null;
+
+                _initialFieldValues?.TryGetValue(key, out initialValue);
+                _fieldValues.TryGetValue(key, out value);
+
+                if (initialValue == null && value != null)
+                {
+                    var operation = new JsonPatchOperation
+                    {
+                        Operation = Operation.Add,
+                        Path = $"/fields/{key}",
+                        Value = QueryBuilder.EncodeValue(value)
+                    };
+                    result.Add(operation);
+                }
+                else if (initialValue != null && value != null)
+                {
+                    var operation = new JsonPatchOperation
+                    {
+                        Operation = Operation.Replace,
+                        Path = $"/field/{key}",
+                        Value = QueryBuilder.EncodeValue(value)
+                    };
+                    result.Add(operation);
+                }
+                else if (initialValue != null)
+                {
+                    var operation = new JsonPatchOperation
+                    {
+                        Operation = Operation.Remove,
+                        Path = $"/field/{key}"                      
+                    };
+                    result.Add(operation);
+                }                
+            }
+            return result;
+        }
+
 
         [Field(SystemField.Id)]
-        public int? Id => _workItem.Id;
+        public int? Id { get; private set; }
+    
+
+        [Field(SystemField.Revision)]
+        public int? Revision { get; private set; }
 
         [Field(SystemField.AssignedTo)]
         public string AssignedTo
         {
             get => GetRefField<string>(SystemField.AssignedTo);
-            set => SetRefField<string>(SystemField.AssignedTo, value);
+            set => SetRefField(SystemField.AssignedTo, value);
         }
 
         [Field(SystemField.Title)]
         public string Title
         {
             get => GetRefField<string>(SystemField.Title);
-            set => SetRefField<string>(SystemField.Title, value);
+            set => SetRefField(SystemField.Title, value);
         }
 
         [Field(SystemField.ChangedDate)]
@@ -143,7 +193,7 @@ namespace WiLinq.LinqProvider.Extensions
         public string Project
         {
             get => GetRefField<string>(SystemField.Project);
-            set => SetRefField<string>(SystemField.Project, value);
+            set => SetRefField(SystemField.Project, value);
         }
 
 
@@ -151,7 +201,7 @@ namespace WiLinq.LinqProvider.Extensions
         public string WorkItemType
         {
             get => GetRefField<string>(SystemField.WorkItemType);
-            internal set => SetRefField<string>(SystemField.WorkItemType, value);
+            internal set => SetRefField(SystemField.WorkItemType, value);
         }
 
 
@@ -159,7 +209,7 @@ namespace WiLinq.LinqProvider.Extensions
         public string Description
         {
             get => GetRefField<string>(SystemField.Description);
-            set => SetRefField<string>(SystemField.Description, value);
+            set => SetRefField(SystemField.Description, value);
         }
 
 
@@ -168,8 +218,10 @@ namespace WiLinq.LinqProvider.Extensions
         public string Reason
         {
             get => GetRefField<string>(SystemField.Reason);
-            set => SetRefField<string>(SystemField.Reason, value);
+            set => SetRefField(SystemField.Reason, value);
         }
+
+      
 
         //[Field(SystemField.WorkItemType)]
         //public string Type => WorkItem.Type.Name;
@@ -178,11 +230,14 @@ namespace WiLinq.LinqProvider.Extensions
         public string State
         {
             get => GetRefField<string>(SystemField.State);
-            set => SetRefField<string>(SystemField.State, value);
+            set => SetRefField(SystemField.State, value);
         }
 
-        [Field(SystemField.Revision)]
-        public int? Revision => WorkItem.Rev;
+      
+
+
+
+
 #if false
         [Field(SystemField.AreaPath)]
          public string Area => WorkItem.AreaPath;

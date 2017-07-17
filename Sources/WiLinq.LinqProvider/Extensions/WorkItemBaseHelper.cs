@@ -12,10 +12,8 @@ namespace WiLinq.LinqProvider.Extensions
 
         public T CreateItem(WorkItem workitem)
         {
-            var ret = new T
-            {
-                WorkItem = workitem
-            };
+            var ret = new T();
+            ret.CopyValuesFromWorkItem(workitem);
             return ret;
         }
 

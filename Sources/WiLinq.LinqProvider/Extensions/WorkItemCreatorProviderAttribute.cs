@@ -5,7 +5,7 @@ namespace WiLinq.LinqProvider.Extensions
     /// <summary>
     /// Attribute used to associate a work item type to its creation provider
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class WorkItemCreatorProviderAttribute : Attribute
     {
         private readonly Type _creator;

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.TeamFoundation.Core.WebApi;
-using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-
 
 namespace WiLinq.LinqProvider.Extensions
 {
