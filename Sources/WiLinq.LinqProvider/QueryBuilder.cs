@@ -87,7 +87,7 @@ namespace WiLinq.LinqProvider
         /// Builds the query.
         /// </summary>
         /// <param name="tpc">The server.</param>
-        /// <param name="project">The project.</param>
+        /// <param name="projectName">The project name</param>
         /// <param name="asOf">As of.</param>
         /// <returns></returns>
         public TPCQuery BuildQuery(WorkItemTrackingHttpClient tpc, string projectName, DateTime? asOf)
@@ -117,6 +117,12 @@ namespace WiLinq.LinqProvider
             {
                 builder.AppendLine("FROM WORKITEMLINKS");
             }
+
+            if (!string.IsNullOrEmpty(projectName))
+            {
+                _whereList.Add($"{SystemField.Project} = {EncodeValue(projectName)}");
+            }
+
             if (_whereList.Count > 0)
             {
                 builder.Append("WHERE ");

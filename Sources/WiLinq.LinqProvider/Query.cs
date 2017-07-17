@@ -79,12 +79,8 @@ namespace WiLinq.LinqProvider
         public static TPCQuery TransformAsWorkItemQuery(IQueryable<T> query)
         {
             var wiQuery = query as Query<T>;
-            if (wiQuery == null)
-            {
-                return null;
-            }
 
-            return wiQuery._provider.TransformAsWorkItemQuery(query.Expression);            
+            return wiQuery?._provider.TransformAsWorkItemQuery(query.Expression);            
         }
 
 

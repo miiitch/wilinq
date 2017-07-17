@@ -74,6 +74,16 @@ namespace WiLinq.LinqProvider
             return SetOf<T>(workItemTrackingHttpClient, teamProject.Name);
         }
 
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient) where T : WorkItemBase, new()
+        {
+            if (!WorkItemPropertyUtility<T>.IsValid)
+            {
+                throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
+            }
+
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, null, WorkItemPropertyUtility<T>.Provider));
+        }
+
         /// <summary>
         /// Extends the project for a specific work item type LINQ Query.
         /// </summary>
