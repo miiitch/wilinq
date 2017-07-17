@@ -24,6 +24,10 @@ namespace WiLinq.Tests
 
             await Client.Save(bug);
 
+            bug.Title = "Title Changed";
+
+            await Client.Save(bug);
+
         }
 
 

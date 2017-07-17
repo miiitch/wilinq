@@ -87,7 +87,24 @@ namespace WiLinq.LinqProvider.Extensions
             Revision = workitem.Rev;
             Id = workitem.Id;
         }
-
+        private static string EncodeValueForJSonDocument(object value)
+        {
+            switch (value)
+            {
+                case int i:
+                    return i.ToString("D");
+                case double d:
+                    return d.ToString("F");
+                case string s:
+                    return s;
+                case bool b:
+                    return b ? "true" : "false";
+                case DateTime dt:
+                    return $"{dt.ToShortDateString()} {dt.ToShortTimeString()}";
+                default:
+                    throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
+            }
+        }
         internal JsonPatchDocument CreatePatchDocument()
         {
             var result = new JsonPatchDocument();
@@ -108,7 +125,7 @@ namespace WiLinq.LinqProvider.Extensions
                 object initialValue = null;
 
                 _initialFieldValues?.TryGetValue(key, out initialValue);
-                _fieldValues.TryGetValue(key, out value);
+                var hasNewValue = _fieldValues.TryGetValue(key, out value);
 
                 if (initialValue == null && value != null)
                 {
@@ -116,29 +133,32 @@ namespace WiLinq.LinqProvider.Extensions
                     {
                         Operation = Operation.Add,
                         Path = $"/fields/{key}",
-                        Value = QueryBuilder.EncodeValue(value)
+                        Value = EncodeValueForJSonDocument(value)
                     };
                     result.Add(operation);
                 }
-                else if (initialValue != null && value != null)
+                else if (hasNewValue)
                 {
-                    var operation = new JsonPatchOperation
+                    if (value == null)
                     {
-                        Operation = Operation.Replace,
-                        Path = $"/field/{key}",
-                        Value = QueryBuilder.EncodeValue(value)
-                    };
-                    result.Add(operation);
-                }
-                else if (initialValue != null)
-                {
-                    var operation = new JsonPatchOperation
+                        var operation = new JsonPatchOperation
+                        {
+                            Operation = Operation.Remove,
+                            Path = $"/fields/{key}"
+                        };
+                        result.Add(operation);
+                    }
+                    else
                     {
-                        Operation = Operation.Remove,
-                        Path = $"/field/{key}"                      
-                    };
-                    result.Add(operation);
-                }                
+                        var operation = new JsonPatchOperation
+                        {
+                            Operation = Operation.Replace,
+                            Path = $"/fields/{key}",
+                            Value = EncodeValueForJSonDocument(value)
+                        };
+                        result.Add(operation);
+                    }
+                }                     
             }
             return result;
         }
