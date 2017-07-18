@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NFluent;
 using NUnit.Framework;
@@ -86,7 +87,7 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All()
-                select workitem;
+                                 select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -96,11 +97,30 @@ namespace WiLinq.Tests
         public async Task Query_With_QueryConstant_Me()
         {
             var projectWiQuery = from workitem in Client.All()
-                where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
-                select workitem;
+                                 where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
+                                 select workitem;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
         }
+        [Test]
+        public async Task Query_With_Date()
+        {
+            var minCreationDate = new DateTime(2017, 7, 1);
+            var projectWiQuery = from workitem in Client.All()
+                                 where workitem.Field<DateTime>(SystemField.CreatedDate) > minCreationDate
+                                 select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+
+            foreach (var workitem in result)
+            {
+                var createdDate = workitem.Field<DateTime?>(SystemField.CreatedDate);
+                Check.That(createdDate).IsNotNull();
+                Check.That(createdDate.Value).IsAfter(minCreationDate);
+            }
+        }
+
 
 #if false
 

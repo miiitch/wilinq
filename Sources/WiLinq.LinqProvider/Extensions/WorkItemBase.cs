@@ -100,7 +100,7 @@ namespace WiLinq.LinqProvider.Extensions
                 case bool b:
                     return b ? "true" : "false";
                 case DateTime dt:
-                    return $"{dt.ToShortDateString()} {dt.ToShortTimeString()}";
+                    return dt.ToString("O");
                 default:
                     throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
             }
