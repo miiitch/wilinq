@@ -8,15 +8,8 @@ namespace WiLinq.LinqProvider.Wiql
 
         }
 
-        protected internal override string ConvertToQueryValue()
-        {
-            return "@Me";
-        }
+        protected internal override string ConvertToQueryValue() => "@Me";
 
-        public override ValueStatement Copy()
-        {
-            return this;
-        }
-
+        public override ValueStatement Copy() => this;
     }
 }

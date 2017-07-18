@@ -7,10 +7,10 @@ namespace WiLinq.LinqProvider.Wiql
 	public sealed class Query
 	{
 
-		public List<string> Fields { get; private set; }
-		public List<WhereStatement> WhereStatements { get; private set; }
-		public QueryMode Mode { get; private set; }
-		public List<OrderStatement> OrderStatements { get; private set; }
+		public List<string> Fields { get; }
+		public List<WhereStatement> WhereStatements { get; }
+		public QueryMode Mode { get; }
+		public List<OrderStatement> OrderStatements { get; }
 
 
 		public Query(QueryMode mode)

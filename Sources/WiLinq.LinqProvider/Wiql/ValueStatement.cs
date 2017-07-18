@@ -12,48 +12,24 @@ namespace WiLinq.LinqProvider.Wiql
             Today = new TodayValueStatement();
         }
 
-        internal ValueStatement()
-        {
-
-        }
-
-
         public abstract ValueStatement Copy();
-       
+
+        public override string ToString() => ConvertToQueryValue();
 
 
-        public static ValueStatement Me { get; private set; }
-        public static ValueStatement Project { get; private set; }
-        public static ValueStatement Today { get; private set; }
+        public static ValueStatement Me { get; }
+        public static ValueStatement Project { get; }
+        public static ValueStatement Today { get; }
 
-        public static ValueStatement Create(string value)
-        {
-            return new StringValueStatement(value);
-        }
+        public static ValueStatement Create(string value) => new StringValueStatement(value);
 
-        public static ValueStatement Create(DateTime value)
-        {
-            return new DateValueStatement(value);
-        }
+        public static ValueStatement Create(DateTime value) => new DateValueStatement(value);
 
-        public static ValueStatement CreateToday(int delta)
-        {
-            if (delta == 0)
-            {
-                return Today;
-            }
-            return new TodayValueStatement(delta);
-        }
+        public static ValueStatement CreateToday(int delta) => delta == 0 ? Today : new TodayValueStatement(delta);
 
-        public static ValueStatement Create(int value)
-        {
-            return new IntegerValueStatement(value);
-        }
+        public static ValueStatement Create(int value) => new IntegerValueStatement(value);
 
-        public static ValueStatement Create(params ValueStatement[] statements)
-        {
-            return new ListValueStatement(statements.ToList());
-        }
+        public static ValueStatement Create(params ValueStatement[] statements) => new ListValueStatement(statements.ToList());
 
         public static ValueStatement CreateParameter(string parameterName)
         {
@@ -75,10 +51,5 @@ namespace WiLinq.LinqProvider.Wiql
             return new ParameterValueStatement(parameterName);
         }
 
-
-        public override string ToString()
-        {
-            return ConvertToQueryValue();
-        }
     }
 }

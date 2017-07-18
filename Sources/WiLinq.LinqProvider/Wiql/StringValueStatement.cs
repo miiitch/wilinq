@@ -4,7 +4,7 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class StringValueStatement : ValueStatement
     {
-        public string Value { get; private set; }
+        public string Value { get; }
 
         /// <summary>
         /// Initializes a new instance of the StringValueStatement class.

@@ -4,21 +4,15 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class IntegerValueStatement : ValueStatement
     {
-        public int Value { get; private set; }
+        public int Value { get; }
 
         internal IntegerValueStatement(int value)
         {
             Value = value;
         }
 
-        protected internal override string ConvertToQueryValue()
-        {
-            return Value.ToString(CultureInfo.InvariantCulture);
-        }
+        protected internal override string ConvertToQueryValue() => Value.ToString(CultureInfo.InvariantCulture);
 
-        public override ValueStatement Copy()
-        {
-            return new IntegerValueStatement(Value);
-        }
+        public override ValueStatement Copy() => new IntegerValueStatement(Value);
     }
 }

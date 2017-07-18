@@ -9,14 +9,8 @@ namespace WiLinq.LinqProvider.Wiql
 
         }
 
-        protected internal override string ConvertToQueryValue()
-        {
-            return "@project";
-        }
+        protected internal override string ConvertToQueryValue() => "@project";
 
-        public override ValueStatement Copy()
-        {
-            return this;
-        }
+        public override ValueStatement Copy() => this;
     }
 }

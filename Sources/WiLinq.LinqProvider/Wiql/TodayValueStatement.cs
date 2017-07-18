@@ -4,7 +4,7 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class TodayValueStatement : ValueStatement
     {
-        public int Delta { get; private set; }
+        public int Delta { get; }
         /// <summary>
         /// Initializes a new instance of the TodayValue class.
         /// </summary>
@@ -36,10 +36,6 @@ namespace WiLinq.LinqProvider.Wiql
         }
 
 
-        public override ValueStatement Copy()
-        {
-            return new TodayValueStatement(Delta);
-        }
-
+        public override ValueStatement Copy() => new TodayValueStatement(Delta);
     }
 }

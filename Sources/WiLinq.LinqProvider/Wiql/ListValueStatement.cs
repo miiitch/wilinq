@@ -6,7 +6,7 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class ListValueStatement : ValueStatement
     {
-        public List<ValueStatement> Value { get; private set; }
+        public List<ValueStatement> Value { get; }
         /// <summary>
         /// Initializes a new instance of the ListValueStatement class.
         /// </summary>
@@ -26,9 +26,6 @@ namespace WiLinq.LinqProvider.Wiql
             return ret;
         }
 
-        public override ValueStatement Copy()
-        {
-            return new ListValueStatement(Value.Select(v => v.Copy()).ToList());
-        }
+        public override ValueStatement Copy() => new ListValueStatement(Value.Select(v => v.Copy()).ToList());
     }
 }

@@ -4,10 +4,10 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class FieldOperationStatement : WhereStatement
     {
-        public string Field { get; private set; }
-        public FieldOperationStatementType Type { get; private set; }
-        public ValueStatement Value { get; private set; }
-        public FieldType FieldType { get; private set; }
+        public string Field { get; }
+        public FieldOperationStatementType Type { get; }
+        public ValueStatement Value { get; }
+        public FieldType FieldType { get; }
 
         /// <summary>
         /// Initializes a new instance of the FieldOperationStatement class.

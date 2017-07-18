@@ -6,9 +6,10 @@ namespace WiLinq.LinqProvider.Wiql
     {
         private const string STR_AND = "And";
         private const string STR_OR = "Or";
-        public WhereStatement Left {  get; private set; }
-        public WhereStatement Right { get; private set; }
-        public BooleanOperationStatementType Type {  get; private set; }
+
+        public WhereStatement Left {  get; }
+        public WhereStatement Right { get; }
+        public BooleanOperationStatementType Type {  get; }
 
         /// <summary>
         /// Initializes a new instance of the BooleanOperationStatement class.
