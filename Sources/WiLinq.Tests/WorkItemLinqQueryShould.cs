@@ -3,7 +3,6 @@ using System.Linq;
 using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
-using WiLinq.LinqProvider.Extensions;
 using System.Threading.Tasks;
 
 namespace WiLinq.Tests
@@ -72,7 +71,7 @@ namespace WiLinq.Tests
 
 
         [Test]
-        public async Task ProjectQueryAllWorkitems()
+        public async Task Return_All_Project_Workitems()
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All(Project)
@@ -83,7 +82,7 @@ namespace WiLinq.Tests
         }
 
         [Test]
-        public async Task AllWorkitems()
+        public async Task Return_All_Collection_Workitems()
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All()
@@ -94,7 +93,7 @@ namespace WiLinq.Tests
         }
 
         [Test]
-        public async Task Query_With_QueryConstant_Me()
+        public async Task Return_All_Workitems_Assigned_To_Me()
         {
             var projectWiQuery = from workitem in Client.All()
                                  where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
@@ -102,8 +101,9 @@ namespace WiLinq.Tests
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
         }
+
         [Test]
-        public async Task Query_With_Date()
+        public async Task Return_All_Worktitem_Created_After_A_Specific_Date()
         {
             var minCreationDate = new DateTime(2017, 7, 1);
             var projectWiQuery = from workitem in Client.All()
@@ -117,10 +117,38 @@ namespace WiLinq.Tests
             {
                 var createdDate = workitem.Field<DateTime?>(SystemField.CreatedDate);
                 Check.That(createdDate).IsNotNull();
+                // ReSharper disable once PossibleInvalidOperationException
                 Check.That(createdDate.Value).IsAfter(minCreationDate);
             }
         }
 
+
+        [Test]
+        public async Task Return_All_Bugs_Of_The_Project()
+        {
+            var projectWiQuery = from workitem in Client.SetOf<Bug>(Project)                
+                select workitem;
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+
+            Check.That(result).Not.IsEmpty();
+            Check.That(result).Not.HasElementThatMatches(bug => bug.WorkItemType != "Bug");
+        }
+
+        [Test]
+        public async Task Return_Bugs_Of_The_Project_Created_After_A_Specific_Date()
+        {
+            var minCreationDate = new DateTime(2017, 7, 1);
+            var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
+                                 where bug.CreatedDate > minCreationDate
+                                 select bug;
+
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+
+            Check.That(result).Not.IsEmpty();
+            Check.That(result).Not.HasElementThatMatches(bug => bug.WorkItemType != "Bug" || bug.CreatedDate <= minCreationDate);
+        }
 
 #if false
 
@@ -161,39 +189,5 @@ namespace WiLinq.Tests
 
 
 #endif
-    }
-
-    [TestFixture]
-    public class CustomWorkItemShould : TestFixtureBase
-    {
-        [Test]
-        public void Expose_The_Right_Project_And_Type()
-        {
-            var bug = Project.New<Bug>();
-
-            Check.That(bug).IsNotNull();
-            Check.That(bug.WorkItemType).IsEqualTo("Bug");
-            Check.That(bug.Project).IsEqualTo(Project.Name);
-
-
-        }
-    }
-
-    [WorkItemType("Bug")]
-    public class Bug : WorkItemBase
-    {
-        public Bug()
-        {
-
-        }
-    }
-
-    [WorkItemType("Product Backlog Item")]
-    public class PBI : WorkItemBase
-    {
-        public PBI()
-        {
-
-        }
     }
 }

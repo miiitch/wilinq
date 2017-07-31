@@ -128,12 +128,44 @@ namespace WiLinq.LinqProvider
                 // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
                 if (workitem.Id.HasValue)
                 {
+                    
                     task = workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workitem.Id.Value);
                 }
                 else
                 {
                     task = workItemTrackingHttpClient.CreateWorkItemAsync(patchDocument, workitem.Project,
                         workitem.WorkItemType);
+                }
+                var savedOrCreatedWorkItem = await task;
+
+                workitem.CopyValuesFromWorkItem(savedOrCreatedWorkItem);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+
+        }
+
+        public static async Task Validate<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, T workitem)
+            where T : WorkItemBase
+        {
+            var patchDocument = workitem.CreatePatchDocument();
+            try
+            {
+                Task<WorkItem> task;
+                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+                if (workitem.Id.HasValue)
+                {
+
+                    task = workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workitem.Id.Value,validateOnly:true);
+                }
+                else
+                {
+                    task = workItemTrackingHttpClient.CreateWorkItemAsync(patchDocument, workitem.Project,
+                        workitem.WorkItemType, validateOnly: true);
                 }
                 var savedOrCreatedWorkItem = await task;
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
 using WiLinq.LinqProvider.Extensions;
@@ -10,13 +11,26 @@ namespace WiLinq.Tests
 {
 
     [TestFixture]
-    public class WorkItemOperations : TestFixtureBase
+    public class WorkitemClientShould : TestFixtureBase
     {
         private WorkItemType _featureType;
 
 
         [Test]
-        public async Task CreateWorkitem()
+        public async Task Create_A_Workitem_And_Save_It()
+        {
+            var bug = Project.New<Bug>();
+
+            bug.Title = "New bug created during test";
+
+            await Client.Save(bug);
+
+            Check.That(bug.Id).HasAValue();
+
+        }
+
+        [Test]
+        public async Task Create_A_Workitem_And_Save_It_And_Update_It()
         {
             var bug = Project.New<Bug>();
 
@@ -30,6 +44,20 @@ namespace WiLinq.Tests
 
         }
 
+        [Test]
+        public async Task ValiadteWorkitem()
+        {
+            var bug = Project.New<Bug>();
+
+            bug.Title = "todo";
+            bug.State = "Finished";
+          
+
+            await Client.Validate(bug);
+
+           
+
+        }
 
 #if false
         private class Feature : WorkItemBase
