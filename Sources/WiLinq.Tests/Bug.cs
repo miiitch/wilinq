@@ -13,7 +13,7 @@ namespace WiLinq.Tests
 
 
     [WiLinq.LinqProvider.Extensions.WorkItemTypeAttribute("Task")]
-    public partial class Task : WiLinq.LinqProvider.Extensions.WorkItemBase
+    public partial class ScrumTask : WiLinq.LinqProvider.Extensions.WorkItemBase
     {
 
         /// <summary>Type of work involved</summary>

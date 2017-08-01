@@ -10,17 +10,19 @@ namespace WiLinq.LinqProvider.Extensions
     /// <typeparam name="T">Subclass of WorkItemObject</typeparam>
     public static class WorkItemPropertyUtility<T> where T : WorkItemBase, new()
     {
-        internal class PropertyData
+        internal class FieldData
         {
             public string ReferenceName { get; set; }
             public Type Type { get; set; }
         }
 
 
+        internal static List<FieldData> Fields => _fieldDataList;
+
         // ReSharper disable StaticFieldInGenericType
         private static string _workItemTypeName;
         private static bool _typeProcessed;
-        private static List<PropertyData> _propertyDataList;
+        private static List<FieldData> _fieldDataList;
         private static bool _propertyProcessed;
         // ReSharper restore StaticFieldInGenericType        
 
@@ -37,7 +39,7 @@ namespace WiLinq.LinqProvider.Extensions
                 return;
             }
             _propertyProcessed = true;
-            _propertyDataList = new List<PropertyData>();
+            _fieldDataList = new List<FieldData>();
 
 
             var props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
@@ -51,7 +53,7 @@ namespace WiLinq.LinqProvider.Extensions
                     continue;
                 }
 
-                _propertyDataList.Add(new PropertyData { ReferenceName = fieldAttribs[0].ReferenceName, Type = prop.PropertyType });
+                _fieldDataList.Add(new FieldData { ReferenceName = fieldAttribs[0].ReferenceName, Type = prop.PropertyType });
             }
         }
 
@@ -120,7 +122,7 @@ namespace WiLinq.LinqProvider.Extensions
 
             ProcessProperties();
 
-            foreach (var propData in _propertyDataList)
+            foreach (var propData in _fieldDataList)
             {
                 var matchingField = (from field in type.FieldDefinitions.Cast<FieldDefinition>()
                                      where field.ReferenceName == propData.ReferenceName

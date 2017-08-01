@@ -12,10 +12,7 @@ namespace WiLinq.Tests
 
     [TestFixture]
     public class WorkitemClientShould : TestFixtureBase
-    {
-        private WorkItemType _featureType;
-
-
+    {       
         [Test]
         public async Task Create_A_Workitem_And_Save_It()
         {
