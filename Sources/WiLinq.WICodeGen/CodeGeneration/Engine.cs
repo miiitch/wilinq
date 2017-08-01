@@ -107,6 +107,8 @@ namespace WiLinq.CodeGen.CodeGeneration
 
             foreach (var classDefinition in modeldefinition.ClassDefinitions)
             {
+                if (!classDefinition.Generate)
+                    continue;
 
                 var wiTypeClass = GenerateWorkItemTypeClass(classDefinition);
                 codeNamespace.Types.Add(wiTypeClass);
@@ -186,14 +188,14 @@ namespace WiLinq.CodeGen.CodeGeneration
 
             property.Name = propName;
 
-            var fieldType = fieldDefinition.Type;
-            if (!fieldType.IsClass)
+            var propertyType = fieldDefinition.Type;
+            if (!propertyType.IsClass)
             {
                 var nullableType = typeof(Nullable<>);
-                fieldType = nullableType.MakeGenericType(fieldType);
+                propertyType = nullableType.MakeGenericType(propertyType);
 
             }
-            property.Type = new CodeTypeReference(fieldType);
+            property.Type = new CodeTypeReference(propertyType);
             property.Attributes = MemberAttributes.Public;
 
             property.CustomAttributes.Add(new CodeAttributeDeclaration(
@@ -208,7 +210,7 @@ namespace WiLinq.CodeGen.CodeGeneration
                 property.Comments.Add(new CodeCommentStatement(comment));
             }
 
-            var fieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), fieldType.IsClass?"GetRefField":"GetStructField",new[] { new CodeTypeReference(fieldType) });
+            var fieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), propertyType.IsClass?"GetRefField":"GetStructField",new[] { new CodeTypeReference(fieldDefinition.Type) });
             var fieldMethodInvoke = new CodeMethodInvokeExpression(fieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName) });
 
             property.GetStatements.Add(new CodeMethodReturnStatement(fieldMethodInvoke));
@@ -217,7 +219,7 @@ namespace WiLinq.CodeGen.CodeGeneration
             if (!fieldDefinition.IsReadOnly)
             {
 
-                var setFieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), fieldType.IsClass ? "SetRefField" : "SetStructField", new[] { new CodeTypeReference(fieldType) });
+                var setFieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), propertyType.IsClass ? "SetRefField" : "SetStructField", new[] { new CodeTypeReference(fieldDefinition.Type) });
                 var setFielMethodInvoke = new CodeMethodInvokeExpression(setFieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName), new CodePropertySetValueReferenceExpression() });
                 property.SetStatements.Add(setFielMethodInvoke);
             }

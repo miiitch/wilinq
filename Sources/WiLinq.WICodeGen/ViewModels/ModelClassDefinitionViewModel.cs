@@ -36,7 +36,7 @@ namespace WiLinq.CodeGen.ViewModels
                 .Select(field => new PropertyDefinitionViewModel(field))
                 .ToList();
 
-            Generate = true;
+            Generate = false;
         }
 
         public string ClassName
