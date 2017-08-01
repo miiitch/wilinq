@@ -11,12 +11,6 @@ namespace WiLinq.CodeGen.CodeGeneration
         public string PropertyName { get; set; }
         public string Description { get; set; }
         public bool Inherited { get; set; }
-        public string TypeNameString
-        {
-            get
-            {
-                return Type.Name;
-            }
-        }
+        public string TypeNameString => Type.Name;
     }
 }

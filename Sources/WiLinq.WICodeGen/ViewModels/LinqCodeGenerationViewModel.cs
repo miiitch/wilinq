@@ -14,21 +14,18 @@ using System.Windows.Forms;
 
 namespace WiLinq.CodeGen.ViewModels
 {
-    class LinqCodeGenerationViewModel : ViewModelBase
+    internal class LinqCodeGenerationViewModel : ViewModelBase
     {
       
         private bool _cSharpCode;
         private readonly ModelDefinition _modelDefinition;
 
-        readonly Engine _codeGenerationEngine;
+        private readonly Engine _codeGenerationEngine;
 
 
         public bool CSharpCode
         {
-            get
-            {
-                return _cSharpCode;
-            }
+            get => _cSharpCode;
             set
             {
                 _cSharpCode = value;
@@ -38,10 +35,7 @@ namespace WiLinq.CodeGen.ViewModels
         }
         public bool VbNetCode
         {
-            get
-            {
-                return !_cSharpCode;
-            }
+            get => !_cSharpCode;
             set
             {
                 _cSharpCode = !value;
@@ -51,23 +45,17 @@ namespace WiLinq.CodeGen.ViewModels
         }
         public string Namespace
         {
-            get
-            {
-                return _modelDefinition.Namespace;
-            }
-            set
-            {
-                _modelDefinition.Namespace = value;
-            }
+            get => _modelDefinition.Namespace;
+            set => _modelDefinition.Namespace = value;
         }
-        public List<ModelClassDefinitionViewModel> Classes { get; private set; }
+        public List<ModelClassDefinitionViewModel> Classes { get; }
 
-        public ICommand GenerateClassesCommand { get; private set; }
+        public ICommand GenerateClassesCommand { get; }
 
         public LinqCodeGenerationViewModel(Project project)
         {
             if (project == null)
-                throw new ArgumentNullException("project", @"project is null.");
+                throw new ArgumentNullException(nameof(project), @"project is null.");
 
             CSharpCode = true;
             _codeGenerationEngine = new Engine();

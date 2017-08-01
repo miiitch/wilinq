@@ -20,19 +20,8 @@ namespace WiLinq.CodeGen.CodeGeneration
     {
         private readonly List<string> _fieldToIgnoreList;
         private readonly List<string> _definedPropertyList;
-        private FieldSeparator _fieldSeparator = FieldSeparator.NoSpace;
 
-        public FieldSeparator FieldSeparator
-        {
-            get
-            {
-                return _fieldSeparator;
-            }
-            set
-            {
-                _fieldSeparator = value;
-            }
-        }
+        public FieldSeparator FieldSeparator { get; set; } = FieldSeparator.NoSpace;
 
         public Engine()
         {
@@ -66,7 +55,7 @@ namespace WiLinq.CodeGen.CodeGeneration
         {
             if (project == null)
             {
-                throw new ArgumentNullException("project");
+                throw new ArgumentNullException(nameof(project));
             }
 
             var result = new ModelDefinition();
@@ -75,12 +64,12 @@ namespace WiLinq.CodeGen.CodeGeneration
                     let classDef = new ModelClassDefinition
                     {
                         WorkItemType = wit.Name,
-                        ClassName = Regex.Replace(wit.Name, @"\W", String.Empty),
+                        ClassName = Regex.Replace(wit.Name, @"\W", string.Empty),
                         FieldDefinitions = (from field in wit.FieldDefinitions.Cast<FieldDefinition>()
                                             select new ModelFieldDefinition
                                             {
                                                 Name = field.Name,
-                                                PropertyName = Regex.Replace(field.Name, @"\W", String.Empty),
+                                                PropertyName = Regex.Replace(field.Name, @"\W", string.Empty),
                                                 IsReadOnly = (!field.IsEditable) || field.IsComputed,
                                                 Description = field.HelpText,
                                                 ReferenceName = field.ReferenceName,
@@ -157,10 +146,10 @@ namespace WiLinq.CodeGen.CodeGeneration
 
 
 
-            if (!String.IsNullOrEmpty(classDefinition.Description))
+            if (!string.IsNullOrEmpty(classDefinition.Description))
             {
 
-                var comment = new CodeComment(String.Format("<summary>{0}</summary>", classDefinition.Description), true);
+                var comment = new CodeComment($"<summary>{classDefinition.Description}</summary>", true);
                 wiTypeClass.Comments.Add(new CodeCommentStatement(comment));
             }
 
@@ -212,14 +201,14 @@ namespace WiLinq.CodeGen.CodeGeneration
                    new CodeAttributeArgument(new CodePrimitiveExpression(fieldDefinition.ReferenceName))));
 
 
-            if (!String.IsNullOrEmpty(fieldDefinition.Description))
+            if (!string.IsNullOrEmpty(fieldDefinition.Description))
             {
 
-                var comment = new CodeComment(String.Format("<summary>{0}</summary>", fieldDefinition.Description), true);
+                var comment = new CodeComment($"<summary>{fieldDefinition.Description}</summary>", true);
                 property.Comments.Add(new CodeCommentStatement(comment));
             }
 
-            var fieldMethod = new CodeMethodReferenceExpression(new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "WorkItem"), "Field", new[] { new CodeTypeReference(fieldType) });
+            var fieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), fieldType.IsClass?"GetRefField":"GetStructField",new[] { new CodeTypeReference(fieldType) });
             var fieldMethodInvoke = new CodeMethodInvokeExpression(fieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName) });
 
             property.GetStatements.Add(new CodeMethodReturnStatement(fieldMethodInvoke));
@@ -228,7 +217,7 @@ namespace WiLinq.CodeGen.CodeGeneration
             if (!fieldDefinition.IsReadOnly)
             {
 
-                var setFieldMethod = new CodeMethodReferenceExpression(new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "WorkItem"), "SetField", new[] { new CodeTypeReference(fieldType) });
+                var setFieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), fieldType.IsClass ? "SetRefField" : "SetStructField", new[] { new CodeTypeReference(fieldType) });
                 var setFielMethodInvoke = new CodeMethodInvokeExpression(setFieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName), new CodePropertySetValueReferenceExpression() });
                 property.SetStatements.Add(setFielMethodInvoke);
             }
@@ -243,17 +232,17 @@ namespace WiLinq.CodeGen.CodeGeneration
         /// <returns></returns>
         private string GeneratePropertyName(ModelFieldDefinition fieldDefinition)
         {
-            if (!String.IsNullOrEmpty(fieldDefinition.PropertyName))
+            if (!string.IsNullOrEmpty(fieldDefinition.PropertyName))
             {
                 return fieldDefinition.PropertyName;
             }
 
             string replacement;
 
-            switch (_fieldSeparator)
+            switch (FieldSeparator)
             {
                 case FieldSeparator.NoSpace:
-                    replacement = String.Empty;
+                    replacement = string.Empty;
                     break;
                 case FieldSeparator.Underscore:
                     replacement = "_";

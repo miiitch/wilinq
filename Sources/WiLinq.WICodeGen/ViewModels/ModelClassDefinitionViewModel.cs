@@ -7,18 +7,15 @@ namespace WiLinq.CodeGen.ViewModels
 {
     internal class ModelClassDefinitionViewModel : ViewModelBase
     {
-        readonly ModelClassDefinition _model;
+        private readonly ModelClassDefinition _model;
 
 
-        public List<PropertyDefinitionViewModel> Properties { get; private set; }
+        public List<PropertyDefinitionViewModel> Properties { get; }
 
 
         public bool Generate
         {
-            get
-            {
-                return _model.Generate;
-            }
+            get => _model.Generate;
             set
             {
                 _model.Generate = value;
@@ -44,57 +41,36 @@ namespace WiLinq.CodeGen.ViewModels
 
         public string ClassName
         {
-            get
-            {
-                return _model.ClassName;
-            }
-            set
-            {
-                _model.ClassName = value;
-            }
+            get => _model.ClassName;
+            set => _model.ClassName = value;
         }
 
-        public string WorkItemType
-        {
-            get
-            {
-                return _model.WorkItemType;
-            }
-        }
+        public string WorkItemType => _model.WorkItemType;
 
 
         public bool IsPublic
         {
-            get
-            {
-                return _model.IsPublic;
-            }
+            get => _model.IsPublic;
             set
             {
-                if (_model.IsPublic != value)
-                {
-                    _model.IsPublic = value;
-                    RaisePropertyChanged(() => IsInternal);
-                    RaisePropertyChanged(() => IsPublic);
-                }
+                if (_model.IsPublic == value) return;
+
+                _model.IsPublic = value;
+                RaisePropertyChanged(() => IsInternal);
+                RaisePropertyChanged(() => IsPublic);
             }
         }
 
         public bool IsInternal
         {
-            get
-            {
-                return !_model.IsPublic;
-            }
+            get => !_model.IsPublic;
             set
             {
                 var isPublic = !value;
-                if (_model.IsPublic != isPublic)
-                {
-                    _model.IsPublic = isPublic;
-                    RaisePropertyChanged(() => IsInternal);
-                    RaisePropertyChanged(() => IsPublic);
-                }
+                if (_model.IsPublic == isPublic) return;
+                _model.IsPublic = isPublic;
+                RaisePropertyChanged(() => IsInternal);
+                RaisePropertyChanged(() => IsPublic);
             }
         }
 

@@ -5,7 +5,7 @@ namespace WiLinq.CodeGen.ViewModels
 {
     internal class PropertyDefinitionViewModel : ViewModelBase
     {
-        readonly ModelFieldDefinition _field;
+        private readonly ModelFieldDefinition _field;
         /// <summary>
         /// Initializes a new instance of the PropertyDefinitionViewModel class.
         /// </summary>
@@ -17,37 +17,13 @@ namespace WiLinq.CodeGen.ViewModels
 
         public string PropertyName
         {
-            get
-            {
-                return _field.PropertyName;
-            }
-            set
-            {
-                _field.PropertyName = value;
-            }
+            get => _field.PropertyName;
+            set => _field.PropertyName = value;
         }
-        public string ReferenceName
-        {
-            get
-            {
-                return _field.ReferenceName;
-            }
-        }
+        public string ReferenceName => _field.ReferenceName;
 
-        public string Type
-        {
-            get
-            {
-                return _field.TypeNameString;
-            }
-        }
+        public string Type => _field.TypeNameString;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return _field.IsReadOnly;
-            }
-        }
+        public bool IsReadOnly => _field.IsReadOnly;
     }
 }

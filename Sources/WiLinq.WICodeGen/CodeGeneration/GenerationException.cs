@@ -36,7 +36,7 @@ namespace WiLinq.CodeGen.CodeGeneration
         /// <param name="message">The message.</param>
         /// <param name="args">The args.</param>
         public GenerationException(string message, params object[] args) :
-            base(String.Format(message, args))
+            base(string.Format(message, args))
         {
 
         }
@@ -60,7 +60,7 @@ namespace WiLinq.CodeGen.CodeGeneration
         /// <param name="innerException">The inner exception.</param>
         /// <param name="args">The args.</param>
         public GenerationException(string message, Exception innerException, params object[] args) :
-            base(String.Format(message, args),innerException)
+            base(string.Format(message, args),innerException)
         {
 
         }
