@@ -88,7 +88,7 @@ namespace WiLinq.LinqProvider
             return null;
         }
 
-        public (string field, string op, string value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
         {
             throw new NotImplementedException();
         }

@@ -15,6 +15,6 @@ namespace WiLinq.LinqProvider
         /// <param name="methodCall"></param>
         /// <param name="isInNotBlock"></param>
         /// <returns></returns>
-        (string field,string op, string value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
+        (WorkItemFieldInfo field,string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
     }
 }

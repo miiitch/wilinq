@@ -265,7 +265,7 @@ namespace WiLinq.LinqProvider
             return c;
         }
 
-      
+
 
         protected override Expression VisitMember(MemberExpression m)
         {
@@ -481,22 +481,16 @@ namespace WiLinq.LinqProvider
                                 var call = m;
                                 if (IsWhereParameter(call.Object))
                                 {
-                                    var resolved = _resolver.Resolve(call, IsInNotBlock);
+                                    var operation = _resolver.Resolve(call, IsInNotBlock);
 
-                                        handled = true;
+                                    handled = true;
 
+                                    var test =
+                                        $"[{operation.field.Name}] {operation.op} {QueryBuilder.EncodeValue(operation.value)}";
 
-                                        var test =
-                                            $"[{resolved.Item1}] {resolved.Item2} {QueryBuilder.EncodeValue(resolved.Item2)}";
-
-                                        _builder.Append(test);
-                                    
-
+                                    _builder.Append(test);
                                 }
                             }
-
-
-
                         }
                         if (!handled)
                         {
@@ -511,7 +505,7 @@ namespace WiLinq.LinqProvider
             return m;
         }
 
-#region Not Supported Expressions
+        #region Not Supported Expressions
 
         protected override MemberBinding VisitMemberBinding(MemberBinding node)
         {
@@ -651,7 +645,7 @@ namespace WiLinq.LinqProvider
         {
             throw new NotSupportedException("VisitTry");
         }
-#endregion
+        #endregion
 
     }
 

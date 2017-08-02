@@ -49,34 +49,40 @@ namespace WiLinq.LinqProvider.Extensions
             throw new NotImplementedException();
         }
 
-        public (string field, string op, string value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
         {
-            if (methodCall.Method.Name == "IsUnderIteration")
+            switch (methodCall.Method.Name)
             {
-                const string refName = SystemField.IterationPath;
-                var op = isInNotBlock ? "not under" : "under";
-                var valEx = methodCall.Arguments[0] as ConstantExpression;
-                if (valEx == null)
-                {
-                    throw new InvalidOperationException();
-                }
-                var val = valEx.Value as string;
-                return (refName, op, val);
+                case "IsUnderIteration":
+                    {
+                        const string refName = SystemField.IterationPath;
+                        var op = isInNotBlock ? "not under" : "under";
+                        var valEx = methodCall.Arguments[0] as ConstantExpression;
+                        if (valEx == null)
+                        {
+                            throw new InvalidOperationException();
+                        }
+                        var val = valEx.Value as string;
+                        return (new WorkItemFieldInfo() { Name = refName, Type = typeof(string) }, op, val);
 
+                    }
+                case "IsUnderArea":
+                    {
+                        const string refName = SystemField.AreaPath;
+                        var op = isInNotBlock ? "not under" : "under";
+                        var valEx = methodCall.Arguments[0] as ConstantExpression;
+                        if (valEx == null)
+                        {
+                            throw new InvalidOperationException();
+                        }
+                        var val = valEx.Value as string;
+                        return (new WorkItemFieldInfo() { Name = refName, Type = typeof(string) }, op, val);
+                    }
+
+                default:
+                    throw new NotImplementedException();
             }
-            if (methodCall.Method.Name == "IsUnderArea")
-            {
-                const string refName = SystemField.AreaPath;
-                var op = isInNotBlock ? "not under" : "under";
-                var valEx = methodCall.Arguments[0] as ConstantExpression;                
-                if (valEx == null)
-                {
-                    throw new InvalidOperationException();
-                }
-                var val = valEx.Value as string;
-                return (refName, op, val);
-            }
-            throw new NotImplementedException();
+            
         }
 
         #endregion
