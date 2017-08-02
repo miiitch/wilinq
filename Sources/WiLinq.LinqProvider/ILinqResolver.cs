@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace WiLinq.LinqProvider
 {
-    public interface ILinqResolver
+    internal interface ILinqResolver
     {
         WorkItemFieldInfo Resolve(MemberInfo memberInfo);
         WorkItemFieldInfo Resolve(string workItemParameterName, MethodCallExpression methodCall);
@@ -15,6 +15,6 @@ namespace WiLinq.LinqProvider
         /// <param name="methodCall"></param>
         /// <param name="isInNotBlock"></param>
         /// <returns></returns>
-        Tuple<string, string, string> Resolve(MethodCallExpression methodCall, bool isInNotBlock);
+        (string field,string op, string value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
     }
 }

@@ -483,8 +483,6 @@ namespace WiLinq.LinqProvider
                                 {
                                     var resolved = _resolver.Resolve(call, IsInNotBlock);
 
-                                    if (resolved != null)
-                                    {
                                         handled = true;
 
 
@@ -492,7 +490,7 @@ namespace WiLinq.LinqProvider
                                             $"[{resolved.Item1}] {resolved.Item2} {QueryBuilder.EncodeValue(resolved.Item2)}";
 
                                         _builder.Append(test);
-                                    }
+                                    
 
                                 }
                             }

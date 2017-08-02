@@ -49,7 +49,7 @@ namespace WiLinq.LinqProvider.Extensions
             throw new NotImplementedException();
         }
 
-        public Tuple<string, string, string> Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        public (string field, string op, string value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
         {
             if (methodCall.Method.Name == "IsUnderIteration")
             {
@@ -61,7 +61,7 @@ namespace WiLinq.LinqProvider.Extensions
                     throw new InvalidOperationException();
                 }
                 var val = valEx.Value as string;
-                return new Tuple<string, string, string>(refName, op, val);
+                return (refName, op, val);
 
             }
             if (methodCall.Method.Name == "IsUnderArea")
@@ -74,7 +74,7 @@ namespace WiLinq.LinqProvider.Extensions
                     throw new InvalidOperationException();
                 }
                 var val = valEx.Value as string;
-                return new Tuple<string, string, string>(refName, op, val);
+                return (refName, op, val);
             }
             throw new NotImplementedException();
         }

@@ -41,21 +41,7 @@ namespace WiLinq.Tests
 
         }
 
-        [Test]
-        public async Task ValiadteWorkitem()
-        {
-            var bug = Project.New<Bug>();
-
-            bug.Title = "todo";
-            bug.State = "Finished";
-          
-
-            await Client.Validate(bug);
-
-           
-
-        }
-
+ 
 #if false
         private class Feature : WorkItemBase
         {

@@ -26,7 +26,7 @@ namespace WiLinq.LinqProvider.Extensions
         private static bool _propertyProcessed;
         // ReSharper restore StaticFieldInGenericType        
 
-        public static ICustomWorkItemHelper<T> Provider => new WorkItemBaseHelper<T>();
+        internal static ICustomWorkItemHelper<T> Provider => new WorkItemBaseHelper<T>();
 
 
         /// <summary>

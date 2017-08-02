@@ -88,7 +88,7 @@ namespace WiLinq.LinqProvider
             return null;
         }
 
-        public Tuple<string, string, string> Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        public (string field, string op, string value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
         {
             throw new NotImplementedException();
         }

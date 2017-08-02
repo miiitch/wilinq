@@ -61,7 +61,7 @@ namespace WiLinq.LinqProvider
         /// <param name="workItemTrackingHttpClient"></param>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static IQueryable<T> SetOf<T, THelper>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
+        internal static IQueryable<T> SetOf<T, THelper>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
             where T : WorkItemBase
             where THelper : ICustomWorkItemHelper<T>, new()
         {
@@ -149,38 +149,7 @@ namespace WiLinq.LinqProvider
 
         }
 
-        public static async Task Validate<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, T workitem)
-            where T : WorkItemBase
-        {
-            var patchDocument = workitem.CreatePatchDocument();
-            try
-            {
-                Task<WorkItem> task;
-                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                if (workitem.Id.HasValue)
-                {
-
-                    task = workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workitem.Id.Value,validateOnly:true);
-                }
-                else
-                {
-                    task = workItemTrackingHttpClient.CreateWorkItemAsync(patchDocument, workitem.Project,
-                        workitem.WorkItemType, validateOnly: true);
-                }
-                var savedOrCreatedWorkItem = await task;
-
-                workitem.CopyValuesFromWorkItem(savedOrCreatedWorkItem);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
-
-        }
-
-
+    
         public static T New<T>(this ProjectInfo project) where T : WorkItemBase, new()
         {
             return NewWorkItemCore<T>(project.Name);
