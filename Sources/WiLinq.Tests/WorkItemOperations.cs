@@ -1,11 +1,7 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
-using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.Tests
 {

@@ -1,12 +1,8 @@
 using System;
-using System.Linq;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.VisualStudio.Services.Client;
 using Microsoft.VisualStudio.Services.WebApi;
 using NUnit.Framework;
-using NUnit.Framework.Internal.Commands;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.Core.WebApi;
 

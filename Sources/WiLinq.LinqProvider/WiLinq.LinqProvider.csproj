@@ -152,13 +152,13 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AsyncExtensions.cs" />
-    <Compile Include="Extensions\FieldAttribute.cs" />
     <Compile Include="Extensions\IgnoreFieldAttribute.cs" />
     <Compile Include="Extensions\ProjectToWorkItemValueConverter.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="Extensions\WorkItemBaseHelper.cs" />
     <Compile Include="Extensions\WorkItemCreatorProviderAttribute.cs" />
     <Compile Include="Extensions\WorkItemValueConverter.cs" />
+    <Compile Include="FieldAttribute.cs" />
     <Compile Include="ICustomWorkItemHelper.cs" />
     <Compile Include="ILinqResolver.cs" />
     <Compile Include="IWorkItemLinqQueryProvider.cs" />
@@ -167,7 +167,7 @@
     <Compile Include="QueryBuilder.cs" />
     <Compile Include="QueryConstant.cs" />
     <Compile Include="QueryExtender.cs" />
-    <Compile Include="Extensions\WorkItemBase.cs" />
+    <Compile Include="WorkItemBase.cs" />
     <Compile Include="QueryLinkMode.cs" />
     <Compile Include="QueryTranslator.cs" />
     <Compile Include="QueryType.cs" />
@@ -202,7 +202,7 @@
     <Compile Include="Extensions\WorkItemPropertyUtility.cs" />
     <Compile Include="Extensions\WorkItemValueConverterRepository.cs" />
     <Compile Include="TPCQuery.cs" />
-    <Compile Include="Extensions\WorkItemTypeAttribute.cs" />
+    <Compile Include="WorkItemTypeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

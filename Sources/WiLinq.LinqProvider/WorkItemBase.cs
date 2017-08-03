@@ -4,8 +4,9 @@ using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
+using WiLinq.LinqProvider.Extensions;
 
-namespace WiLinq.LinqProvider.Extensions
+namespace WiLinq.LinqProvider
 {
 
 

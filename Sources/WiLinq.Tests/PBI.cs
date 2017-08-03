@@ -1,4 +1,4 @@
-using WiLinq.LinqProvider.Extensions;
+using WiLinq.LinqProvider;
 
 namespace WiLinq.Tests
 {

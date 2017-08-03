@@ -1,6 +1,6 @@
 using System;
 
-namespace WiLinq.LinqProvider.Extensions
+namespace WiLinq.LinqProvider
 {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class FieldAttribute : Attribute

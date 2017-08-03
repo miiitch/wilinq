@@ -1,4 +1,4 @@
-using WiLinq.LinqProvider.Extensions;
+using WiLinq.LinqProvider;
 
 namespace WiLinq.Tests
 {
@@ -12,12 +12,12 @@ namespace WiLinq.Tests
     }
 
 
-    [WiLinq.LinqProvider.Extensions.WorkItemTypeAttribute("Task")]
-    public partial class ScrumTask : WiLinq.LinqProvider.Extensions.WorkItemBase
+    [WorkItemType("Task")]
+    public partial class ScrumTask : WorkItemBase
     {
 
         /// <summary>Type of work involved</summary>
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Common.Activity")]
+        [Field("Microsoft.VSTS.Common.Activity")]
         public virtual string Activity
         {
             get
@@ -30,7 +30,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.AreaPath")]
+        [Field("System.AreaPath")]
         public virtual string AreaPath
         {
             get
@@ -39,7 +39,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.AuthorizedAs")]
+        [Field("System.AuthorizedAs")]
         public virtual string AuthorizedAs
         {
             get
@@ -48,7 +48,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.AuthorizedDate")]
+        [Field("System.AuthorizedDate")]
         public virtual System.Nullable<System.DateTime> AuthorizedDate
         {
             get
@@ -57,7 +57,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Common.BacklogPriority")]
+        [Field("Microsoft.VSTS.Common.BacklogPriority")]
         public virtual System.Nullable<double> BacklogPriority
         {
             get
@@ -70,7 +70,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.CMMI.Blocked")]
+        [Field("Microsoft.VSTS.CMMI.Blocked")]
         public virtual string Blocked
         {
             get
@@ -83,7 +83,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.BoardColumn")]
+        [Field("System.BoardColumn")]
         public virtual string BoardColumn
         {
             get
@@ -92,7 +92,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.BoardColumnDone")]
+        [Field("System.BoardColumnDone")]
         public virtual System.Nullable<bool> BoardColumnDone
         {
             get
@@ -101,7 +101,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.BoardLane")]
+        [Field("System.BoardLane")]
         public virtual string BoardLane
         {
             get
@@ -110,7 +110,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Common.ClosedDate")]
+        [Field("Microsoft.VSTS.Common.ClosedDate")]
         public virtual System.Nullable<System.DateTime> ClosedDate
         {
             get
@@ -123,7 +123,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.History")]
+        [Field("System.History")]
         public virtual string History
         {
             get
@@ -136,7 +136,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Build.IntegrationBuild")]
+        [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {
             get
@@ -149,7 +149,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.IterationPath")]
+        [Field("System.IterationPath")]
         public virtual string IterationPath
         {
             get
@@ -159,7 +159,7 @@ namespace WiLinq.Tests
         }
 
         /// <summary>Importance to business</summary>
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Common.Priority")]
+        [Field("Microsoft.VSTS.Common.Priority")]
         public virtual System.Nullable<int> Priority
         {
             get
@@ -173,7 +173,7 @@ namespace WiLinq.Tests
         }
 
         /// <summary>An estimate of the number of units of work remaining to complete this task</summary>
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Scheduling.RemainingWork")]
+        [Field("Microsoft.VSTS.Scheduling.RemainingWork")]
         public virtual System.Nullable<double> RemainingWork
         {
             get
@@ -186,7 +186,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.RevisedDate")]
+        [Field("System.RevisedDate")]
         public virtual System.Nullable<System.DateTime> RevisedDate
         {
             get
@@ -195,7 +195,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("Microsoft.VSTS.Common.StateChangeDate")]
+        [Field("Microsoft.VSTS.Common.StateChangeDate")]
         public virtual System.Nullable<System.DateTime> StateChangeDate
         {
             get
@@ -208,7 +208,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.Tags")]
+        [Field("System.Tags")]
         public virtual string Tags
         {
             get
@@ -221,7 +221,7 @@ namespace WiLinq.Tests
             }
         }
 
-        [WiLinq.LinqProvider.Extensions.FieldAttribute("System.Watermark")]
+        [Field("System.Watermark")]
         public virtual System.Nullable<int> Watermark
         {
             get
