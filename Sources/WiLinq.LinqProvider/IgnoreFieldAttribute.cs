@@ -1,6 +1,6 @@
 using System;
 
-namespace WiLinq.LinqProvider.Extensions
+namespace WiLinq.LinqProvider
 {
     [AttributeUsage(AttributeTargets.Class,AllowMultiple=true)]
     public sealed class IgnoreFieldAttribute : Attribute

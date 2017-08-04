@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using WiLinq.LinqProvider.Extensions;
 
-namespace WiLinq.LinqProvider.Extensions
+namespace WiLinq.LinqProvider
 {
     /// <summary>
     /// Utility class used to discover and manipulate specialized workitem 

@@ -152,7 +152,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AsyncExtensions.cs" />
-    <Compile Include="Extensions\IgnoreFieldAttribute.cs" />
+    <Compile Include="IgnoreFieldAttribute.cs" />
     <Compile Include="Extensions\ProjectToWorkItemValueConverter.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="Extensions\WorkItemBaseHelper.cs" />
@@ -199,7 +199,7 @@
     <Compile Include="Wiql\WhereStatement.cs" />
     <Compile Include="WorkItemFieldInfo.cs" />
     <Compile Include="WorkItemLinqQueryProvider.cs" />
-    <Compile Include="Extensions\WorkItemPropertyUtility.cs" />
+    <Compile Include="WorkItemPropertyUtility.cs" />
     <Compile Include="Extensions\WorkItemValueConverterRepository.cs" />
     <Compile Include="TPCQuery.cs" />
     <Compile Include="WorkItemTypeAttribute.cs" />
