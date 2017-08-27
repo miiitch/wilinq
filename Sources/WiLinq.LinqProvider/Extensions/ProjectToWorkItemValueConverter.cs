@@ -13,8 +13,7 @@ namespace WiLinq.LinqProvider.Extensions
             {
                 throw new ArgumentNullException(nameof(obj), "obj is null.");
             }
-            var project = obj as ProjectInfo;
-            if (project == null)
+            if (!(obj is ProjectInfo project))
             {
                 throw new ArgumentException("obj is not a Project", nameof(obj));
             }
