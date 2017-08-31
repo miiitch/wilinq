@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WiLinq.LinqProvider
 {
-    internal class Query<T> : IOrderedQueryable<T>       
+    internal class Query<T> : IOrderedQueryable<T>
     {
         private readonly IWorkItemLinqQueryProvider _provider;
         private readonly Expression _expression;
@@ -29,10 +29,6 @@ namespace WiLinq.LinqProvider
             {
                 throw new ArgumentOutOfRangeException(nameof(expression));
             }
-
-            
-          
-
         }
 
         Expression IQueryable.Expression => _expression;
@@ -46,41 +42,41 @@ namespace WiLinq.LinqProvider
 
         public IEnumerator<T> GetEnumerator()
         {
-
             return ((IEnumerable<T>)_provider.Execute(_expression)).GetEnumerator();
-
         }
 
 
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-
             return ((IEnumerable)_provider.Execute(_expression)).GetEnumerator();
-
         }
 
+        public async Task<List<int>> ExecuteAndGetIdsAsync()
+        {
+            var result = await _provider.ExecuteAndGetIdsAsync(_expression);
+
+            return result;
+        }
 
         public async Task<IEnumerable<T>> ExecuteAsync()
         {
-           var result = await _provider.ExecuteAync(_expression);
+            var result = await _provider.ExecuteAync(_expression);
 
-            return (IEnumerable<T>) result;
+            return (IEnumerable<T>)result;
         }
 
 
         public override string ToString()
         {
-
             return _provider.GetQueryText(_expression);
-
         }
 
         public static TPCQuery TransformAsWorkItemQuery(IQueryable<T> query)
         {
             var wiQuery = query as Query<T>;
 
-            return wiQuery?._provider.TransformAsWorkItemQuery(query.Expression);            
+            return wiQuery?._provider.TransformAsWorkItemQuery(query.Expression);
         }
 
 
@@ -89,7 +85,7 @@ namespace WiLinq.LinqProvider
 
             if (_asOfDate.HasValue)
             {
-                throw new InvalidOperationException("AsOf Date already defined");                
+                throw new InvalidOperationException("AsOf Date already defined");
 
             }
             _provider.AsOfDate = dt;

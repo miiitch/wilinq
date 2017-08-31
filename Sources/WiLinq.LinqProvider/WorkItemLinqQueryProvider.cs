@@ -78,15 +78,31 @@ namespace WiLinq.LinqProvider
         {
             return Task.Run(() => ExecuteAync(expression)).Result;
         }
-        public async Task<object> ExecuteAync(Expression expression)
+
+        private TPCQuery BuildQuery(Expression expression)
         {
-           
             var translator = new QueryTranslator(_creatorProvider);
             var queryBuilder = translator.Translate(expression);
 
             ConfigureExtraFilters(queryBuilder);
 
             var query = queryBuilder.BuildQuery(_workItemTrackingHttpClient, _projectName, _asOfDate);
+
+            return query;
+        }
+
+        public async Task<List<int>> ExecuteAndGetIdsAsync(Expression expression)
+        {
+            var query = BuildQuery(expression);
+
+            var result = await query.GetWorkItemIdsAsync();
+
+            return result;
+        }
+
+        public async Task<object> ExecuteAync(Expression expression)
+        {
+            var query = BuildQuery(expression);
 
             var tmpResult = await query.GetWorkItemsAsync();
 
@@ -106,12 +122,12 @@ namespace WiLinq.LinqProvider
             }
 
 
-            if (queryBuilder.SelectLambda == null)
+            if (query.SelectLambda == null)
             {
                 return wiResult;
             }
 
-            var deleg = queryBuilder.SelectLambda.Compile();
+            var deleg = query.SelectLambda.Compile();
 
             var applySelect = GetType().GetMethod("ApplySelect", BindingFlags.NonPublic | BindingFlags.Instance);
 

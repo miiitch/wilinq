@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
-using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider
 {
@@ -40,7 +40,7 @@ namespace WiLinq.LinqProvider
 
         protected T GetRefField<T>(string referenceName) where T : class
         {
-            if (_fieldValues.TryGetValue(referenceName, out object fieldValue))
+            if (_fieldValues.TryGetValue(referenceName, out var fieldValue))
             {
                 return (T)fieldValue;
             }
@@ -122,11 +122,10 @@ namespace WiLinq.LinqProvider
 
             foreach (var key in keys)
             {
-                object value;
                 object initialValue = null;
 
                 _initialFieldValues?.TryGetValue(key, out initialValue);
-                var hasNewValue = _fieldValues.TryGetValue(key, out value);
+                var hasNewValue = _fieldValues.TryGetValue(key, out var value);
 
                 if (initialValue == null && value != null)
                 {
@@ -254,10 +253,81 @@ namespace WiLinq.LinqProvider
             set => SetRefField(SystemField.State, value);
         }
 
-      
+
+        [Field(SystemField.AreaPath)]
+        public string Area
+        {
+            get => GetRefField<string>(SystemField.AreaPath);
+            set => SetRefField(SystemField.AreaPath, value);
+        }
+
+        [Field(SystemField.IterationPath)]
+        public string Iteration
+        {
+            get => GetRefField<string>(SystemField.IterationPath);
+            set => SetRefField(SystemField.IterationPath, value);
+        }
+
+        private bool IsPathUnder(string referencePath, string path)
+        {
+            var referencePathElements = SplitPath(referencePath);
+            var pathElementsToCompare = SplitPath(path);
+
+            if (pathElementsToCompare.Length < referencePathElements.Length)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < referencePathElements.Length; ++i)
+            {
+                if (string.Compare(referencePathElements[i], pathElementsToCompare[i],
+                        StringComparison.InvariantCulture) != 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
 
 
+            string[] SplitPath(string pathToSplit)
+            {
+             
+                if (string.IsNullOrWhiteSpace(pathToSplit))
+                    throw new ArgumentException("Value cannot be null or whitespace.", nameof(pathToSplit));
 
+
+                var pathElements = pathToSplit.Split('\\');
+
+                if (pathElements.Length > 1)
+                {
+                    var lastElement = pathElements[pathElements.Length - 1];
+                    if (string.IsNullOrWhiteSpace(lastElement))
+                    {
+                        pathElements = pathElements.Take(pathElements.Length - 1).ToArray();
+                    }
+                }
+
+                if (pathElements.Any(string.IsNullOrWhiteSpace))
+                {
+                    throw new ArgumentException("invalid path: contains empty elements");
+                }
+
+                return pathElements;
+            }
+
+            
+        }
+
+        public bool IsAreaUnder(string path)
+        {
+            return IsPathUnder(Area, path);
+        }
+
+        public bool IsIterationUnder(string path)
+        {
+            return IsPathUnder(Iteration, path);
+        }
 
 #if false
         [Field(SystemField.AreaPath)]

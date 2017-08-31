@@ -382,8 +382,7 @@ namespace WiLinq.LinqProvider
                     }
                     break;
                 case WhereLocation.RightOperatorClause:
-                    {
-                        var handled = true;
+                    {                        
                         var fieldInfo = _resolver.Resolve(_parameterName, m);
                         if (fieldInfo != null)
                         {

@@ -150,17 +150,17 @@ namespace WiLinq.LinqProvider
         }
 
     
-        public static T New<T>(this ProjectInfo project) where T : WorkItemBase, new()
+        public static T New<T>(this ProjectInfo project, NewWorkItemOptions options = NewWorkItemOptions.Nothing) where T : WorkItemBase, new()
         {
-            return NewWorkItemCore<T>(project.Name);
+            return NewWorkItemCore<T>(project.Name, options);
         }
 
-        public static T New<T>(this TeamProject project) where T : WorkItemBase, new()
+        public static T New<T>(this TeamProject project, NewWorkItemOptions options = NewWorkItemOptions.Nothing) where T : WorkItemBase, new()
         {
-            return NewWorkItemCore<T>(project.Name);
+            return NewWorkItemCore<T>(project.Name,options);
         }
 
-        private static T NewWorkItemCore<T>(string projectName) where T : WorkItemBase, new()
+        private static T NewWorkItemCore<T>(string projectName, NewWorkItemOptions options) where T : WorkItemBase, new()
         {
             if (projectName == null)
             {
@@ -175,6 +175,15 @@ namespace WiLinq.LinqProvider
                 Project = projectName
             };
 
+            if ((options & NewWorkItemOptions.FillAreaPath) == NewWorkItemOptions.FillAreaPath)
+            {
+                result.Area = projectName;
+            }
+
+            if ((options & NewWorkItemOptions.FillIterationPath) == NewWorkItemOptions.FillIterationPath)
+            {
+                result.Iteration = projectName;
+            }
 
             return result;
         }
@@ -353,5 +362,13 @@ namespace WiLinq.LinqProvider
 
     }
 
+    [Flags]
+    public enum NewWorkItemOptions
+    {
+        Nothing = 0,
+        FillAreaPath = 0b1,
+        FillIterationPath = 0b10,
+        FillAreaAndItertionPath = FillAreaPath | FillIterationPath
 
+    }
 }

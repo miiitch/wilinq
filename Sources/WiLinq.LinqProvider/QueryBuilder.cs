@@ -161,7 +161,10 @@ namespace WiLinq.LinqProvider
 
             var wiql = builder.ToString();
 
-            _query = new TPCQuery(tpc, wiql,_queryType,projectName,null);
+            _query = new TPCQuery(tpc, wiql, _queryType, projectName, null)
+            {
+                SelectLambda = SelectLambda
+            };
             return _query;
         }
 

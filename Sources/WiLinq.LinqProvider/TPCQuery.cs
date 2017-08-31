@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -32,6 +33,9 @@ namespace WiLinq.LinqProvider
             _projectName = projectName;
             _teamName = teamName;
         }
+
+        public LambdaExpression SelectLambda { get; set; }
+
 #if false
         public WorkItemLinkInfo[] GetLinks()
         {
@@ -43,7 +47,7 @@ namespace WiLinq.LinqProvider
         }
 
 #endif
-        public Task<List<WorkItem>> GetWorkItemsAsync()
+        public Task<List<int>> GetWorkItemIdsAsync()
         {
             if (_type != QueryType.WorkItem)
             {
@@ -52,26 +56,32 @@ namespace WiLinq.LinqProvider
 
             return GetWorkItemsAsyncCore();
 
-            async Task<List<WorkItem>> GetWorkItemsAsyncCore()
+            async Task<List<int>> GetWorkItemsAsyncCore()
             {
-                
-                var result = await _workItemTrackingHttpClient.QueryByWiqlAsync(new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql() { Query = _wiql});
+
+                var result = await _workItemTrackingHttpClient.QueryByWiqlAsync(new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql() { Query = _wiql });
                 if (_type == QueryType.WorkItem && result.QueryType !=
                     Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.QueryType.Flat)
                 {
                     throw new InvalidOperationException("Invalid query type");
                 }
 
-                var ids = result.WorkItems.Select(_ => _.Id);
-                try
-                {
-                    var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
-                    return workitems;
-                }
-                catch (VssServiceResponseException notFoundResponseException) when(notFoundResponseException.Message == "Not Found")
-                {
-                    return new List<WorkItem>();
-                }
+                var ids = result.WorkItems.Select(_ => _.Id).ToList();
+                return ids;
+            }
+        }
+
+        public async Task<List<WorkItem>> GetWorkItemsAsync()
+        {
+            var ids = await GetWorkItemIdsAsync();
+            try
+            {
+                var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
+                return workitems;
+            }
+            catch (VssServiceResponseException notFoundResponseException) when (notFoundResponseException.Message == "Not Found")
+            {
+                return new List<WorkItem>();
             }
         }
     }

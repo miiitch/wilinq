@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -12,5 +13,7 @@ namespace WiLinq.LinqProvider
         TPCQuery TransformAsWorkItemQuery(Expression expression);
 
         Task<object> ExecuteAync(Expression expression);
+        Task<List<int>> ExecuteAndGetIdsAsync(Expression expression);
+
     }
 }

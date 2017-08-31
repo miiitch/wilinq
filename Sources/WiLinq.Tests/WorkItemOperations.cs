@@ -10,7 +10,7 @@ namespace WiLinq.Tests
     public class WorkitemClientShould : TestFixtureBase
     {       
         [Test]
-        public async Task Create_A_Workitem_And_Save_It()
+        public async Task Create_A_Workitem_Then_Save_It()
         {
             var bug = Project.New<Bug>();
 
@@ -21,6 +21,20 @@ namespace WiLinq.Tests
             Check.That(bug.Id).HasAValue();
 
         }
+
+        [Test]
+        public async Task Create_A_Workitem_With_Iteration_And_Area_Then_Save_It()
+        {
+            var bug = Project.New<Bug>(NewWorkItemOptions.FillAreaAndItertionPath);
+
+            bug.Title = "New bug created during test with area and iteration path";
+
+            await Client.Save(bug);
+
+            Check.That(bug.Id).HasAValue();
+
+        }
+
 
         [Test]
         public async Task Create_A_Workitem_And_Save_It_And_Update_It()

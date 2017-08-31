@@ -93,6 +93,21 @@ namespace WiLinq.Tests
         }
 
         [Test]
+        public async Task Return_All_Collection_Workitem_Ids()
+        {
+            //all workitems;
+            var projectWiQuery = from workitem in Client.All()
+                select workitem;
+
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+            var idsFromFullQuery = result.Select(w => w.Id).ToList();
+            var ids = await projectWiQuery.ToIdListAsync();
+
+            Check.That(ids).ContainsExactly(idsFromFullQuery);
+        }
+
+        [Test]
         public async Task Return_All_Workitems_Assigned_To_Me()
         {
             var projectWiQuery = from workitem in Client.All()

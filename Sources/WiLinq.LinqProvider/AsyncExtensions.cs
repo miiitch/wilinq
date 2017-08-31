@@ -11,8 +11,7 @@ namespace WiLinq.LinqProvider
     {
         public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> query) where T : WorkItemBase
         {
-            var workItemQuery = query as Query<T>;
-            if (workItemQuery == null)
+            if (!(query is Query<T> workItemQuery))
             {
                 throw new ArgumentException("invalid linq provider", nameof(query));
             }
@@ -29,8 +28,7 @@ namespace WiLinq.LinqProvider
 
         public static async Task<List<WorkItem>> ToListAsync(this IQueryable<WorkItem> query)
         {
-            var workItemQuery = query as Query<WorkItem>;
-            if (workItemQuery == null)
+            if (!(query is Query<WorkItem> workItemQuery))
             {
                 throw new ArgumentException("invalid linq provider",nameof(query));
             }
@@ -42,6 +40,30 @@ namespace WiLinq.LinqProvider
             }
 
             return enumerable.ToList();
+        }
+
+
+        public static async Task<List<int>> ToIdListAsync<T>(this IQueryable<T> query) where T : WorkItemBase
+        {
+            if (!(query is Query<T> workItemQuery))
+            {
+                throw new ArgumentException("invalid linq provider", nameof(query));
+            }
+
+            var result = await workItemQuery.ToIdListAsync();
+
+            return result;
+        }
+
+        public static async Task<List<int>> ToIdListAsync(this IQueryable<WorkItem> query)
+        {
+            if (!(query is Query<WorkItem> workItemQuery))
+            {
+                throw new ArgumentException("invalid linq provider", nameof(query));
+            }
+            var result = await workItemQuery.ExecuteAndGetIdsAsync();
+
+            return result;
         }
     }
 }
