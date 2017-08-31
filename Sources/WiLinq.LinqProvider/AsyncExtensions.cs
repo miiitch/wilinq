@@ -9,6 +9,12 @@ namespace WiLinq.LinqProvider
 {
     public static class AsyncExtensions
     {
+        /// <summary>
+        /// Returns a list of workitems asynchronously
+        /// </summary>
+        /// <typeparam name="T">Type of workitem, inherits from WorkItemBase</typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> query) where T : WorkItemBase
         {
             if (!(query is Query<T> workItemQuery))
@@ -26,6 +32,11 @@ namespace WiLinq.LinqProvider
             return enumerable.ToList();
         }
 
+        /// <summary>
+        /// Returns a list of workitems asynchronously
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static async Task<List<WorkItem>> ToListAsync(this IQueryable<WorkItem> query)
         {
             if (!(query is Query<WorkItem> workItemQuery))
@@ -42,7 +53,12 @@ namespace WiLinq.LinqProvider
             return enumerable.ToList();
         }
 
-
+        /// <summary>
+        /// Return the ids of the queries workitems asynchonously
+        /// </summary>
+        /// <typeparam name="T">Type of workitem, inherits from WorkItemBase</typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static async Task<List<int>> ToIdListAsync<T>(this IQueryable<T> query) where T : WorkItemBase
         {
             if (!(query is Query<T> workItemQuery))
@@ -55,6 +71,11 @@ namespace WiLinq.LinqProvider
             return result;
         }
 
+        /// <summary>
+        /// Return the ids of the queries workitems asynchonously
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static async Task<List<int>> ToIdListAsync(this IQueryable<WorkItem> query)
         {
             if (!(query is Query<WorkItem> workItemQuery))
