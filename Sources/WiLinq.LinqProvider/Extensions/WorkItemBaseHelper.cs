@@ -57,8 +57,7 @@ namespace WiLinq.LinqProvider.Extensions
                     {
                         const string refName = SystemField.IterationPath;
                         var op = isInNotBlock ? "not under" : "under";
-                        var valEx = methodCall.Arguments[0] as ConstantExpression;
-                        if (valEx == null)
+                        if (!(methodCall.Arguments[0] is ConstantExpression valEx))
                         {
                             throw new InvalidOperationException();
                         }
@@ -70,8 +69,7 @@ namespace WiLinq.LinqProvider.Extensions
                     {
                         const string refName = SystemField.AreaPath;
                         var op = isInNotBlock ? "not under" : "under";
-                        var valEx = methodCall.Arguments[0] as ConstantExpression;
-                        if (valEx == null)
+                        if (!(methodCall.Arguments[0] is ConstantExpression valEx))
                         {
                             throw new InvalidOperationException();
                         }

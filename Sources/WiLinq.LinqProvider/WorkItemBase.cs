@@ -319,14 +319,14 @@ namespace WiLinq.LinqProvider
             
         }
 
-        public bool IsAreaUnder(string path)
+        public bool IsUnderArea(string path)
         {
-            return IsPathUnder(Area, path);
+            return IsPathUnder(path, Area);
         }
 
-        public bool IsIterationUnder(string path)
+        public bool IsUnderIteration(string path)
         {
-            return IsPathUnder(Iteration, path);
+            return IsPathUnder(path, Iteration);
         }
 
 #if false

@@ -36,5 +36,65 @@ namespace WiLinq.Tests
             Check.That(bug.Iteration).IsEqualTo(bug.Project);
         }
 
+        [Test]
+        [TestCase(null, null, true)]
+        [TestCase("Foo", "Foo", true)]
+        [TestCase("Foo", null, true)]
+        [TestCase(null, "Foo", false)]
+        [TestCase("Foo\\Foo2", "Foo", true)]
+        [TestCase("Foo\\", "Foo", true)]
+        [TestCase("Foo", "Foo\\Foo2", false)]
+        public void Compute_Area_Checks(string workItemArea, string reference, bool expected)
+        {
+            var bug = Project.New<Bug>(NewWorkItemOptions.FillAreaPath);
+
+            var areaToCheck = bug.Area;
+
+            if (workItemArea != null)
+            {
+                bug.Area += "\\" + workItemArea;
+            }
+
+            if (reference != null)
+            {
+                areaToCheck += "\\" + reference;
+            }
+
+            var actual = bug.IsUnderArea(areaToCheck);
+
+            Check.That(actual).Equals(expected);
+
+        }
+
+        [Test]
+        [TestCase(null, null, true)]
+        [TestCase("Foo", "Foo", true)]
+        [TestCase("Foo", null, true)]
+        [TestCase(null, "Foo", false)]
+        [TestCase("Foo\\Foo2", "Foo", true)]
+        [TestCase("Foo\\", "Foo", true)]
+        [TestCase("Foo", "Foo\\Foo2", false)]
+        public void Compute_Iteration_Checks(string workItemIteration, string reference, bool expected)
+        {
+            var bug = Project.New<Bug>(NewWorkItemOptions.FillIterationPath);
+
+            var iterationToCheck = bug.Iteration;
+
+            if (workItemIteration != null)
+            {
+                bug.Iteration += "\\" + workItemIteration;
+            }
+
+            if (reference != null)
+            {
+                iterationToCheck += "\\" + reference;
+            }
+
+            var actual = bug.IsUnderIteration(iterationToCheck);
+
+            Check.That(actual).Equals(expected);
+
+        }
+
     }
 }

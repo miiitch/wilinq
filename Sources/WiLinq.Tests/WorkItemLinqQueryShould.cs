@@ -165,6 +165,26 @@ namespace WiLinq.Tests
             Check.That(result).Not.HasElementThatMatches(bug => bug.WorkItemType != "Bug" || bug.CreatedDate <= minCreationDate);
         }
 
+        [Test]
+        public async Task Return_bugs_Under_A_Specific_Iteration()
+        {
+            var iteration = $@"{Project.Name}\Sprint 1";
+         
+            var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
+                where bug.IsUnderIteration(iteration)
+                select bug;
+
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+
+            Check.That(result).Not.IsEmpty();
+            foreach (var bug in result)
+            {
+                Check.That(bug.IsUnderIteration(iteration)).IsTrue();
+            }
+          
+        }
+
 #if false
 
 
