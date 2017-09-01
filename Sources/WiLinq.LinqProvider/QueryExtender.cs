@@ -169,6 +169,11 @@ namespace WiLinq.LinqProvider
 
             var typeName = WorkItemPropertyUtility<T>.WorkItemTypeName;
 
+            if (string.IsNullOrWhiteSpace(typeName))
+            {
+                throw new ArgumentException($"The type {typeof(T).FullName} is not linked to an workitem type");
+            }
+
             var result = new T
             {
                 WorkItemType = typeName,
@@ -275,16 +280,17 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T">Workitem Type</typeparam>
         /// <param name="wi">The wi.</param>
         /// <returns></returns>
-        public static T As<T>(this WorkItem wi) where T : GenericWorkItem, new()
+        public static T ConvertIn<T>(this WorkItem wi) where T : GenericWorkItem, new()
         {
-            if (!Is<T>(wi))
-            {
-                return null;
-            }
-
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the needed attributes");
+            }
+
+            if (!Is<T>(wi))
+            {
+                throw new ArgumentException(nameof(wi),
+                    $"Source type is '{wi.Field<string>(SystemField.WorkItemType)}' but the target type is {WorkItemPropertyUtility<T>.WorkItemTypeName}");
             }
 
             var ret = new T();
@@ -312,52 +318,6 @@ namespace WiLinq.LinqProvider
         }
 #endif
         #endregion
-
-        /// <summary>
-        /// Returns a typed workitem for the specific project
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="project"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static T Get<T>(this ProjectInfo project, int id) where T : GenericWorkItem, new()
-        {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            throw new NotImplementedException();
-#if false
-            if (!project.IsSupported<T>())
-            {
-                throw new ArgumentException($"{typeof(T).FullName} is not supported in {project.Name}",nameof(project));
-            }
-
-            var wi = project.Store.GetWorkItem(id);
-
-            if (wi == null)
-            {
-                return null;
-            }
-
-            if (wi.Project.Name != project.Name)
-            {
-                throw new ArgumentException($"Workitem #{id} is not in project '{project.Name}'",nameof(id));
-            }
-
-            if (!wi.Is<T>())
-            {
-                throw new ArgumentException($"Workitem #{id} is of type '{typeof(T).FullName}'", nameof(id));
-            }
-
-            var result = new T()
-            {
-                WorkItem = wi
-            };
-            return result;
-#endif
-        }
 
 
     }
