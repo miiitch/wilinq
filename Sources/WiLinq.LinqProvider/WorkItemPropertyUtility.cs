@@ -9,7 +9,7 @@ namespace WiLinq.LinqProvider
     /// Utility class used to discover and manipulate specialized workitem 
     /// </summary>
     /// <typeparam name="T">Subclass of WorkItemObject</typeparam>
-    public static class WorkItemPropertyUtility<T> where T : WorkItemBase, new()
+    public static class WorkItemPropertyUtility<T> where T : GenericWorkItem, new()
     {
         internal class FieldData
         {
@@ -105,7 +105,8 @@ namespace WiLinq.LinqProvider
             get
             {
                 ProcessType();
-                return !string.IsNullOrEmpty(_workItemTypeName);
+
+                return typeof(T) == typeof(GenericWorkItem) || !string.IsNullOrEmpty(_workItemTypeName);
             }
         }
 #if false

@@ -3,7 +3,7 @@ using WiLinq.LinqProvider;
 namespace WiLinq.Tests
 {
     [WorkItemType("Bug")]
-    public class Bug : WorkItemBase
+    public class Bug : GenericWorkItem
     {
         public Bug()
         {
@@ -13,7 +13,7 @@ namespace WiLinq.Tests
 
 
     [WorkItemType("Task")]
-    public partial class ScrumTask : WorkItemBase
+    public partial class ScrumTask : GenericWorkItem
     {
 
         /// <summary>Type of work involved</summary>

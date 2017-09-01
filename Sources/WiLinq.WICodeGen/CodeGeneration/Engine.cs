@@ -29,7 +29,7 @@ namespace WiLinq.CodeGen.CodeGeneration
             _fieldToIgnoreList = new List<string>();
             _definedPropertyList = new List<string>();
 
-            foreach (var pi in typeof(WorkItemBase).GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            foreach (var pi in typeof(GenericWorkItem).GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 _definedPropertyList.Add(pi.Name);
                 var attribs = pi.GetCustomAttributes(typeof(FieldAttribute), false) as FieldAttribute[];
@@ -43,7 +43,7 @@ namespace WiLinq.CodeGen.CodeGeneration
             }
 
             foreach (var ignoreField in
-                typeof(WorkItemBase)
+                typeof(GenericWorkItem)
                 .GetCustomAttributes(typeof(IgnoreFieldAttribute), false)
                 .OfType<IgnoreFieldAttribute>())
             {
@@ -141,7 +141,7 @@ namespace WiLinq.CodeGen.CodeGeneration
                 IsPartial = true,
                 IsClass = true
             };
-            wiTypeClass.BaseTypes.Add(typeof(WorkItemBase));
+            wiTypeClass.BaseTypes.Add(typeof(GenericWorkItem));
 
             wiTypeClass.CustomAttributes.Add(new CodeAttributeDeclaration(
                 new CodeTypeReference(typeof(WorkItemTypeAttribute)),

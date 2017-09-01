@@ -53,7 +53,7 @@ namespace WiLinq.Tests
 
  
 #if false
-        private class Feature : WorkItemBase
+        private class Feature : GenericWorkItem
         {
 
 

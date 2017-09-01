@@ -167,7 +167,7 @@
     <Compile Include="QueryBuilder.cs" />
     <Compile Include="QueryConstant.cs" />
     <Compile Include="QueryExtender.cs" />
-    <Compile Include="WorkItemBase.cs" />
+    <Compile Include="GenericWorkItem.cs" />
     <Compile Include="QueryLinkMode.cs" />
     <Compile Include="QueryTranslator.cs" />
     <Compile Include="QueryType.cs" />

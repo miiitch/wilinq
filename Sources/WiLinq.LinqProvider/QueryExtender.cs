@@ -62,7 +62,7 @@ namespace WiLinq.LinqProvider
         /// <param name="project">The project.</param>
         /// <returns></returns>
         internal static IQueryable<T> SetOf<T, THelper>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProjectInfo project)
-            where T : WorkItemBase
+            where T : GenericWorkItem
             where THelper : ICustomWorkItemHelper<T>, new()
         {
             if (project == null)
@@ -75,18 +75,18 @@ namespace WiLinq.LinqProvider
 
 
         public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient,
-            ProjectInfo projectInfo) where T : WorkItemBase, new()
+            ProjectInfo projectInfo) where T : GenericWorkItem, new()
         {
             return SetOf<T>(workItemTrackingHttpClient, projectInfo.Name);
         }
 
         public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient,
-            TeamProject teamProject) where T : WorkItemBase, new()
+            TeamProject teamProject) where T : GenericWorkItem, new()
         {
             return SetOf<T>(workItemTrackingHttpClient, teamProject.Name);
         }
 
-        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient) where T : WorkItemBase, new()
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient) where T : GenericWorkItem, new()
         {
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
@@ -102,7 +102,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T">Type of work item</typeparam>
         /// <param name="projectName">The project name</param>
         /// <returns></returns>
-        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, string projectName) where T : WorkItemBase, new()
+        public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, string projectName) where T : GenericWorkItem, new()
         {
             if (projectName == null)
             {
@@ -119,7 +119,7 @@ namespace WiLinq.LinqProvider
 
 
         public static async Task Save<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, T workitem)
-            where T : WorkItemBase
+            where T : GenericWorkItem
         {
             var patchDocument = workitem.CreatePatchDocument();
             try
@@ -150,17 +150,17 @@ namespace WiLinq.LinqProvider
         }
 
     
-        public static T New<T>(this ProjectInfo project, NewWorkItemOptions options = NewWorkItemOptions.Nothing) where T : WorkItemBase, new()
+        public static T New<T>(this ProjectInfo project, NewWorkItemOptions options = NewWorkItemOptions.Nothing) where T : GenericWorkItem, new()
         {
             return NewWorkItemCore<T>(project.Name, options);
         }
 
-        public static T New<T>(this TeamProject project, NewWorkItemOptions options = NewWorkItemOptions.Nothing) where T : WorkItemBase, new()
+        public static T New<T>(this TeamProject project, NewWorkItemOptions options = NewWorkItemOptions.Nothing) where T : GenericWorkItem, new()
         {
             return NewWorkItemCore<T>(project.Name,options);
         }
 
-        private static T NewWorkItemCore<T>(string projectName, NewWorkItemOptions options) where T : WorkItemBase, new()
+        private static T NewWorkItemCore<T>(string projectName, NewWorkItemOptions options) where T : GenericWorkItem, new()
         {
             if (projectName == null)
             {
@@ -192,7 +192,7 @@ namespace WiLinq.LinqProvider
 #if false
         public static IQueryable<T> OfType<T, U>(this IQueryable<U> query)
             where T : U, new()
-            where U : WorkItemBase, new()
+            where U : GenericWorkItem, new()
         {
             WorkItemLinqQueryProvider<U> wiQP = (query as IQueryable<U>).Provider as WorkItemLinqQueryProvider<U>;
             return new Query<T>(new WorkItemLinqQueryProvider<T>(wiQP.TPC,wiQP.Project, WorkItemPropertyUtility<T>.Provider));
@@ -259,7 +259,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T">Workitem Type</typeparam>
         /// <param name="wi"></param>
         /// <returns></returns>
-        public static bool Is<T>(this WorkItem wi) where T : WorkItemBase, new()
+        public static bool Is<T>(this WorkItem wi) where T : GenericWorkItem, new()
         {
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
@@ -275,7 +275,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T">Workitem Type</typeparam>
         /// <param name="wi">The wi.</param>
         /// <returns></returns>
-        public static T As<T>(this WorkItem wi) where T : WorkItemBase, new()
+        public static T As<T>(this WorkItem wi) where T : GenericWorkItem, new()
         {
             if (!Is<T>(wi))
             {
@@ -302,7 +302,7 @@ namespace WiLinq.LinqProvider
         /// <typeparam name="T"></typeparam>
         /// <param name="project">The project.</param>
         /// <returns></returns>
-        public static bool IsSupported<T>(this ProjectInfo project) where T : WorkItemBase,new()
+        public static bool IsSupported<T>(this ProjectInfo project) where T : GenericWorkItem,new()
         {
             if (project == null)
             {
@@ -320,7 +320,7 @@ namespace WiLinq.LinqProvider
         /// <param name="project"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static T Get<T>(this ProjectInfo project, int id) where T : WorkItemBase, new()
+        public static T Get<T>(this ProjectInfo project, int id) where T : GenericWorkItem, new()
         {
             if (project == null)
             {

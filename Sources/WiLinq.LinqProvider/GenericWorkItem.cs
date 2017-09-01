@@ -17,7 +17,7 @@ namespace WiLinq.LinqProvider
     [IgnoreField(SystemField.HyperLinkCount)]
     [IgnoreField(SystemField.AttachedFileCount)]
     [IgnoreField(SystemField.NodeName)]
-    public abstract class WorkItemBase
+    public class GenericWorkItem
     {
         private Dictionary<string, object> _initialFieldValues;
   
@@ -75,7 +75,7 @@ namespace WiLinq.LinqProvider
             _fieldValues[referenceName] = nextValue;
         }
      
-        protected WorkItemBase()
+        public GenericWorkItem()
         {
             _fieldValues = new Dictionary<string, object>();
         }

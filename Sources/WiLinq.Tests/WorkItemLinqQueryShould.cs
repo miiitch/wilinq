@@ -201,6 +201,22 @@ namespace WiLinq.Tests
             }
         }
 
+        [Test]
+        public async Task Return_All_Workitems_With_Created_Is_Equal_To_ChangedBy()
+        {
+            var projectWiQuery = from bug in Client.SetOf<GenericWorkItem>()
+                where bug.CreatedBy == bug.ChangedBy
+                select bug;
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+
+            Check.That(result).Not.IsEmpty();
+            foreach (var bug in result)
+            {
+                Check.That(bug.CreatedBy).Equals(bug.ChangedBy);
+            }
+        }
+
 #if false
 
 

@@ -5,7 +5,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 namespace WiLinq.LinqProvider.Extensions
 {
-    internal class WorkItemBaseHelper<T> : ICustomWorkItemHelper<T> where T : WorkItemBase, new()
+    internal class WorkItemBaseHelper<T> : ICustomWorkItemHelper<T> where T : GenericWorkItem, new()
     {
 
         #region ICustomWorkItemHelper<T> Members

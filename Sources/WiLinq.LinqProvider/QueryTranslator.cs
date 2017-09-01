@@ -137,7 +137,7 @@ namespace WiLinq.LinqProvider
         /// </returns>
         private bool IsAWorkItem(Type type)
         {
-            if (type == typeof(WorkItem) || type == typeof(WorkItemBase))
+            if (type == typeof(WorkItem) || type == typeof(GenericWorkItem))
             {
                 return true;
             }

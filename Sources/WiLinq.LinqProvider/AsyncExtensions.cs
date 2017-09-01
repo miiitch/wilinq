@@ -12,10 +12,10 @@ namespace WiLinq.LinqProvider
         /// <summary>
         /// Returns a list of workitems asynchronously
         /// </summary>
-        /// <typeparam name="T">Type of workitem, inherits from WorkItemBase</typeparam>
+        /// <typeparam name="T">Type of workitem, inherits from GenericWorkItem</typeparam>
         /// <param name="query"></param>
         /// <returns></returns>
-        public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> query) where T : WorkItemBase
+        public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> query) where T : GenericWorkItem
         {
             if (!(query is Query<T> workItemQuery))
             {
@@ -56,10 +56,10 @@ namespace WiLinq.LinqProvider
         /// <summary>
         /// Return the ids of the queries workitems asynchonously
         /// </summary>
-        /// <typeparam name="T">Type of workitem, inherits from WorkItemBase</typeparam>
+        /// <typeparam name="T">Type of workitem, inherits from GenericWorkItem</typeparam>
         /// <param name="query"></param>
         /// <returns></returns>
-        public static async Task<List<int>> ToIdListAsync<T>(this IQueryable<T> query) where T : WorkItemBase
+        public static async Task<List<int>> ToIdListAsync<T>(this IQueryable<T> query) where T : GenericWorkItem
         {
             if (!(query is Query<T> workItemQuery))
             {
