@@ -185,18 +185,26 @@ namespace WiLinq.Tests
           
         }
 
+        [Test]
+        public async Task Return_Bug_With_Created_Is_Equal_To_ChangedBy()
+        {
+            var projectWiQuery = from bug in Client.SetOf<Bug>()
+                where bug.CreatedBy == bug.ChangedBy
+                select bug;
+            // ReSharper disable once UnusedVariable
+            var result = await projectWiQuery.ToListAsync();
+
+            Check.That(result).Not.IsEmpty();
+            foreach (var bug in result)
+            {
+                Check.That(bug.CreatedBy).Equals(bug.ChangedBy);
+            }
+        }
+
 #if false
 
 
-        [Test]
-        public void Query_With_Field_Value_As_A_WI_Field()
-        {
-            var projectWiQuery = from workitem in Project.WorkItemSet()
-                                 where workitem.CreatedBy == workitem.ChangedBy
-                                 select workitem;
-            // ReSharper disable once UnusedVariable
-            var result = projectWiQuery.ToList();
-        }
+      
 
         [Test]
         public void Query_With_Field_Value_As_AWI_Field_With_Field_Method()
