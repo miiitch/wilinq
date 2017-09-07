@@ -7,6 +7,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using WiLinq.LinqProvider.Extensions;
+using WiLinq.LinqProvider.Process;
 
 namespace WiLinq.LinqProvider
 {
@@ -51,6 +52,19 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }
             return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient, project.Name, new TFSWorkItemHelper()));
+        }
+
+        public static IQueryable<GenericWorkItem> FromTemplate<T>(
+            this WorkItemTrackingHttpClient workItemTrackingHttpClient) where T: ProcessTemplate, new()
+        {
+            return FromTemplate(workItemTrackingHttpClient, new T());
+        }
+
+        public static IQueryable<GenericWorkItem> FromTemplate(
+            this WorkItemTrackingHttpClient workItemTrackingHttpClient, ProcessTemplate template)
+        {
+            return new Query<GenericWorkItem>(new WorkItemLinqQueryProvider<GenericWorkItem>(workItemTrackingHttpClient, null, new ProcessTemplateHelper(template)));
+
         }
 
         /// <summary>
@@ -284,7 +298,7 @@ namespace WiLinq.LinqProvider
         {
             if (!WorkItemPropertyUtility<T>.IsValid)
             {
-                throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the needed attributes");
+                throw new ArgumentException($"Type '{typeof(T)}' does not have a the needed attributes");
             }
 
             if (!Is<T>(wi))

@@ -2,22 +2,13 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using WiLinq.LinqProvider.Process;
 
 namespace WiLinq.LinqProvider.Extensions
 {
-    internal class WorkItemBaseHelper<T> : ICustomWorkItemHelper<T> where T : GenericWorkItem, new()
+
+    internal class CustomWorkItemResolver<T> : ILinqResolver where T : GenericWorkItem
     {
-
-        #region ICustomWorkItemHelper<T> Members
-
-        public T CreateItem(WorkItem workitem)
-        {
-            var ret = new T();
-            ret.CopyValuesFromWorkItem(workitem);
-            return ret;
-        }
-
-        #endregion
 
         #region ILinqResolver Members
 
@@ -80,9 +71,45 @@ namespace WiLinq.LinqProvider.Extensions
                 default:
                     throw new NotImplementedException();
             }
-            
+
         }
 
         #endregion
+    }
+
+    internal class ProcessTemplateHelper : CustomWorkItemResolver<GenericWorkItem>,
+        ICustomWorkItemHelper<GenericWorkItem>
+    {
+        readonly ProcessTemplate _processTemplate;
+        private readonly bool _failIfTypeUnknown;
+     
+
+        public ProcessTemplateHelper(ProcessTemplate processTemplate, bool failIfTypeUnknown = false)
+        {
+            _processTemplate = processTemplate;
+            _failIfTypeUnknown = failIfTypeUnknown;
+           
+        }
+
+        public GenericWorkItem CreateItem(WorkItem workitem)
+        {
+            return _processTemplate.Convert(workitem, _failIfTypeUnknown);
+        }
+    }
+
+    internal class WorkItemBaseHelper<T> : CustomWorkItemResolver<T>, ICustomWorkItemHelper<T> where T : GenericWorkItem, new()
+    {
+        
+        #region ICustomWorkItemHelper<T> Members
+
+        public T CreateItem(WorkItem workitem)
+        {
+            var ret = new T();
+            ret.CopyValuesFromWorkItem(workitem);
+            return ret;
+        }
+
+        #endregion
+
     }
 }
