@@ -221,6 +221,10 @@
       <Project>{db5dcbaf-13b0-4502-95cc-b61a3d0f9aef}</Project>
       <Name>WiLinq.LinqProvider</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WiLinq.ProcessTemplates.Scrum\WiLinq.ProcessTemplates.Scrum.csproj">
+      <Project>{8AFD9899-C00D-4658-842F-5C8C46668795}</Project>
+      <Name>WiLinq.ProcessTemplates.Scrum</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

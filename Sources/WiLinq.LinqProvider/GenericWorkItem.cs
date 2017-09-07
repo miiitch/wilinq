@@ -32,7 +32,7 @@ namespace WiLinq.LinqProvider
             }
             if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
-                return (T?)fieldValue;
+                return (T)fieldValue;
             }
             return null;
         }

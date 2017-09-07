@@ -3,7 +3,8 @@ using System.Linq;
 using NFluent;
 using NUnit.Framework;
 using WiLinq.LinqProvider;
-using System.Threading.Tasks;
+using WiLinq.ProcessTemplates.Scrum;
+using Task = System.Threading.Tasks.Task;
 
 namespace WiLinq.Tests
 {
@@ -216,6 +217,24 @@ namespace WiLinq.Tests
                 Check.That(bug.CreatedBy).Equals(bug.ChangedBy);
             }
         }
+
+        [Test]
+        public async Task Return_TypedWorkitems_According_The_Process_Template()
+        {
+            //all workitems;
+            var q = from workitem in Client.FromTemplate<ScrumTemplate>()                
+                select workitem;
+
+            var result = await q.ToListAsync();
+
+            foreach (var workItem in result.OfType<WiLinq.ProcessTemplates.Scrum.Bug>())
+            {
+                Check.That(workItem.WorkItemType).Equals("Bug");
+                var prio = workItem.Priority;
+            }
+
+        }
+
 
 #if false
 
