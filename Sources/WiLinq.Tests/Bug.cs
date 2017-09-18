@@ -5,10 +5,13 @@ namespace WiLinq.Tests
     [WorkItemType("Bug")]
     public class Bug : GenericWorkItem
     {
-        public Bug()
+        [Field("Microsoft.VSTS.Common.Priority")]
+        public virtual int? Priority
         {
-
+            get => GetStructField<int>("Microsoft.VSTS.Common.Priority");
+            set => SetStructField("Microsoft.VSTS.Common.Priority", value);
         }
+   
     }
 
 
