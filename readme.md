@@ -97,7 +97,7 @@ var result = await projectWiQuery.ToListAsync();
 
 ## Create and save typed workitems
 
-Typed workitems can be created and updates by using the New<> and Save<> methods:
+Typed workitems can be created and saved by using the New<> and Save<> methods:
 ```csharp
  var bug = Project.New<Bug>();
 
