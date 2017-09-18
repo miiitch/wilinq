@@ -50,7 +50,7 @@ public class Bug : GenericWorkItem
 ```
 
 Query on bugs:
-```
+```csharp
 var projectWiQuery = from bug in Client.SetOf<Bug>()
     where bug.CreatedBy == bug.ChangedBy && bug.Priority == 2
     select bug;
@@ -86,7 +86,7 @@ var q = from workitem in Client.FromTemplate<ScrumTemplate>()
 
 As any linq provider, sync queries are supported. You can also use a specific extension method to retrieve the data as an async query:
 
-```
+```csharp
 var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
     where bug.IsUnderIteration(iteration)
     select bug;
@@ -98,7 +98,7 @@ var result = await projectWiQuery.ToListAsync();
 ## Create and save typed workitems
 
 Typed workitems can be created and updates by using the New<> and Save<> methods:
-```
+```csharp
  var bug = Project.New<Bug>();
 
 bug.Title = "New bug created";
