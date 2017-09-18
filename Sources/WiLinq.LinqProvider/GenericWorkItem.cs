@@ -28,7 +28,7 @@ namespace WiLinq.LinqProvider
         {
             if (_fieldValues.TryGetValue(referenceName, out object fieldValue))
             {
-                return (T?)fieldValue;
+                return (T)fieldValue;
             }
             if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
