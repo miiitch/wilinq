@@ -55,7 +55,8 @@
         <TabControl ItemsSource="{Binding Path=Classes}" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Grid.Row="1" 
-                    TabStripPlacement="Left">
+                    TabStripPlacement="Left"
+                    HorizontalContentAlignment="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">

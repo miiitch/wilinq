@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:WiLinq.Codegen.Views"
         ResizeMode="NoResize"
-        Title="MainWindow" Height="600" Width="700">
+        Title="Work item class generator" Height="600" Width="700">
     <Grid>
         <views:LinqCodeGenerationView />
     </Grid>
