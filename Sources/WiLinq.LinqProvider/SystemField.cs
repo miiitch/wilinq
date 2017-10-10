@@ -50,5 +50,9 @@ namespace WiLinq.LinqProvider
         public const string HyperLinkCount = "System.HyperLinkCount";
 
         public const string NodeName = "System.NodeName";
+
+        public const string Watermark = "System.Watermark";
+
+        public const string Tags = "System.Tags";
     }
 }

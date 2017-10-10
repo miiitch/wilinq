@@ -86,32 +86,9 @@ namespace WiLinq.Tests
             }
         }
 
-        [Field("System.BoardColumn")]
-        public virtual string BoardColumn
-        {
-            get
-            {
-                return this.GetRefField<string>("System.BoardColumn");
-            }
-        }
+     
 
-        [Field("System.BoardColumnDone")]
-        public virtual System.Nullable<bool> BoardColumnDone
-        {
-            get
-            {
-                return this.GetStructField<bool>("System.BoardColumnDone");
-            }
-        }
-
-        [Field("System.BoardLane")]
-        public virtual string BoardLane
-        {
-            get
-            {
-                return this.GetRefField<string>("System.BoardLane");
-            }
-        }
+   
 
         [Field("Microsoft.VSTS.Common.ClosedDate")]
         public virtual System.Nullable<System.DateTime> ClosedDate
@@ -163,15 +140,15 @@ namespace WiLinq.Tests
 
         /// <summary>Importance to business</summary>
         [Field("Microsoft.VSTS.Common.Priority")]
-        public virtual System.Nullable<int> Priority
+        public virtual System.Nullable<long> Priority
         {
             get
             {
-                return this.GetStructField<int>("Microsoft.VSTS.Common.Priority");
+                return this.GetStructField<long>("Microsoft.VSTS.Common.Priority");
             }
             set
             {
-                this.SetStructField<int>("Microsoft.VSTS.Common.Priority", value);
+                this.SetStructField<long>("Microsoft.VSTS.Common.Priority", value);
             }
         }
 
@@ -211,26 +188,6 @@ namespace WiLinq.Tests
             }
         }
 
-        [Field("System.Tags")]
-        public virtual string Tags
-        {
-            get
-            {
-                return this.GetRefField<string>("System.Tags");
-            }
-            set
-            {
-                this.SetRefField<string>("System.Tags", value);
-            }
-        }
-
-        [Field("System.Watermark")]
-        public virtual System.Nullable<int> Watermark
-        {
-            get
-            {
-                return this.GetStructField<int>("System.Watermark");
-            }
-        }
+      
     }
 }

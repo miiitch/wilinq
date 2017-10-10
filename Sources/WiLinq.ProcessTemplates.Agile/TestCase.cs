@@ -1,10 +1,10 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
-    [WorkItemType("Shared Steps")]
-    public class SharedSteps : GenericWorkItem
+    [WorkItemType("Test Case")]
+    public class TestCase : GenericWorkItem
     {
 
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
@@ -27,6 +27,45 @@ namespace WiLinq.ProcessTemplates.Scrum
         [Field("System.AuthorizedDate")]
         public virtual DateTime? AuthorizedDate => GetStructField<DateTime>("System.AuthorizedDate");
 
+        /// <summary>The ID of the test that automates this test case</summary>
+        [Field("Microsoft.VSTS.TCM.AutomatedTestId")]
+        public virtual string AutomatedTestId
+        {
+            get => GetRefField<string>("Microsoft.VSTS.TCM.AutomatedTestId");
+            set => SetRefField("Microsoft.VSTS.TCM.AutomatedTestId", value);
+        }
+
+        /// <summary>The name of the test that automates this test case</summary>
+        [Field("Microsoft.VSTS.TCM.AutomatedTestName")]
+        public virtual string AutomatedTestName
+        {
+            get => GetRefField<string>("Microsoft.VSTS.TCM.AutomatedTestName");
+            set => SetRefField("Microsoft.VSTS.TCM.AutomatedTestName", value);
+        }
+
+        /// <summary>The assembly containing the test that automates this test case</summary>
+        [Field("Microsoft.VSTS.TCM.AutomatedTestStorage")]
+        public virtual string AutomatedTestStorage
+        {
+            get => GetRefField<string>("Microsoft.VSTS.TCM.AutomatedTestStorage");
+            set => SetRefField("Microsoft.VSTS.TCM.AutomatedTestStorage", value);
+        }
+
+        /// <summary>The type of the test that automates this test case</summary>
+        [Field("Microsoft.VSTS.TCM.AutomatedTestType")]
+        public virtual string AutomatedTestType
+        {
+            get => GetRefField<string>("Microsoft.VSTS.TCM.AutomatedTestType");
+            set => SetRefField("Microsoft.VSTS.TCM.AutomatedTestType", value);
+        }
+
+        [Field("Microsoft.VSTS.TCM.AutomationStatus")]
+        public virtual string Automationstatus
+        {
+            get => GetRefField<string>("Microsoft.VSTS.TCM.AutomationStatus");
+            set => SetRefField("Microsoft.VSTS.TCM.AutomationStatus", value);
+        }
+
         [Field("Microsoft.VSTS.Common.ClosedBy")]
         public virtual string ClosedBy
         {
@@ -41,6 +80,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
+        /// <summary>The build in which the bug was fixed</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {
@@ -48,11 +88,11 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.Build.IntegrationBuild", value);
         }
 
-        [Field("Microsoft.VSTS.Common.Issue")]
-        public virtual string Issue
+        [Field("Microsoft.VSTS.TCM.LocalDataSource")]
+        public virtual string LocalDataSource
         {
-            get => GetRefField<string>("Microsoft.VSTS.Common.Issue");
-            set => SetRefField("Microsoft.VSTS.Common.Issue", value);
+            get => GetRefField<string>("Microsoft.VSTS.TCM.LocalDataSource");
+            set => SetRefField("Microsoft.VSTS.TCM.LocalDataSource", value);
         }
 
         [Field("Microsoft.VSTS.TCM.Parameters")]
@@ -62,6 +102,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.TCM.Parameters", value);
         }
 
+        /// <summary>Importance of this test case to the business goals of the product. 1=Most important.</summary>
         [Field("Microsoft.VSTS.Common.Priority")]
         public virtual long? Priority
         {
@@ -79,6 +120,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.StateChangeDate", value);
         }
 
+        /// <summary>Steps required to perform the test</summary>
         [Field("Microsoft.VSTS.TCM.Steps")]
         public virtual string Steps
         {

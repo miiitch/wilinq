@@ -1,10 +1,10 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
-    [WorkItemType("Feature")]
-    public class Feature : GenericWorkItem
+    [WorkItemType("User Story")]
+    public class UserStory : GenericWorkItem
     {
 
         [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
@@ -34,21 +34,6 @@ namespace WiLinq.ProcessTemplates.Scrum
         [Field("System.AuthorizedDate")]
         public virtual DateTime? AuthorizedDate => GetStructField<DateTime>("System.AuthorizedDate");
 
-        [Field("Microsoft.VSTS.Common.BacklogPriority")]
-        public virtual double? BacklogPriority
-        {
-            get => GetStructField<double>("Microsoft.VSTS.Common.BacklogPriority");
-            set => SetStructField("Microsoft.VSTS.Common.BacklogPriority", value);
-        }
-
-        /// <summary>The business value for the customer when the feature is released</summary>
-        [Field("Microsoft.VSTS.Common.BusinessValue")]
-        public virtual long? BusinessValue
-        {
-            get => GetStructField<long>("Microsoft.VSTS.Common.BusinessValue");
-            set => SetStructField("Microsoft.VSTS.Common.BusinessValue", value);
-        }
-
         [Field("Microsoft.VSTS.Common.ClosedBy")]
         public virtual string ClosedBy
         {
@@ -63,15 +48,15 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
-        /// <summary>The estimated effort to implemented the feature</summary>
-        [Field("Microsoft.VSTS.Scheduling.Effort")]
-        public virtual double? Effort
+        /// <summary>The completion date for all the tasks implementing this story</summary>
+        [Field("Microsoft.VSTS.Scheduling.FinishDate")]
+        public virtual DateTime? FinishDate
         {
-            get => GetStructField<double>("Microsoft.VSTS.Scheduling.Effort");
-            set => SetStructField("Microsoft.VSTS.Scheduling.Effort", value);
+            get => GetStructField<DateTime>("Microsoft.VSTS.Scheduling.FinishDate");
+            set => SetStructField("Microsoft.VSTS.Scheduling.FinishDate", value);
         }
 
-        /// <summary>The build in which the feature was fixed</summary>
+        /// <summary>The build in which the bug was fixed</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {
@@ -79,7 +64,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.Build.IntegrationBuild", value);
         }
 
-        /// <summary>Priority for completing the feature, based on business goals</summary>
+        /// <summary>Business importance. 1=must fix; 4=unimportant.</summary>
         [Field("Microsoft.VSTS.Common.Priority")]
         public virtual long? Priority
         {
@@ -87,8 +72,53 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.Priority", value);
         }
 
+        [Field("Microsoft.VSTS.Common.ResolvedBy")]
+        public virtual string ResolvedBy
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.ResolvedBy");
+            set => SetRefField("Microsoft.VSTS.Common.ResolvedBy", value);
+        }
+
+        [Field("Microsoft.VSTS.Common.ResolvedDate")]
+        public virtual DateTime? ResolvedDate
+        {
+            get => GetStructField<DateTime>("Microsoft.VSTS.Common.ResolvedDate");
+            set => SetStructField("Microsoft.VSTS.Common.ResolvedDate", value);
+        }
+
+        [Field("Microsoft.VSTS.Common.ResolvedReason")]
+        public virtual string ResolvedReason
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.ResolvedReason");
+            set => SetRefField("Microsoft.VSTS.Common.ResolvedReason", value);
+        }
+
         [Field("System.RevisedDate")]
         public virtual DateTime? RevisedDate => GetStructField<DateTime>("System.RevisedDate");
+
+        /// <summary>Uncertainty in requirement or design</summary>
+        [Field("Microsoft.VSTS.Common.Risk")]
+        public virtual string Risk
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.Risk");
+            set => SetRefField("Microsoft.VSTS.Common.Risk", value);
+        }
+
+        /// <summary>Work first on items with lower-valued stack rank. Set in triage.</summary>
+        [Field("Microsoft.VSTS.Common.StackRank")]
+        public virtual double? StackRank
+        {
+            get => GetStructField<double>("Microsoft.VSTS.Common.StackRank");
+            set => SetStructField("Microsoft.VSTS.Common.StackRank", value);
+        }
+
+        /// <summary>The start date for implementation of this story</summary>
+        [Field("Microsoft.VSTS.Scheduling.StartDate")]
+        public virtual DateTime? StartDate
+        {
+            get => GetStructField<DateTime>("Microsoft.VSTS.Scheduling.StartDate");
+            set => SetStructField("Microsoft.VSTS.Scheduling.StartDate", value);
+        }
 
         [Field("Microsoft.VSTS.Common.StateChangeDate")]
         public virtual DateTime? StateChangeDate
@@ -97,23 +127,15 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.StateChangeDate", value);
         }
 
-        /// <summary>The target date for completing the feature</summary>
-        [Field("Microsoft.VSTS.Scheduling.TargetDate")]
-        public virtual DateTime? TargetDate
+        /// <summary>The size of work estimated for implementing this user story</summary>
+        [Field("Microsoft.VSTS.Scheduling.StoryPoints")]
+        public virtual double? StoryPoints
         {
-            get => GetStructField<DateTime>("Microsoft.VSTS.Scheduling.TargetDate");
-            set => SetStructField("Microsoft.VSTS.Scheduling.TargetDate", value);
+            get => GetStructField<double>("Microsoft.VSTS.Scheduling.StoryPoints");
+            set => SetStructField("Microsoft.VSTS.Scheduling.StoryPoints", value);
         }
 
-        /// <summary>How does the business value decay over time. Higher values make the feature more time critical</summary>
-        [Field("Microsoft.VSTS.Common.TimeCriticality")]
-        public virtual double? TimeCriticality
-        {
-            get => GetStructField<double>("Microsoft.VSTS.Common.TimeCriticality");
-            set => SetStructField("Microsoft.VSTS.Common.TimeCriticality", value);
-        }
-
-        /// <summary>Business = Services provided by the system to fulfill stakeholder needs; Architectural = Technical system services to implement business features that deliver solution value</summary>
+        /// <summary>Business = delivers value to a user or another system; Architectural = work to support other stories or components</summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

@@ -75,7 +75,7 @@ namespace WiLinq.CodeGen.CodeGeneration
                                                 Description = field.HelpText,
                                                 ReferenceName = field.ReferenceName,
                                                 Inherited = _fieldToIgnoreList.Contains(field.ReferenceName),
-                                                Type = field.SystemType
+                                                Type = AdaptType(field.SystemType)
                                             }).ToList()
 
 
@@ -85,6 +85,16 @@ namespace WiLinq.CodeGen.CodeGeneration
 
 
             return result;
+        }
+
+        private Type AdaptType(Type fieldSystemType)
+        {
+            if (fieldSystemType == typeof(int))
+            {
+                return typeof(long);
+            }
+
+            return fieldSystemType;
         }
 
 

@@ -1,18 +1,11 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
     [WorkItemType("Feature")]
     public class Feature : GenericWorkItem
     {
-
-        [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
-        public virtual string AcceptanceCriteria
-        {
-            get => GetRefField<string>("Microsoft.VSTS.Common.AcceptanceCriteria");
-            set => SetRefField("Microsoft.VSTS.Common.AcceptanceCriteria", value);
-        }
 
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
@@ -33,13 +26,6 @@ namespace WiLinq.ProcessTemplates.Scrum
 
         [Field("System.AuthorizedDate")]
         public virtual DateTime? AuthorizedDate => GetStructField<DateTime>("System.AuthorizedDate");
-
-        [Field("Microsoft.VSTS.Common.BacklogPriority")]
-        public virtual double? BacklogPriority
-        {
-            get => GetStructField<double>("Microsoft.VSTS.Common.BacklogPriority");
-            set => SetStructField("Microsoft.VSTS.Common.BacklogPriority", value);
-        }
 
         /// <summary>The business value for the customer when the feature is released</summary>
         [Field("Microsoft.VSTS.Common.BusinessValue")]
@@ -63,7 +49,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
-        /// <summary>The estimated effort to implemented the feature</summary>
+        /// <summary>The estimated effort to implement the feature</summary>
         [Field("Microsoft.VSTS.Scheduling.Effort")]
         public virtual double? Effort
         {
@@ -87,8 +73,45 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.Priority", value);
         }
 
+        [Field("Microsoft.VSTS.Common.ResolvedBy")]
+        public virtual string ResolvedBy
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.ResolvedBy");
+            set => SetRefField("Microsoft.VSTS.Common.ResolvedBy", value);
+        }
+
+        [Field("Microsoft.VSTS.Common.ResolvedDate")]
+        public virtual DateTime? ResolvedDate
+        {
+            get => GetStructField<DateTime>("Microsoft.VSTS.Common.ResolvedDate");
+            set => SetStructField("Microsoft.VSTS.Common.ResolvedDate", value);
+        }
+
+        [Field("Microsoft.VSTS.Common.ResolvedReason")]
+        public virtual string ResolvedReason
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.ResolvedReason");
+            set => SetRefField("Microsoft.VSTS.Common.ResolvedReason", value);
+        }
+
         [Field("System.RevisedDate")]
         public virtual DateTime? RevisedDate => GetStructField<DateTime>("System.RevisedDate");
+
+        /// <summary>Uncertainty in feature</summary>
+        [Field("Microsoft.VSTS.Common.Risk")]
+        public virtual string Risk
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.Risk");
+            set => SetRefField("Microsoft.VSTS.Common.Risk", value);
+        }
+
+        /// <summary>Work first on items with lower-valued stack rank. Set in triage.</summary>
+        [Field("Microsoft.VSTS.Common.StackRank")]
+        public virtual double? StackRank
+        {
+            get => GetStructField<double>("Microsoft.VSTS.Common.StackRank");
+            set => SetStructField("Microsoft.VSTS.Common.StackRank", value);
+        }
 
         [Field("Microsoft.VSTS.Common.StateChangeDate")]
         public virtual DateTime? StateChangeDate

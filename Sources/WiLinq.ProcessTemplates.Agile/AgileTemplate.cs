@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using WiLinq.LinqProvider.Process;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
-    public class ScrumTemplate : ProcessTemplate
+    public class AgileTemplate : ProcessTemplate
     {
-        public ScrumTemplate()
+        public AgileTemplate()
         {
             AddWorkItemType<Epic>();
             AddWorkItemType<Feature>();
-            AddWorkItemType<ProductBacklogItem>();
+            AddWorkItemType<UserStory>();
             AddWorkItemType<Bug>();
             AddWorkItemType<Task>();
-            AddWorkItemType<Impediment>();
+            AddWorkItemType<Issue>();
             AddWorkItemType<FeedbackRequest>();
             AddWorkItemType<FeedbackResponse>();
             AddWorkItemType<TestSuite>();

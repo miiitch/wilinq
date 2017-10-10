@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Services.WebApi;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.VisualStudio.Services.Common;
 
 namespace WiLinq.Tests
 {
@@ -17,8 +18,26 @@ namespace WiLinq.Tests
         public virtual async Task SetUp()
         {
             var collectionUrl = Environment.GetEnvironmentVariable("WILINQ_TEST_TPCURL");
+            if (string.IsNullOrWhiteSpace(collectionUrl))
+            {
+                throw new InvalidOperationException("Environment variable 'WILINQ_TEST_TPCURL' is missing");
+            }
+            var personnalAccessToken = Environment.GetEnvironmentVariable("WILINQ_TEST_PAT");
+            VssCredentials  vssCredentials;
+            if (string.IsNullOrWhiteSpace(personnalAccessToken))
+            {
+                vssCredentials = new VssClientCredentials
+                {
+                    Storage = new VssClientCredentialStorage()
+                };
 
-            var connection = new VssConnection(new Uri(collectionUrl), new VssClientCredentials());
+            }
+            else
+            {
+                vssCredentials = new VssBasicCredential(string.Empty, personnalAccessToken);
+            }
+            
+            var connection = new VssConnection(new Uri(collectionUrl), vssCredentials);
 
             await connection.ConnectAsync();
 

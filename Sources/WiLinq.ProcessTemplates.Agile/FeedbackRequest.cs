@@ -1,7 +1,7 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
     [WorkItemType("Feedback Request")]
     public class FeedbackRequest : GenericWorkItem
@@ -51,6 +51,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
+        /// <summary>The build in which the feedback was requested</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {

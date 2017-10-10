@@ -1,7 +1,7 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
     [WorkItemType("Shared Steps")]
     public class SharedSteps : GenericWorkItem
@@ -41,6 +41,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
+        /// <summary>The build in which the bug was fixed</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {
@@ -48,6 +49,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.Build.IntegrationBuild", value);
         }
 
+        /// <summary>Used to highlight the shared step, e.g., to mark it as an issue</summary>
         [Field("Microsoft.VSTS.Common.Issue")]
         public virtual string Issue
         {
@@ -62,6 +64,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.TCM.Parameters", value);
         }
 
+        /// <summary>Priority to the business</summary>
         [Field("Microsoft.VSTS.Common.Priority")]
         public virtual long? Priority
         {
@@ -79,6 +82,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.StateChangeDate", value);
         }
 
+        /// <summary>Steps required to perform the test</summary>
         [Field("Microsoft.VSTS.TCM.Steps")]
         public virtual string Steps
         {

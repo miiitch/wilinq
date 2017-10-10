@@ -1,10 +1,10 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
-    [WorkItemType("Shared Steps")]
-    public class SharedSteps : GenericWorkItem
+    [WorkItemType("Issue")]
+    public class Issue : GenericWorkItem
     {
 
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
@@ -41,6 +41,15 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
+        /// <summary>The date by which this issue needs to be closed</summary>
+        [Field("Microsoft.VSTS.Scheduling.DueDate")]
+        public virtual DateTime? DueDate
+        {
+            get => GetStructField<DateTime>("Microsoft.VSTS.Scheduling.DueDate");
+            set => SetStructField("Microsoft.VSTS.Scheduling.DueDate", value);
+        }
+
+        /// <summary>The build in which the bug was fixed</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {
@@ -48,20 +57,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.Build.IntegrationBuild", value);
         }
 
-        [Field("Microsoft.VSTS.Common.Issue")]
-        public virtual string Issue
-        {
-            get => GetRefField<string>("Microsoft.VSTS.Common.Issue");
-            set => SetRefField("Microsoft.VSTS.Common.Issue", value);
-        }
-
-        [Field("Microsoft.VSTS.TCM.Parameters")]
-        public virtual string Parameters
-        {
-            get => GetRefField<string>("Microsoft.VSTS.TCM.Parameters");
-            set => SetRefField("Microsoft.VSTS.TCM.Parameters", value);
-        }
-
+        /// <summary>Business importance. 1=must fix; 4=unimportant.</summary>
         [Field("Microsoft.VSTS.Common.Priority")]
         public virtual long? Priority
         {
@@ -72,18 +68,19 @@ namespace WiLinq.ProcessTemplates.Scrum
         [Field("System.RevisedDate")]
         public virtual DateTime? RevisedDate => GetStructField<DateTime>("System.RevisedDate");
 
+        /// <summary>Work first on items with lower-valued stack rank. Set in triage.</summary>
+        [Field("Microsoft.VSTS.Common.StackRank")]
+        public virtual double? StackRank
+        {
+            get => GetStructField<double>("Microsoft.VSTS.Common.StackRank");
+            set => SetStructField("Microsoft.VSTS.Common.StackRank", value);
+        }
+
         [Field("Microsoft.VSTS.Common.StateChangeDate")]
         public virtual DateTime? StateChangeDate
         {
             get => GetStructField<DateTime>("Microsoft.VSTS.Common.StateChangeDate");
             set => SetStructField("Microsoft.VSTS.Common.StateChangeDate", value);
-        }
-
-        [Field("Microsoft.VSTS.TCM.Steps")]
-        public virtual string Steps
-        {
-            get => GetRefField<string>("Microsoft.VSTS.TCM.Steps");
-            set => SetRefField("Microsoft.VSTS.TCM.Steps", value);
         }
     }
 }

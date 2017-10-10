@@ -1,7 +1,7 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
     [WorkItemType("Shared Parameter")]
     public class SharedParameter : GenericWorkItem
@@ -13,6 +13,7 @@ namespace WiLinq.ProcessTemplates.Scrum
         [Field("System.AuthorizedDate")]
         public virtual DateTime? AuthorizedDate => GetStructField<DateTime>("System.AuthorizedDate");
 
+        /// <summary>The build in which the bug was fixed</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {

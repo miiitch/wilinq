@@ -17,6 +17,8 @@ namespace WiLinq.LinqProvider
     [IgnoreField(SystemField.HyperLinkCount)]
     [IgnoreField(SystemField.AttachedFileCount)]
     [IgnoreField(SystemField.NodeName)]
+    [IgnoreField(SystemField.Watermark)]
+    [IgnoreField(SystemField.History)]
     public class GenericWorkItem
     {
         private Dictionary<string, object> _initialFieldValues;
@@ -32,7 +34,8 @@ namespace WiLinq.LinqProvider
             }
             if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
-                return (T)fieldValue;
+                var value = (T) fieldValue;
+                return new Nullable<T>(value);
             }
             return null;
         }
@@ -251,6 +254,23 @@ namespace WiLinq.LinqProvider
             get => GetRefField<string>(SystemField.State);
             set => SetRefField(SystemField.State, value);
         }
+
+        [Field(SystemField.Tags)]
+        public virtual string Tags
+        {
+            get => GetRefField<string>("System.Tags");
+            set => SetRefField("System.Tags", value);
+        }
+
+
+        [Field("System.BoardColumn")]
+        public virtual string BoardColumn => GetRefField<string>("System.BoardColumn");
+
+        [Field("System.BoardColumnDone")]
+        public virtual bool? BoardColumnDone => GetStructField<bool>("System.BoardColumnDone");
+
+        [Field("System.BoardLane")]
+        public virtual string BoardLane => GetRefField<string>("System.BoardLane");
 
 
         [Field(SystemField.AreaPath)]

@@ -1,18 +1,11 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
-    [WorkItemType("Feature")]
-    public class Feature : GenericWorkItem
+    [WorkItemType("Epic")]
+    public class Epic : GenericWorkItem
     {
-
-        [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
-        public virtual string AcceptanceCriteria
-        {
-            get => GetRefField<string>("Microsoft.VSTS.Common.AcceptanceCriteria");
-            set => SetRefField("Microsoft.VSTS.Common.AcceptanceCriteria", value);
-        }
 
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
@@ -34,14 +27,7 @@ namespace WiLinq.ProcessTemplates.Scrum
         [Field("System.AuthorizedDate")]
         public virtual DateTime? AuthorizedDate => GetStructField<DateTime>("System.AuthorizedDate");
 
-        [Field("Microsoft.VSTS.Common.BacklogPriority")]
-        public virtual double? BacklogPriority
-        {
-            get => GetStructField<double>("Microsoft.VSTS.Common.BacklogPriority");
-            set => SetStructField("Microsoft.VSTS.Common.BacklogPriority", value);
-        }
-
-        /// <summary>The business value for the customer when the feature is released</summary>
+        /// <summary>The business value for the customer when the epic is released</summary>
         [Field("Microsoft.VSTS.Common.BusinessValue")]
         public virtual long? BusinessValue
         {
@@ -63,7 +49,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.ClosedDate", value);
         }
 
-        /// <summary>The estimated effort to implemented the feature</summary>
+        /// <summary>The estimated effort to implemented the epic</summary>
         [Field("Microsoft.VSTS.Scheduling.Effort")]
         public virtual double? Effort
         {
@@ -71,7 +57,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Scheduling.Effort", value);
         }
 
-        /// <summary>The build in which the feature was fixed</summary>
+        /// <summary>The build in which the epic was fixed</summary>
         [Field("Microsoft.VSTS.Build.IntegrationBuild")]
         public virtual string IntegrationBuild
         {
@@ -79,7 +65,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.Build.IntegrationBuild", value);
         }
 
-        /// <summary>Priority for completing the feature, based on business goals</summary>
+        /// <summary>Priority for completing the epic, based on business goals</summary>
         [Field("Microsoft.VSTS.Common.Priority")]
         public virtual long? Priority
         {
@@ -87,8 +73,45 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.Priority", value);
         }
 
+        [Field("Microsoft.VSTS.Common.ResolvedBy")]
+        public virtual string ResolvedBy
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.ResolvedBy");
+            set => SetRefField("Microsoft.VSTS.Common.ResolvedBy", value);
+        }
+
+        [Field("Microsoft.VSTS.Common.ResolvedDate")]
+        public virtual DateTime? ResolvedDate
+        {
+            get => GetStructField<DateTime>("Microsoft.VSTS.Common.ResolvedDate");
+            set => SetStructField("Microsoft.VSTS.Common.ResolvedDate", value);
+        }
+
+        [Field("Microsoft.VSTS.Common.ResolvedReason")]
+        public virtual string ResolvedReason
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.ResolvedReason");
+            set => SetRefField("Microsoft.VSTS.Common.ResolvedReason", value);
+        }
+
         [Field("System.RevisedDate")]
         public virtual DateTime? RevisedDate => GetStructField<DateTime>("System.RevisedDate");
+
+        /// <summary>Uncertainty in epic</summary>
+        [Field("Microsoft.VSTS.Common.Risk")]
+        public virtual string Risk
+        {
+            get => GetRefField<string>("Microsoft.VSTS.Common.Risk");
+            set => SetRefField("Microsoft.VSTS.Common.Risk", value);
+        }
+
+        /// <summary>Work first on items with lower-valued stack rank.</summary>
+        [Field("Microsoft.VSTS.Common.StackRank")]
+        public virtual double? StackRank
+        {
+            get => GetStructField<double>("Microsoft.VSTS.Common.StackRank");
+            set => SetStructField("Microsoft.VSTS.Common.StackRank", value);
+        }
 
         [Field("Microsoft.VSTS.Common.StateChangeDate")]
         public virtual DateTime? StateChangeDate
@@ -97,7 +120,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.StateChangeDate", value);
         }
 
-        /// <summary>The target date for completing the feature</summary>
+        /// <summary>The target date for completing the epic</summary>
         [Field("Microsoft.VSTS.Scheduling.TargetDate")]
         public virtual DateTime? TargetDate
         {
@@ -105,7 +128,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Scheduling.TargetDate", value);
         }
 
-        /// <summary>How does the business value decay over time. Higher values make the feature more time critical</summary>
+        /// <summary>How does the business value decay over time. Higher values make the epic more time critical</summary>
         [Field("Microsoft.VSTS.Common.TimeCriticality")]
         public virtual double? TimeCriticality
         {
@@ -113,7 +136,7 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.TimeCriticality", value);
         }
 
-        /// <summary>Business = Services provided by the system to fulfill stakeholder needs; Architectural = Technical system services to implement business features that deliver solution value</summary>
+        /// <summary>Business = Customer-facing epics; Architectural = Technology initiatives to support current and future business needs</summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

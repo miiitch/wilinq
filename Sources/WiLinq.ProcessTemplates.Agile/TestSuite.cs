@@ -1,7 +1,7 @@
 using System;
 using WiLinq.LinqProvider;
 
-namespace WiLinq.ProcessTemplates.Scrum
+namespace WiLinq.ProcessTemplates.Agile
 {
     [WorkItemType("Test Suite")]
     public class TestSuite : GenericWorkItem
