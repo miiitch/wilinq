@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global stuffs", "Global stu
 		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		CommonAssemblyInfo.fs = CommonAssemblyInfo.fs
 		WiLinq.LinqProvider\Extensions\FieldAttribute.cs = WiLinq.LinqProvider\Extensions\FieldAttribute.cs
+		WiLinq.nuspec = WiLinq.nuspec
+		WiLinq.ProcessTemplates.Scrum.nuspec = WiLinq.ProcessTemplates.Scrum.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiLinq.CodeGen", "WiLinq.WICodeGen\WiLinq.CodeGen.csproj", "{1DFBD0B8-CFE1-42B7-AB2F-8301FE38315A}"
