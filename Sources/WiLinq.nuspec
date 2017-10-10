@@ -1,32 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
-	<metadata>
-		<id>Wilinq</id>
-		<version>$version$</version>
-		<title>Linq provider for VSTS/TFS workitems</title>
-		<authors>Michel Perfetti</authors>
-		<owners>Michel Perfetti</owners>
-		<licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
-		<projectUrl>https://github.com/miiitch/wilinq/</projectUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>WiLinq is a workitem linq provider targeting VSTS Rest API</description>
-		<releaseNotes>Development version</releaseNotes>
-		<copyright>Copyright 2017</copyright>
-		<tags>Linq WorkItem TFS VSTS</tags>
-		<dependencies>
-			<group targetFramework="net461">
-				<dependency id="Microsoft.TeamFoundationServer.Client" version="15.112.1" />
-			</group>
-		</dependencies>
-	</metadata>
-	<files>
-		<file src="WiLinq.LinqProvider\bin\$configuration$\WiLinq.LinqProvider.dll" target="lib\net461\WiLinq.LinqProvider.dll" />
-		<file src="WiLinq.LinqProvider\bin\$configuration$\WiLinq.LinqProvider.pdb" target="lib\net461\WiLinq.LinqProvider.pdb" />	
-		<file src="WiLinq.Codegen\bin\$configuration$\GalaSoft.MvvmLight.Extras.WPF45.dll" target="tools\GalaSoft.MvvmLight.Extras.WPF45.dll" />
-		<file src="WiLinq.Codegen\bin\$configuration$\GalaSoft.MvvmLight.WPF45.dll" target="tools\GalaSoft.MvvmLight.WPF45.dll" />
-		<file src="WiLinq.Codegen\bin\$configuration$\Microsoft.Practices.ServiceLocation.dll" target="tools\Microsoft.Practices.ServiceLocation.dll" />
-		<file src="WiLinq.Codegen\bin\$configuration$\WiLinq.LinqProvider.dll" target="tools\WiLinq.LinqProvider.dll" />
-		<file src="WiLinq.Codegen\bin\$configuration$\WICodeGen.exe" target="tools\WICodeGen.exe" />
-	</files>
-	
+  <metadata>
+    <id>Wilinq</id>
+    <version>$version$</version>
+    <title>Linq provider for VSTS/TFS workitems</title>
+    <authors>Michel Perfetti</authors>
+    <owners>Michel Perfetti</owners>
+    <licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
+    <projectUrl>https://github.com/miiitch/wilinq/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>WiLinq is a workitem linq provider targeting VSTS Rest API</description>
+    <releaseNotes>Development version</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Linq WorkItem TFS VSTS</tags>
+    <dependencies>
+      <group targetFramework="net461">
+        <dependency id="Microsoft.TeamFoundationServer.Client" version="15.112.1" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="WiLinq.LinqProvider\bin\$configuration$\WiLinq.LinqProvider.dll" target="lib\net461" />
+    <file src="WiLinq.LinqProvider\bin\$configuration$\WiLinq.LinqProvider.pdb" target="lib\net461" />
+    <file src="WiLinq.WICodegen\bin\$configuration$\**\*.*" target="tools" />
+  </files>
+
 </package>
