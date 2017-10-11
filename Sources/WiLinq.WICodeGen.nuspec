@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>Wilinq</id>
+    <id>Wilinq code generator</id>
     <version>$version$</version>
-    <title>Linq provider for VSTS/TFS workitems</title>
+    <title>Code Generator for WiLinq</title>
     <authors>Michel Perfetti</authors>
     <owners>Michel Perfetti</owners>
     <licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
@@ -19,9 +19,8 @@
       </group>
     </dependencies>
   </metadata>
-  <files>
-    <file src="WiLinq.LinqProvider\bin\$configuration$\WiLinq.LinqProvider.dll" target="lib\net461" />
-    <file src="WiLinq.LinqProvider\bin\$configuration$\WiLinq.LinqProvider.pdb" target="lib\net461" />
+  <files>  
+    <file src="WiLinq.WICodegen\bin\$configuration$\**\*.*" target="tools" />
   </files>
 
 </package>
