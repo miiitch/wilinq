@@ -1,0 +1,4 @@
+assembly-versioning-scheme: MajorMinorPatchTag
+branches: {}
+ignore:
+  sha: []
