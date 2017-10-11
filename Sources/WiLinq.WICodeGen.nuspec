@@ -13,10 +13,7 @@
     <releaseNotes>Development version</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Linq WorkItem TFS VSTS</tags>
-    <dependencies>
-      <group targetFramework="net461">
-        <dependency id="Microsoft.TeamFoundationServer.Client" version="15.112.1" />
-      </group>
+    <dependencies>     
     </dependencies>
   </metadata>
   <files>  
