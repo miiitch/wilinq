@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
-		<id>Wilinq.ProcessTemplates.Scrum</id>
+		<id>Wilinq.ProcessTemplates.Agile</id>
 		<version>$version$</version>
-		<title>Scrum process template for Workitem linq provider Wilinq</title>
+		<title>Agile process template for Workitem linq provider Wilinq</title>
 		<authors>Michel Perfetti</authors>
 		<owners>Michel Perfetti</owners>
 		<licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
@@ -12,7 +12,7 @@
 		<description>WiLinq is a workitem linq provider targeting VSTS Extended API</description>
 		<releaseNotes>Development version</releaseNotes>
 		<copyright>Copyright 2017</copyright>
-		<tags>Wilinq Linq WorkItem TFS VSTS Process Template Scrum</tags>
+		<tags>Wilinq Linq WorkItem TFS VSTS Process Template Agile</tags>
 		<dependencies>
 			<group targetFramework="net461">
 			  <dependency id="Wilinq" version="$version$" />			
@@ -20,8 +20,8 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="WiLinq.Processtemplates.Scrum\bin\$configuration$\WiLinq.Processtemplates.Scrum.dll" target="lib\net461" />
-		<file src="WiLinq.Processtemplates.Scrum\bin\$configuration$\WiLinq.Processtemplates.Scrum.pdb" target="lib\net461" />	
+		<file src="WiLinq.Processtemplates.Agile\bin\$configuration$\WiLinq.Processtemplates.Agile.dll" target="lib\net461" />
+		<file src="WiLinq.Processtemplates.Agile\bin\$configuration$\WiLinq.Processtemplates.Agile.pdb" target="lib\net461" />	
 	</files>
 	
 </package>

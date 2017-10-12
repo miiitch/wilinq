@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Provider", "Provider", "{40D3F125-9DE5-4F4D-A354-713820F9FDC2}"
 EndProject
@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global stuffs", "Global stu
 		CommonAssemblyInfo.fs = CommonAssemblyInfo.fs
 		WiLinq.LinqProvider\Extensions\FieldAttribute.cs = WiLinq.LinqProvider\Extensions\FieldAttribute.cs
 		WiLinq.nuspec = WiLinq.nuspec
+		WiLinq.ProcessTemplates.Agile.nuspec = WiLinq.ProcessTemplates.Agile.nuspec
 		WiLinq.ProcessTemplates.Scrum.nuspec = WiLinq.ProcessTemplates.Scrum.nuspec
 		WiLinq.WICodeGen.nuspec = WiLinq.WICodeGen.nuspec
 	EndProjectSection
