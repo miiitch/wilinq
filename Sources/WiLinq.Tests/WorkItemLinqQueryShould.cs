@@ -16,8 +16,8 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.All()
-                    where workitem.Id == 3
-                    select workitem;
+                where workitem.Id == 3
+                select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = q.ToList();
@@ -31,8 +31,8 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.All()
-                    where workitem.Id == 3
-                    select workitem;
+                where workitem.Id == 3
+                select workitem;
 
             var result = await q.ToListAsync();
 
@@ -41,13 +41,12 @@ namespace WiLinq.Tests
         }
 
         [Test]
-
         public async Task Return_Only_One_Element_Of_Type_Bug_With_The_Right_Id()
         {
             //all workitems;
             var q = from workitem in Client.SetOf<Bug>(Project)
-                    where workitem.Id == 174
-                    select workitem;
+                where workitem.Id == 174
+                select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await q.ToListAsync();
@@ -61,8 +60,8 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.SetOf<Bug>(Project)
-                    where workitem.Id == 173
-                    select workitem;
+                where workitem.Id == 173
+                select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await q.ToListAsync();
@@ -76,7 +75,7 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All(Project)
-                                 select workitem;
+                select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -87,7 +86,7 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All()
-                                 select workitem;
+                select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -112,8 +111,8 @@ namespace WiLinq.Tests
         public async Task Return_All_Workitems_Assigned_To_Me()
         {
             var projectWiQuery = from workitem in Client.All()
-                                 where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
-                                 select workitem;
+                where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
+                select workitem;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
         }
@@ -123,8 +122,8 @@ namespace WiLinq.Tests
         {
             var minCreationDate = new DateTime(2017, 7, 1);
             var projectWiQuery = from workitem in Client.All()
-                                 where workitem.Field<DateTime>(SystemField.CreatedDate) > minCreationDate
-                                 select workitem;
+                where workitem.Field<DateTime>(SystemField.CreatedDate) > minCreationDate
+                select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -142,7 +141,7 @@ namespace WiLinq.Tests
         [Test]
         public async Task Return_All_Bugs_Of_The_Project()
         {
-            var projectWiQuery = from workitem in Client.SetOf<Bug>(Project)                
+            var projectWiQuery = from workitem in Client.SetOf<Bug>(Project)
                 select workitem;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -156,21 +155,22 @@ namespace WiLinq.Tests
         {
             var minCreationDate = new DateTime(2017, 7, 1);
             var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
-                                 where bug.CreatedDate > minCreationDate
-                                 select bug;
+                where bug.CreatedDate > minCreationDate
+                select bug;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
 
             Check.That(result).Not.IsEmpty();
-            Check.That(result).Not.HasElementThatMatches(bug => bug.WorkItemType != "Bug" || bug.CreatedDate <= minCreationDate);
+            Check.That(result).Not
+                .HasElementThatMatches(bug => bug.WorkItemType != "Bug" || bug.CreatedDate <= minCreationDate);
         }
 
         [Test]
         public async Task Return_bugs_Under_A_Specific_Iteration()
         {
             var iteration = $@"{Project.Name}\Sprint 1";
-         
+
             var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
                 where bug.IsUnderIteration(iteration)
                 select bug;
@@ -183,7 +183,6 @@ namespace WiLinq.Tests
             {
                 Check.That(bug.IsUnderIteration(iteration)).IsTrue();
             }
-          
         }
 
         [Test]
@@ -222,17 +221,16 @@ namespace WiLinq.Tests
         public async Task Return_TypedWorkitems_According_The_Process_Template()
         {
             //all workitems;
-            var q = from workitem in Client.FromTemplate<ScrumTemplate>()                
+            var q = from workitem in Client.FromTemplate<ScrumTemplate>()
                 select workitem;
 
             var result = await q.ToListAsync();
 
-            foreach (var workItem in result.OfType<WiLinq.ProcessTemplates.Scrum.Bug>())
+            foreach (var workItem in result.OfType<ProcessTemplates.Scrum.Bug>())
             {
                 Check.That(workItem.WorkItemType).Equals("Bug");
                 var prio = workItem.Priority;
             }
-
         }
 
 

@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Test Suite")]
     public class TestSuite : GenericWorkItem
     {
-
         [Field("System.AuthorizedAs")]
         public virtual string AuthorizedAs => GetRefField<string>("System.AuthorizedAs");
 

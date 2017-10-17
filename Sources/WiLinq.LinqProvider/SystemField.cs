@@ -1,7 +1,7 @@
 namespace WiLinq.LinqProvider
 {
     /// <summary>
-    /// This class references some of the system fields.
+    ///     This class references some of the system fields.
     /// </summary>
     public static class SystemField
     {

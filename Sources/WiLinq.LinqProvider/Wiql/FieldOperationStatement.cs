@@ -4,25 +4,30 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class FieldOperationStatement : WhereStatement
     {
-        public string Field { get; }
-        public FieldOperationStatementType Type { get; }
-        public ValueStatement Value { get; }
-        public FieldType FieldType { get; }
-
         /// <summary>
-        /// Initializes a new instance of the FieldOperationStatement class.
+        ///     Initializes a new instance of the FieldOperationStatement class.
         /// </summary>
-        public FieldOperationStatement(string field, FieldOperationStatementType type, ValueStatement value, FieldType fieldType)
+        public FieldOperationStatement(string field, FieldOperationStatementType type, ValueStatement value,
+            FieldType fieldType)
         {
             if (string.IsNullOrEmpty(field))
+            {
                 throw new ArgumentException("field is null or empty.", nameof(field));
+            }
             if (value == null)
+            {
                 throw new ArgumentNullException(nameof(value), "value is null.");
+            }
             Field = field;
             Type = type;
             Value = value;
             FieldType = fieldType;
         }
+
+        public string Field { get; }
+        public FieldOperationStatementType Type { get; }
+        public ValueStatement Value { get; }
+        public FieldType FieldType { get; }
 
 
         protected internal override string ConvertToQueryValue()
@@ -30,14 +35,14 @@ namespace WiLinq.LinqProvider.Wiql
             var field = $"[{Field}]";
             switch (FieldType)
             {
-                case FieldType.Default:                    
+                case FieldType.Default:
                     break;
                 case FieldType.Source:
                     field = "Source." + field;
                     break;
                 case FieldType.Target:
                     field = "Target." + field;
-                    break;           
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -90,7 +95,6 @@ namespace WiLinq.LinqProvider.Wiql
             }
 
             return $"{field} {op} {Value.ConvertToQueryValue()}";
-           
         }
     }
 }

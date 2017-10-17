@@ -9,8 +9,8 @@ namespace WiLinq.LinqProvider
 {
     internal class Query<T> : IOrderedQueryable<T>
     {
-        private readonly IWorkItemLinqQueryProvider _provider;
         private readonly Expression _expression;
+        private readonly IWorkItemLinqQueryProvider _provider;
         private DateTime? _asOfDate;
 
         public Query(IWorkItemLinqQueryProvider provider)
@@ -42,14 +42,13 @@ namespace WiLinq.LinqProvider
 
         public IEnumerator<T> GetEnumerator()
         {
-            return ((IEnumerable<T>)_provider.Execute(_expression)).GetEnumerator();
+            return ((IEnumerable<T>) _provider.Execute(_expression)).GetEnumerator();
         }
-
 
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)_provider.Execute(_expression)).GetEnumerator();
+            return ((IEnumerable) _provider.Execute(_expression)).GetEnumerator();
         }
 
         public async Task<List<int>> ExecuteAndGetIdsAsync()
@@ -63,7 +62,7 @@ namespace WiLinq.LinqProvider
         {
             var result = await _provider.ExecuteAync(_expression);
 
-            return (IEnumerable<T>)result;
+            return (IEnumerable<T>) result;
         }
 
 
@@ -82,18 +81,14 @@ namespace WiLinq.LinqProvider
 
         public Query<T> AsOf(DateTime dt)
         {
-
             if (_asOfDate.HasValue)
             {
                 throw new InvalidOperationException("AsOf Date already defined");
-
             }
             _provider.AsOfDate = dt;
 
             _asOfDate = dt;
             return this;
-
         }
-
     }
 }

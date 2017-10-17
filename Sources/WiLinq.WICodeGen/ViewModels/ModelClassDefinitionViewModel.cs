@@ -9,21 +9,7 @@ namespace WiLinq.CodeGen.ViewModels
     {
         private readonly ModelClassDefinition _model;
 
-
-        public List<PropertyDefinitionViewModel> Properties { get; }
-
-
-        public bool Generate
-        {
-            get => _model.Generate;
-            set
-            {
-                _model.Generate = value;
-                RaisePropertyChanged(() => Generate);
-            }
-        }
-
-        /// <summary>    
+        /// <summary>
         /// </summary>
         /// <param name="model"></param>
         public ModelClassDefinitionViewModel(ModelClassDefinition model)
@@ -37,6 +23,20 @@ namespace WiLinq.CodeGen.ViewModels
                 .ToList();
 
             Generate = false;
+        }
+
+
+        public List<PropertyDefinitionViewModel> Properties { get; }
+
+
+        public bool Generate
+        {
+            get => _model.Generate;
+            set
+            {
+                _model.Generate = value;
+                RaisePropertyChanged(() => Generate);
+            }
         }
 
         public string ClassName
@@ -53,7 +53,10 @@ namespace WiLinq.CodeGen.ViewModels
             get => _model.IsPublic;
             set
             {
-                if (_model.IsPublic == value) return;
+                if (_model.IsPublic == value)
+                {
+                    return;
+                }
 
                 _model.IsPublic = value;
                 RaisePropertyChanged(() => IsInternal);
@@ -67,12 +70,14 @@ namespace WiLinq.CodeGen.ViewModels
             set
             {
                 var isPublic = !value;
-                if (_model.IsPublic == isPublic) return;
+                if (_model.IsPublic == isPublic)
+                {
+                    return;
+                }
                 _model.IsPublic = isPublic;
                 RaisePropertyChanged(() => IsInternal);
                 RaisePropertyChanged(() => IsPublic);
             }
         }
-
     }
 }

@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Epic")]
     public class Epic : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
         {
@@ -136,7 +135,10 @@ namespace WiLinq.ProcessTemplates.Agile
             set => SetStructField("Microsoft.VSTS.Common.TimeCriticality", value);
         }
 
-        /// <summary>Business = Customer-facing epics; Architectural = Technology initiatives to support current and future business needs</summary>
+        /// <summary>
+        ///     Business = Customer-facing epics; Architectural = Technology initiatives to support current and future
+        ///     business needs
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

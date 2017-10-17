@@ -5,10 +5,9 @@ using WiLinq.LinqProvider;
 
 namespace WiLinq.Tests
 {
-
     [TestFixture]
     public class WorkitemClientShould : TestFixtureBase
-    {       
+    {
         [Test]
         public async Task Create_A_Workitem_Then_Save_It()
         {
@@ -19,7 +18,6 @@ namespace WiLinq.Tests
             await Client.Save(bug);
 
             Check.That(bug.Id).HasAValue();
-
         }
 
         [Test]
@@ -32,7 +30,6 @@ namespace WiLinq.Tests
             await Client.Save(bug);
 
             Check.That(bug.Id).HasAValue();
-
         }
 
 
@@ -48,10 +45,9 @@ namespace WiLinq.Tests
             bug.Title = "Title Changed";
 
             await Client.Save(bug);
-
         }
 
- 
+
 #if false
         private class Feature : GenericWorkItem
         {
@@ -123,5 +119,4 @@ namespace WiLinq.Tests
         }
 #endif
     }
-
 }

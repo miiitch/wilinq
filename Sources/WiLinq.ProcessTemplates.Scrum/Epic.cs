@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Epic")]
     public class Epic : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
         public virtual string AcceptanceCriteria
         {
@@ -113,7 +112,10 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetStructField("Microsoft.VSTS.Common.TimeCriticality", value);
         }
 
-        /// <summary>Business = Customer-facing epics; Architectural = Technology initiatives to support current and future business needs</summary>
+        /// <summary>
+        ///     Business = Customer-facing epics; Architectural = Technology initiatives to support current and future
+        ///     business needs
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

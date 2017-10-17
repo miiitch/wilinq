@@ -6,10 +6,8 @@ using WiLinq.LinqProvider.Process;
 
 namespace WiLinq.LinqProvider.Extensions
 {
-
     internal class CustomWorkItemResolver<T> : ILinqResolver where T : GenericWorkItem
     {
-
         #region ILinqResolver Members
 
         public WorkItemFieldInfo Resolve(MemberInfo memberInfo)
@@ -31,7 +29,6 @@ namespace WiLinq.LinqProvider.Extensions
             {
                 Name = attributes[0].ReferenceName,
                 Type = pInfo.PropertyType
-
             };
         }
 
@@ -40,38 +37,37 @@ namespace WiLinq.LinqProvider.Extensions
             throw new NotImplementedException();
         }
 
-        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall,
+            bool isInNotBlock)
         {
             switch (methodCall.Method.Name)
             {
                 case "IsUnderIteration":
+                {
+                    const string refName = SystemField.IterationPath;
+                    var op = isInNotBlock ? "not under" : "under";
+                    if (!(methodCall.Arguments[0] is ConstantExpression valEx))
                     {
-                        const string refName = SystemField.IterationPath;
-                        var op = isInNotBlock ? "not under" : "under";
-                        if (!(methodCall.Arguments[0] is ConstantExpression valEx))
-                        {
-                            throw new InvalidOperationException();
-                        }
-                        var val = valEx.Value as string;
-                        return (new WorkItemFieldInfo() { Name = refName, Type = typeof(string) }, op, val);
-
+                        throw new InvalidOperationException();
                     }
+                    var val = valEx.Value as string;
+                    return (new WorkItemFieldInfo {Name = refName, Type = typeof(string)}, op, val);
+                }
                 case "IsUnderArea":
+                {
+                    const string refName = SystemField.AreaPath;
+                    var op = isInNotBlock ? "not under" : "under";
+                    if (!(methodCall.Arguments[0] is ConstantExpression valEx))
                     {
-                        const string refName = SystemField.AreaPath;
-                        var op = isInNotBlock ? "not under" : "under";
-                        if (!(methodCall.Arguments[0] is ConstantExpression valEx))
-                        {
-                            throw new InvalidOperationException();
-                        }
-                        var val = valEx.Value as string;
-                        return (new WorkItemFieldInfo() { Name = refName, Type = typeof(string) }, op, val);
+                        throw new InvalidOperationException();
                     }
+                    var val = valEx.Value as string;
+                    return (new WorkItemFieldInfo {Name = refName, Type = typeof(string)}, op, val);
+                }
 
                 default:
                     throw new NotImplementedException();
             }
-
         }
 
         #endregion
@@ -80,15 +76,14 @@ namespace WiLinq.LinqProvider.Extensions
     internal class ProcessTemplateHelper : CustomWorkItemResolver<GenericWorkItem>,
         ICustomWorkItemHelper<GenericWorkItem>
     {
-        readonly ProcessTemplate _processTemplate;
         private readonly bool _failIfTypeUnknown;
-     
+        private readonly ProcessTemplate _processTemplate;
+
 
         public ProcessTemplateHelper(ProcessTemplate processTemplate, bool failIfTypeUnknown = false)
         {
             _processTemplate = processTemplate;
             _failIfTypeUnknown = failIfTypeUnknown;
-           
         }
 
         public GenericWorkItem CreateItem(WorkItem workitem)
@@ -97,9 +92,9 @@ namespace WiLinq.LinqProvider.Extensions
         }
     }
 
-    internal class WorkItemBaseHelper<T> : CustomWorkItemResolver<T>, ICustomWorkItemHelper<T> where T : GenericWorkItem, new()
+    internal class WorkItemBaseHelper<T> : CustomWorkItemResolver<T>, ICustomWorkItemHelper<T>
+        where T : GenericWorkItem, new()
     {
-        
         #region ICustomWorkItemHelper<T> Members
 
         public T CreateItem(WorkItem workitem)
@@ -110,6 +105,5 @@ namespace WiLinq.LinqProvider.Extensions
         }
 
         #endregion
-
     }
 }

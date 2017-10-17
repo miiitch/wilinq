@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Feedback Response")]
     public class FeedbackResponse : GenericWorkItem
     {
-
         [Field("System.AuthorizedAs")]
         public virtual string AuthorizedAs => GetRefField<string>("System.AuthorizedAs");
 

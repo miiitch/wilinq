@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Code Review Request")]
     public class CodeReviewRequest : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.CodeReview.Context")]
         public virtual string AssociatedContext
         {

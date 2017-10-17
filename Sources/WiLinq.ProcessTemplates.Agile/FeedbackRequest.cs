@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Feedback Request")]
     public class FeedbackRequest : GenericWorkItem
     {
-
         /// <summary>Instructions to launch the specified application</summary>
         [Field("Microsoft.VSTS.Feedback.ApplicationLaunchInstructions")]
         public virtual string ApplicationLaunchInstructions

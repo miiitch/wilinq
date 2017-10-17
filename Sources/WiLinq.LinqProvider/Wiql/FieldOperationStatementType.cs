@@ -15,5 +15,5 @@ namespace WiLinq.LinqProvider.Wiql
         IsUnder,
         IsNotUnder,
         WasEver
-    };
+    }
 }

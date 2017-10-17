@@ -6,16 +6,19 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class ListValueStatement : ValueStatement
     {
-        public List<ValueStatement> Value { get; }
         /// <summary>
-        /// Initializes a new instance of the ListValueStatement class.
+        ///     Initializes a new instance of the ListValueStatement class.
         /// </summary>
         public ListValueStatement(List<ValueStatement> value)
         {
             if (value == null)
+            {
                 throw new ArgumentNullException(nameof(value), "value is null.");
+            }
             Value = value;
         }
+
+        public List<ValueStatement> Value { get; }
 
         protected internal override string ConvertToQueryValue()
         {
@@ -26,6 +29,9 @@ namespace WiLinq.LinqProvider.Wiql
             return ret;
         }
 
-        public override ValueStatement Copy() => new ListValueStatement(Value.Select(v => v.Copy()).ToList());
+        public override ValueStatement Copy()
+        {
+            return new ListValueStatement(Value.Select(v => v.Copy()).ToList());
+        }
     }
 }

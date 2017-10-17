@@ -7,8 +7,6 @@ using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 
 namespace WiLinq.LinqProvider
 {
-
-
     [IgnoreField(SystemField.AreaId)]
     [IgnoreField(SystemField.IterationId)]
     [IgnoreField(SystemField.RelatedLinkCount)]
@@ -22,20 +20,20 @@ namespace WiLinq.LinqProvider
     public class GenericWorkItem
     {
         private Dictionary<string, object> _initialFieldValues;
-  
+
         private Dictionary<string, object> _fieldValues;
 
 
         protected T? GetStructField<T>(string referenceName) where T : struct
         {
-            if (_fieldValues.TryGetValue(referenceName, out object fieldValue))
+            if (_fieldValues.TryGetValue(referenceName, out var fieldValue))
             {
-                return (T)fieldValue;
+                return (T) fieldValue;
             }
             if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
                 var value = (T) fieldValue;
-                return new Nullable<T>(value);
+                return value;
             }
             return null;
         }
@@ -44,11 +42,11 @@ namespace WiLinq.LinqProvider
         {
             if (_fieldValues.TryGetValue(referenceName, out var fieldValue))
             {
-                return (T)fieldValue;
+                return (T) fieldValue;
             }
             if (_initialFieldValues != null && _initialFieldValues.TryGetValue(referenceName, out fieldValue))
             {
-                return (T)fieldValue;
+                return (T) fieldValue;
             }
             return null;
         }
@@ -61,7 +59,7 @@ namespace WiLinq.LinqProvider
             }
 
             // ReSharper disable once MergeConditionalExpression
-            SetFieldValue(referenceName, nullableValue.HasValue ? (object)nullableValue.Value : null);
+            SetFieldValue(referenceName, nullableValue.HasValue ? (object) nullableValue.Value : null);
         }
 
         protected void SetRefField<T>(string referenceName, T value) where T : class
@@ -77,19 +75,20 @@ namespace WiLinq.LinqProvider
         {
             _fieldValues[referenceName] = nextValue;
         }
-     
+
         public GenericWorkItem()
         {
             _fieldValues = new Dictionary<string, object>();
         }
 
-        internal void CopyValuesFromWorkItem( WorkItem workitem)
+        internal void CopyValuesFromWorkItem(WorkItem workitem)
         {
             _initialFieldValues = workitem.Fields.ToDictionary(_ => _.Key, _ => _.Value);
             _fieldValues = new Dictionary<string, object>();
             Revision = workitem.Rev;
             Id = workitem.Id;
         }
+
         private static string EncodeValueForJSonDocument(object value)
         {
             switch (value)
@@ -108,6 +107,7 @@ namespace WiLinq.LinqProvider
                     throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
             }
         }
+
         internal JsonPatchDocument CreatePatchDocument()
         {
             var result = new JsonPatchDocument();
@@ -160,7 +160,7 @@ namespace WiLinq.LinqProvider
                         };
                         result.Add(operation);
                     }
-                }                     
+                }
             }
             return result;
         }
@@ -168,7 +168,7 @@ namespace WiLinq.LinqProvider
 
         [Field(SystemField.Id)]
         public int? Id { get; private set; }
-    
+
 
         [Field(SystemField.Revision)]
         public int? Revision { get; private set; }
@@ -191,21 +191,21 @@ namespace WiLinq.LinqProvider
         public DateTime? ChangedDate => GetStructField<DateTime>(SystemField.ChangedDate);
 
         /// <summary>
-        /// Gets the created by value of the work item.
+        ///     Gets the created by value of the work item.
         /// </summary>
         /// <value>The created by.</value>
         [Field(SystemField.CreatedBy)]
         public string CreatedBy => GetRefField<string>(SystemField.CreatedBy);
 
         /// <summary>
-        /// Gets the changed by value of the work item.
+        ///     Gets the changed by value of the work item.
         /// </summary>
         /// <value>The changed by.</value>
         [Field(SystemField.ChangedBy)]
         public string ChangedBy => GetRefField<string>(SystemField.ChangedBy);
 
         /// <summary>
-        /// Gets the created date.
+        ///     Gets the created date.
         /// </summary>
         /// <value>The created date.</value>
         [Field(SystemField.CreatedDate)]
@@ -235,7 +235,6 @@ namespace WiLinq.LinqProvider
         }
 
 
-
         [Field(SystemField.Reason)]
         public string Reason
         {
@@ -243,7 +242,6 @@ namespace WiLinq.LinqProvider
             set => SetRefField(SystemField.Reason, value);
         }
 
-      
 
         //[Field(SystemField.WorkItemType)]
         //public string Type => WorkItem.Type.Name;
@@ -311,9 +309,10 @@ namespace WiLinq.LinqProvider
 
             string[] SplitPath(string pathToSplit)
             {
-             
                 if (string.IsNullOrWhiteSpace(pathToSplit))
+                {
                     throw new ArgumentException("Value cannot be null or whitespace.", nameof(pathToSplit));
+                }
 
 
                 var pathElements = pathToSplit.Split('\\');
@@ -334,8 +333,6 @@ namespace WiLinq.LinqProvider
 
                 return pathElements;
             }
-
-            
         }
 
         public bool IsUnderArea(string path)

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.WebApi;
-using WiLinq.LinqProvider.Wiql;
 
 namespace WiLinq.LinqProvider
 {
     /// <summary>
-    /// This is the result of a WI Linq Query.
+    ///     This is the result of a WI Linq Query.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     internal class TPCQuery
@@ -20,15 +19,16 @@ namespace WiLinq.LinqProvider
         private readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
         private string _projectName;
         private string _teamName;
-            
+
         private readonly QueryType _type;
 
-        public TPCQuery(WorkItemTrackingHttpClient workItemTrackingHttpClient, string wiql,QueryType type, string projectName, string teamName)
+        public TPCQuery(WorkItemTrackingHttpClient workItemTrackingHttpClient, string wiql, QueryType type,
+            string projectName, string teamName)
         {
             _wiql = wiql;
             _workItemTrackingHttpClient = workItemTrackingHttpClient ??
                                           throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
-           
+
             _type = type;
             _projectName = projectName;
             _teamName = teamName;
@@ -58,8 +58,8 @@ namespace WiLinq.LinqProvider
 
             async Task<List<int>> GetWorkItemsAsyncCore()
             {
-
-                var result = await _workItemTrackingHttpClient.QueryByWiqlAsync(new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql() { Query = _wiql });
+                var result = await _workItemTrackingHttpClient.QueryByWiqlAsync(
+                    new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql {Query = _wiql});
                 if (_type == QueryType.WorkItem && result.QueryType !=
                     Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.QueryType.Flat)
                 {
@@ -79,7 +79,8 @@ namespace WiLinq.LinqProvider
                 var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
                 return workitems;
             }
-            catch (VssServiceResponseException notFoundResponseException) when (notFoundResponseException.Message == "Not Found")
+            catch (VssServiceResponseException notFoundResponseException) when (notFoundResponseException.Message ==
+                                                                                "Not Found")
             {
                 return new List<WorkItem>();
             }

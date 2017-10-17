@@ -6,7 +6,7 @@ using WiLinq.LinqProvider.Extensions;
 namespace WiLinq.LinqProvider
 {
     /// <summary>
-    /// Utility class used to discover and manipulate specialized workitem 
+    ///     Utility class used to discover and manipulate specialized workitem
     /// </summary>
     /// <typeparam name="T">Subclass of WorkItemObject</typeparam>
     public static class WorkItemPropertyUtility<T> where T : GenericWorkItem, new()
@@ -18,12 +18,13 @@ namespace WiLinq.LinqProvider
         }
 
 
-        internal static List<FieldData> Fields => _fieldDataList;
+        internal static List<FieldData> Fields { get; private set; }
 
         // ReSharper disable StaticFieldInGenericType
         private static string _workItemTypeName;
+
         private static bool _typeProcessed;
-        private static List<FieldData> _fieldDataList;
+
         private static bool _propertyProcessed;
         // ReSharper restore StaticFieldInGenericType        
 
@@ -31,19 +32,20 @@ namespace WiLinq.LinqProvider
 
 
         /// <summary>
-        /// Processes the work item type and extracts the useful data from its properties
+        ///     Processes the work item type and extracts the useful data from its properties
         /// </summary>
-        static void ProcessProperties()
+        private static void ProcessProperties()
         {
             if (_propertyProcessed)
             {
                 return;
             }
             _propertyProcessed = true;
-            _fieldDataList = new List<FieldData>();
+            Fields = new List<FieldData>();
 
 
-            var props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            var props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public |
+                                                BindingFlags.DeclaredOnly);
 
             foreach (var prop in props)
             {
@@ -54,21 +56,22 @@ namespace WiLinq.LinqProvider
                     continue;
                 }
 
-                _fieldDataList.Add(new FieldData { ReferenceName = fieldAttribs[0].ReferenceName, Type = prop.PropertyType });
+                Fields.Add(new FieldData {ReferenceName = fieldAttribs[0].ReferenceName, Type = prop.PropertyType});
             }
         }
 
         /// <summary>
-        /// Processes the work item type and extracts the useful data
+        ///     Processes the work item type and extracts the useful data
         /// </summary>
-        static void ProcessType()
+        private static void ProcessType()
         {
             if (_typeProcessed)
             {
                 return;
             }
             _typeProcessed = true;
-            var modelAttribs = typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
+            var modelAttribs =
+                typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
 
             if (modelAttribs == null || modelAttribs.Length != 1)
             {
@@ -78,13 +81,11 @@ namespace WiLinq.LinqProvider
             {
                 _workItemTypeName = modelAttribs[0].TypeName;
             }
-
         }
 
 
-
         /// <summary>
-        /// Gets the name of the work item type.
+        ///     Gets the name of the work item type.
         /// </summary>
         /// <value>The name of the work item type.</value>
         public static string WorkItemTypeName
@@ -97,7 +98,7 @@ namespace WiLinq.LinqProvider
         }
 
         /// <summary>
-        /// Gets a value indicating whether the work item is valid for Linq to WIQL queries
+        ///     Gets a value indicating whether the work item is valid for Linq to WIQL queries
         /// </summary>
         /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
         public static bool IsValid

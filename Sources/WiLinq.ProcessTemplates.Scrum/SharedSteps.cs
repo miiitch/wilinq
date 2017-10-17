@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Shared Steps")]
     public class SharedSteps : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
         {

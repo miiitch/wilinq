@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Test Plan")]
     public class TestPlan : GenericWorkItem
     {
-
         [Field("System.AuthorizedAs")]
         public virtual string AuthorizedAs => GetRefField<string>("System.AuthorizedAs");
 

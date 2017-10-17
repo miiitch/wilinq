@@ -14,6 +14,6 @@ namespace WiLinq.CodeGen.CodeGeneration
 
         public bool Generate { get; set; }
 
-        public List<ModelFieldDefinition> FieldDefinitions { get; set; }        
+        public List<ModelFieldDefinition> FieldDefinitions { get; set; }
     }
 }

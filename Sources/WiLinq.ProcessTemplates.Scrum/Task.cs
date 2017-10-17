@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Task")]
     public class Task : GenericWorkItem
     {
-
         /// <summary>Type of work involved</summary>
         [Field("Microsoft.VSTS.Common.Activity")]
         public virtual string Activity

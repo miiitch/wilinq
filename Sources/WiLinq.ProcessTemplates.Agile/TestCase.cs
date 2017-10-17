@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Test Case")]
     public class TestCase : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
         {

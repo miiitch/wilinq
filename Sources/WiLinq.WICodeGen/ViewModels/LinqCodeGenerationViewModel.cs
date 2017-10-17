@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GalaSoft.MvvmLight.Command;
 using System.CodeDom.Compiler;
-using Microsoft.CSharp;
-using Microsoft.VisualBasic;
+using System.Collections.Generic;
 using System.IO;
-using GalaSoft.MvvmLight;
-using WiLinq.CodeGen.CodeGeneration;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Windows.Input;
+using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using Microsoft.CSharp;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Microsoft.VisualBasic;
+using WiLinq.CodeGen.CodeGeneration;
 
 namespace WiLinq.CodeGen.ViewModels
 {
     internal class LinqCodeGenerationViewModel : ViewModelBase
     {
-      
         private bool _cSharpCode;
         private readonly ModelDefinition _modelDefinition;
 
@@ -33,6 +32,7 @@ namespace WiLinq.CodeGen.ViewModels
                 RaisePropertyChanged(() => VbNetCode);
             }
         }
+
         public bool VbNetCode
         {
             get => !_cSharpCode;
@@ -43,11 +43,13 @@ namespace WiLinq.CodeGen.ViewModels
                 RaisePropertyChanged(() => VbNetCode);
             }
         }
+
         public string Namespace
         {
             get => _modelDefinition.Namespace;
             set => _modelDefinition.Namespace = value;
         }
+
         public List<ModelClassDefinitionViewModel> Classes { get; }
 
         public ICommand GenerateClassesCommand { get; }
@@ -55,7 +57,9 @@ namespace WiLinq.CodeGen.ViewModels
         public LinqCodeGenerationViewModel(Project project)
         {
             if (project == null)
+            {
                 throw new ArgumentNullException(nameof(project), @"project is null.");
+            }
 
             CSharpCode = true;
             _codeGenerationEngine = new Engine();
@@ -71,7 +75,7 @@ namespace WiLinq.CodeGen.ViewModels
             using (dialog)
             {
                 dialog.Title = @"Save the generated code";
-                
+
                 CodeDomProvider codeProvider;
                 if (CSharpCode)
                 {
@@ -105,14 +109,12 @@ namespace WiLinq.CodeGen.ViewModels
                 {
                     _codeGenerationEngine.GenerateCode(_modelDefinition, codeProvider, writer);
                     writer.Flush();
-                    fileStream.Flush();                   
+                    fileStream.Flush();
                 }
 
                 MessageBox.Show(@"Generation successful");
             }
-            
         }
-
 
 
 #if false
@@ -163,8 +165,5 @@ namespace WiLinq.CodeGen.ViewModels
             _addin.Manager.Messenger.Send(msg);
         }
 #endif
-
-
     }
-
 }

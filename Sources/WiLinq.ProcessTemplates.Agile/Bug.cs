@@ -3,12 +3,9 @@ using WiLinq.LinqProvider;
 
 namespace WiLinq.ProcessTemplates.Agile
 {
-  
-
     [WorkItemType("Bug")]
     public class Bug : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
         {
@@ -171,7 +168,10 @@ namespace WiLinq.ProcessTemplates.Agile
             set => SetRefField("Microsoft.VSTS.TCM.SystemInfo", value);
         }
 
-        /// <summary>The type should be set to Business primarily to represent customer-facing issues. Work to change the architecture should be added as a User Story</summary>
+        /// <summary>
+        ///     The type should be set to Business primarily to represent customer-facing issues. Work to change the
+        ///     architecture should be added as a User Story
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

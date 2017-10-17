@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
-using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider
 {
     public static class AsyncExtensions
     {
         /// <summary>
-        /// Returns a list of workitems asynchronously
+        ///     Returns a list of workitems asynchronously
         /// </summary>
         /// <typeparam name="T">Type of workitem, inherits from GenericWorkItem</typeparam>
         /// <param name="query"></param>
@@ -33,7 +32,7 @@ namespace WiLinq.LinqProvider
         }
 
         /// <summary>
-        /// Returns a list of workitems asynchronously
+        ///     Returns a list of workitems asynchronously
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -41,7 +40,7 @@ namespace WiLinq.LinqProvider
         {
             if (!(query is Query<WorkItem> workItemQuery))
             {
-                throw new ArgumentException("invalid linq provider",nameof(query));
+                throw new ArgumentException("invalid linq provider", nameof(query));
             }
             var enumerable = await workItemQuery.ExecuteAsync();
 
@@ -54,7 +53,7 @@ namespace WiLinq.LinqProvider
         }
 
         /// <summary>
-        /// Return the ids of the queries workitems asynchonously
+        ///     Return the ids of the queries workitems asynchonously
         /// </summary>
         /// <typeparam name="T">Type of workitem, inherits from GenericWorkItem</typeparam>
         /// <param name="query"></param>
@@ -72,7 +71,7 @@ namespace WiLinq.LinqProvider
         }
 
         /// <summary>
-        /// Return the ids of the queries workitems asynchonously
+        ///     Return the ids of the queries workitems asynchonously
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

@@ -1,4 +1,3 @@
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -10,11 +9,11 @@ namespace WiLinq.LinqProvider
         WorkItemFieldInfo Resolve(string workItemParameterName, MethodCallExpression methodCall);
 
         /// <summary>
-        /// Resolve method on methodcall on the workitem type itself
+        ///     Resolve method on methodcall on the workitem type itself
         /// </summary>
         /// <param name="methodCall"></param>
         /// <param name="isInNotBlock"></param>
         /// <returns></returns>
-        (WorkItemFieldInfo field,string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
+        (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
     }
 }

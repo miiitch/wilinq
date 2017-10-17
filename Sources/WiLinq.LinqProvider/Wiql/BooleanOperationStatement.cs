@@ -2,17 +2,13 @@ using System;
 
 namespace WiLinq.LinqProvider.Wiql
 {
-    public sealed  class BooleanOperationStatement : WhereStatement
+    public sealed class BooleanOperationStatement : WhereStatement
     {
         private const string STR_AND = "And";
         private const string STR_OR = "Or";
 
-        public WhereStatement Left {  get; }
-        public WhereStatement Right { get; }
-        public BooleanOperationStatementType Type {  get; }
-
         /// <summary>
-        /// Initializes a new instance of the BooleanOperationStatement class.
+        ///     Initializes a new instance of the BooleanOperationStatement class.
         /// </summary>
         public BooleanOperationStatement(WhereStatement left, BooleanOperationStatementType type, WhereStatement right)
         {
@@ -20,6 +16,10 @@ namespace WiLinq.LinqProvider.Wiql
             Right = right;
             Type = type;
         }
+
+        public WhereStatement Left { get; }
+        public WhereStatement Right { get; }
+        public BooleanOperationStatementType Type { get; }
 
 
         protected internal override string ConvertToQueryValue()
@@ -41,6 +41,5 @@ namespace WiLinq.LinqProvider.Wiql
 
             return $"({Left.ConvertToQueryValue()} {op} {Right.ConvertToQueryValue()})";
         }
-        
     }
 }

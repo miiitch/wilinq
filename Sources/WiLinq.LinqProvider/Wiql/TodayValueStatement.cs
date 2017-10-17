@@ -4,9 +4,8 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public sealed class TodayValueStatement : ValueStatement
     {
-        public int Delta { get; }
         /// <summary>
-        /// Initializes a new instance of the TodayValue class.
+        ///     Initializes a new instance of the TodayValue class.
         /// </summary>
         internal TodayValueStatement(int delta)
         {
@@ -16,8 +15,9 @@ namespace WiLinq.LinqProvider.Wiql
         internal TodayValueStatement()
             : this(0)
         {
-
         }
+
+        public int Delta { get; }
 
         protected internal override string ConvertToQueryValue()
         {
@@ -36,6 +36,9 @@ namespace WiLinq.LinqProvider.Wiql
         }
 
 
-        public override ValueStatement Copy() => new TodayValueStatement(Delta);
+        public override ValueStatement Copy()
+        {
+            return new TodayValueStatement(Delta);
+        }
     }
 }

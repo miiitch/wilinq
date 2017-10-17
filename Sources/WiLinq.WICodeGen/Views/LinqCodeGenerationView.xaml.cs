@@ -1,7 +1,7 @@
 ﻿namespace WiLinq.Codegen.Views
 {
     /// <summary>
-    /// Interaction logic for LinqCodeGenerationView.xaml
+    ///     Interaction logic for LinqCodeGenerationView.xaml
     /// </summary>
     public partial class LinqCodeGenerationView
     {

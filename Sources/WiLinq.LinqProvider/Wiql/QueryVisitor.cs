@@ -4,7 +4,6 @@ namespace WiLinq.LinqProvider.Wiql
 {
     public class QueryVisitor
     {
-
         public Query Visit(Query query)
         {
             var result = new Query(query.Mode);
@@ -26,7 +25,6 @@ namespace WiLinq.LinqProvider.Wiql
 
 
             return result;
-
         }
 
         private WhereStatement VisitWhereStatements(WhereStatement whereStatement)
@@ -49,7 +47,8 @@ namespace WiLinq.LinqProvider.Wiql
             throw new InvalidOperationException("Unknown wherestatement");
         }
 
-        private BooleanOperationStatement VisitBooleanOperationStatement(BooleanOperationStatement booleanOperationStatement)
+        private BooleanOperationStatement VisitBooleanOperationStatement(
+            BooleanOperationStatement booleanOperationStatement)
         {
             var left = VisitWhereStatements(booleanOperationStatement.Left);
             var right = VisitWhereStatements(booleanOperationStatement.Right);
@@ -57,9 +56,11 @@ namespace WiLinq.LinqProvider.Wiql
             return new BooleanOperationStatement(left, booleanOperationStatement.Type, right);
         }
 
-        protected virtual FieldOperationStatement VisitFieldOperationStatement(FieldOperationStatement fieldOperationStatement)
+        protected virtual FieldOperationStatement VisitFieldOperationStatement(
+            FieldOperationStatement fieldOperationStatement)
         {
-           return new FieldOperationStatement(fieldOperationStatement.Field,fieldOperationStatement.Type,fieldOperationStatement.Value.Copy(),fieldOperationStatement.FieldType);
+            return new FieldOperationStatement(fieldOperationStatement.Field, fieldOperationStatement.Type,
+                fieldOperationStatement.Value.Copy(), fieldOperationStatement.FieldType);
         }
 
         protected virtual string VisitSelectField(string field)
@@ -75,9 +76,5 @@ namespace WiLinq.LinqProvider.Wiql
                 IsAscending = orderStatement.IsAscending
             };
         }
-
-
-
-
     }
 }

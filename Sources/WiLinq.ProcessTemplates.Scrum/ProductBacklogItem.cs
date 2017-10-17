@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Product Backlog Item")]
     public class ProductBacklogItem : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
         public virtual string AcceptanceCriteria
         {
@@ -68,7 +67,10 @@ namespace WiLinq.ProcessTemplates.Scrum
         [Field("System.RevisedDate")]
         public virtual DateTime? RevisedDate => GetStructField<DateTime>("System.RevisedDate");
 
-        /// <summary>Business = delivers value to a user or another system; Architectural = work to support other stories or components</summary>
+        /// <summary>
+        ///     Business = delivers value to a user or another system; Architectural = work to support other stories or
+        ///     components
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

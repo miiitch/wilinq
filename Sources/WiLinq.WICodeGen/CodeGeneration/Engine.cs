@@ -1,5 +1,4 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -7,22 +6,18 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using WiLinq.LinqProvider;
-using WiLinq.LinqProvider.Extensions;
-
-
 
 namespace WiLinq.CodeGen.CodeGeneration
 {
     /// <summary>
-    /// Class used to generate the model
+    ///     Class used to generate the model
     /// </summary>
     public class Engine
     {
-        private readonly List<string> _fieldToIgnoreList;
         private readonly List<string> _definedPropertyList;
-
-        public FieldSeparator FieldSeparator { get; set; } = FieldSeparator.NoSpace;
+        private readonly List<string> _fieldToIgnoreList;
 
         public Engine()
         {
@@ -44,12 +39,14 @@ namespace WiLinq.CodeGen.CodeGeneration
 
             foreach (var ignoreField in
                 typeof(GenericWorkItem)
-                .GetCustomAttributes(typeof(IgnoreFieldAttribute), false)
-                .OfType<IgnoreFieldAttribute>())
+                    .GetCustomAttributes(typeof(IgnoreFieldAttribute), false)
+                    .OfType<IgnoreFieldAttribute>())
             {
                 _fieldToIgnoreList.Add(ignoreField.ReferenceName);
             }
         }
+
+        public FieldSeparator FieldSeparator { get; set; } = FieldSeparator.NoSpace;
 
 
         public ModelDefinition GenerateModelDefinition(Project project)
@@ -62,25 +59,23 @@ namespace WiLinq.CodeGen.CodeGeneration
             var result = new ModelDefinition();
 
             var q = from wit in project.WorkItemTypes.Cast<WorkItemType>()
-                    let classDef = new ModelClassDefinition
-                    {
-                        WorkItemType = wit.Name,
-                        ClassName = Regex.Replace(wit.Name, @"\W", string.Empty),
-                        FieldDefinitions = (from field in wit.FieldDefinitions.Cast<FieldDefinition>()
-                                            select new ModelFieldDefinition
-                                            {
-                                                Name = field.Name,
-                                                PropertyName = Regex.Replace(field.Name, @"\W", string.Empty),
-                                                IsReadOnly = (!field.IsEditable) || field.IsComputed,
-                                                Description = field.HelpText,
-                                                ReferenceName = field.ReferenceName,
-                                                Inherited = _fieldToIgnoreList.Contains(field.ReferenceName),
-                                                Type = AdaptType(field.SystemType)
-                                            }).ToList()
-
-
-                    }
-                    select classDef;
+                let classDef = new ModelClassDefinition
+                {
+                    WorkItemType = wit.Name,
+                    ClassName = Regex.Replace(wit.Name, @"\W", string.Empty),
+                    FieldDefinitions = (from field in wit.FieldDefinitions.Cast<FieldDefinition>()
+                        select new ModelFieldDefinition
+                        {
+                            Name = field.Name,
+                            PropertyName = Regex.Replace(field.Name, @"\W", string.Empty),
+                            IsReadOnly = !field.IsEditable || field.IsComputed,
+                            Description = field.HelpText,
+                            ReferenceName = field.ReferenceName,
+                            Inherited = _fieldToIgnoreList.Contains(field.ReferenceName),
+                            Type = AdaptType(field.SystemType)
+                        }).ToList()
+                }
+                select classDef;
             result.ClassDefinitions = q.ToList();
 
 
@@ -99,12 +94,12 @@ namespace WiLinq.CodeGen.CodeGeneration
 
 
         /// <summary>
-        /// Method used to generate model from a modelDefinition
+        ///     Method used to generate model from a modelDefinition
         /// </summary>
         /// <param name="modeldefinition"></param>
         /// <param name="codeProvider"></param>
         /// <param name="output"></param>
-        /// <returns></returns>        
+        /// <returns></returns>
         public bool GenerateCode(ModelDefinition modeldefinition, CodeDomProvider codeProvider, TextWriter output)
         {
             var unit = new CodeCompileUnit();
@@ -119,12 +114,12 @@ namespace WiLinq.CodeGen.CodeGeneration
             foreach (var classDefinition in modeldefinition.ClassDefinitions)
             {
                 if (!classDefinition.Generate)
+                {
                     continue;
+                }
 
                 var wiTypeClass = GenerateWorkItemTypeClass(classDefinition);
                 codeNamespace.Types.Add(wiTypeClass);
-
-
             }
 
             var options = new CodeGeneratorOptions {BlankLinesBetweenMembers = true, IndentString = "  "};
@@ -158,10 +153,8 @@ namespace WiLinq.CodeGen.CodeGeneration
                 new CodeAttributeArgument(new CodePrimitiveExpression(classDefinition.WorkItemType))));
 
 
-
             if (!string.IsNullOrEmpty(classDefinition.Description))
             {
-
                 var comment = new CodeComment($"<summary>{classDefinition.Description}</summary>", true);
                 wiTypeClass.Comments.Add(new CodeCommentStatement(comment));
             }
@@ -170,8 +163,8 @@ namespace WiLinq.CodeGen.CodeGeneration
             //GenerateConstructor(wiTypeClass);
 
             var sortedFields = from field in classDefinition.FieldDefinitions
-                               orderby field.Name
-                               select field;
+                orderby field.Name
+                select field;
 
             foreach (var fieldDefinition in sortedFields)
             {
@@ -187,7 +180,7 @@ namespace WiLinq.CodeGen.CodeGeneration
 
 
         /// <summary>
-        /// Generates a field.
+        ///     Generates a field.
         /// </summary>
         /// <param name="wiTypeClass">The wi type class.</param>
         /// <param name="fieldDefinition">The field definition.</param>
@@ -204,34 +197,37 @@ namespace WiLinq.CodeGen.CodeGeneration
             {
                 var nullableType = typeof(Nullable<>);
                 propertyType = nullableType.MakeGenericType(propertyType);
-
             }
             property.Type = new CodeTypeReference(propertyType);
             property.Attributes = MemberAttributes.Public;
 
             property.CustomAttributes.Add(new CodeAttributeDeclaration(
-                   new CodeTypeReference(typeof(FieldAttribute)),
-                   new CodeAttributeArgument(new CodePrimitiveExpression(fieldDefinition.ReferenceName))));
+                new CodeTypeReference(typeof(FieldAttribute)),
+                new CodeAttributeArgument(new CodePrimitiveExpression(fieldDefinition.ReferenceName))));
 
 
             if (!string.IsNullOrEmpty(fieldDefinition.Description))
             {
-
                 var comment = new CodeComment($"<summary>{fieldDefinition.Description}</summary>", true);
                 property.Comments.Add(new CodeCommentStatement(comment));
             }
 
-            var fieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), propertyType.IsClass?"GetRefField":"GetStructField",new[] { new CodeTypeReference(fieldDefinition.Type) });
-            var fieldMethodInvoke = new CodeMethodInvokeExpression(fieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName) });
+            var fieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(),
+                propertyType.IsClass ? "GetRefField" : "GetStructField", new CodeTypeReference(fieldDefinition.Type));
+            var fieldMethodInvoke = new CodeMethodInvokeExpression(fieldMethod,
+                new CodePrimitiveExpression(fieldDefinition.ReferenceName));
 
             property.GetStatements.Add(new CodeMethodReturnStatement(fieldMethodInvoke));
 
 
             if (!fieldDefinition.IsReadOnly)
             {
-
-                var setFieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(), propertyType.IsClass ? "SetRefField" : "SetStructField", new[] { new CodeTypeReference(fieldDefinition.Type) });
-                var setFielMethodInvoke = new CodeMethodInvokeExpression(setFieldMethod, new CodeExpression[] { new CodePrimitiveExpression(fieldDefinition.ReferenceName), new CodePropertySetValueReferenceExpression() });
+                var setFieldMethod = new CodeMethodReferenceExpression(new CodeThisReferenceExpression(),
+                    propertyType.IsClass ? "SetRefField" : "SetStructField",
+                    new CodeTypeReference(fieldDefinition.Type));
+                var setFielMethodInvoke = new CodeMethodInvokeExpression(setFieldMethod,
+                    new CodePrimitiveExpression(fieldDefinition.ReferenceName),
+                    new CodePropertySetValueReferenceExpression());
                 property.SetStatements.Add(setFielMethodInvoke);
             }
             wiTypeClass.Members.Add(property);
@@ -239,7 +235,7 @@ namespace WiLinq.CodeGen.CodeGeneration
         }
 
         /// <summary>
-        /// Generates the name of the property.
+        ///     Generates the name of the property.
         /// </summary>
         /// <param name="fieldDefinition">The field definition.</param>
         /// <returns></returns>

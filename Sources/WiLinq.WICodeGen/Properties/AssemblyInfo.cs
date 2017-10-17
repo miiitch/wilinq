@@ -10,7 +10,6 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 
 
-
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
@@ -34,5 +33,3 @@ using System.Windows;
     //(used if a resource is not found in the page, 
     // app, or any theme specific resource dictionaries)
 )]
-
-

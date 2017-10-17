@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Code Review Response")]
     public class CodeReviewResponse : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.CodeReview.AcceptedBy")]
         public virtual string AcceptedBy
         {

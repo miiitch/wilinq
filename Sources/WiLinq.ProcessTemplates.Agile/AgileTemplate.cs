@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WiLinq.LinqProvider.Process;
+﻿using WiLinq.LinqProvider.Process;
 
 namespace WiLinq.ProcessTemplates.Agile
 {

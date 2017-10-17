@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("User Story")]
     public class UserStory : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
         public virtual string AcceptanceCriteria
         {
@@ -135,7 +134,10 @@ namespace WiLinq.ProcessTemplates.Agile
             set => SetStructField("Microsoft.VSTS.Scheduling.StoryPoints", value);
         }
 
-        /// <summary>Business = delivers value to a user or another system; Architectural = work to support other stories or components</summary>
+        /// <summary>
+        ///     Business = delivers value to a user or another system; Architectural = work to support other stories or
+        ///     components
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

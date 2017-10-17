@@ -6,10 +6,9 @@ namespace WiLinq.LinqProvider
     // ReSharper disable once InconsistentNaming
     public static class TFSWorkItemExtensions
     {
-
         public static T Field<T>(this WorkItem wi, string referenceName)
         {
-            return (T)(wi.Fields[referenceName]);
+            return (T) wi.Fields[referenceName];
         }
 
 

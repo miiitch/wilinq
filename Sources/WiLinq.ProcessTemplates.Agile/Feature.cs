@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Feature")]
     public class Feature : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.ActivatedBy")]
         public virtual string ActivatedBy
         {
@@ -136,7 +135,10 @@ namespace WiLinq.ProcessTemplates.Agile
             set => SetStructField("Microsoft.VSTS.Common.TimeCriticality", value);
         }
 
-        /// <summary>Business = Services provided by the system to fulfill stakeholder needs; Architectural = Technical system services to implement business features that deliver solution value</summary>
+        /// <summary>
+        ///     Business = Services provided by the system to fulfill stakeholder needs; Architectural = Technical system
+        ///     services to implement business features that deliver solution value
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

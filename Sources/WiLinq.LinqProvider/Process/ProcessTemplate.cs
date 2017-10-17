@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
 namespace WiLinq.LinqProvider.Process
 {
-    
     public class ProcessTemplate
     {
         private readonly Dictionary<string, Type> _workitemTypes;
@@ -31,7 +27,7 @@ namespace WiLinq.LinqProvider.Process
                 throw new ArgumentException($"Type '{workItemType}' alread registrated");
             }
 
-            _workitemTypes.Add(workItemType,typeof(T));
+            _workitemTypes.Add(workItemType, typeof(T));
         }
 
         internal GenericWorkItem Convert(WorkItem workItem, bool failIfTypeUnknown = false)
@@ -62,11 +58,5 @@ namespace WiLinq.LinqProvider.Process
             result.CopyValuesFromWorkItem(workItem);
             return result;
         }
-
-
-
     }
-
-
-     
 }

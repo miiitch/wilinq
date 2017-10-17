@@ -8,12 +8,11 @@ namespace WiLinq.LinqProvider
 {
     internal interface IWorkItemLinqQueryProvider : IQueryProvider
     {
-        string GetQueryText(Expression expression);
         DateTime? AsOfDate { get; set; }
+        string GetQueryText(Expression expression);
         TPCQuery TransformAsWorkItemQuery(Expression expression);
 
         Task<object> ExecuteAync(Expression expression);
         Task<List<int>> ExecuteAndGetIdsAsync(Expression expression);
-
     }
 }

@@ -1,4 +1,3 @@
-
 using System;
 using WiLinq.LinqProvider;
 
@@ -7,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Scrum
     [WorkItemType("Bug")]
     public class Bug : GenericWorkItem
     {
-
         [Field("Microsoft.VSTS.Common.AcceptanceCriteria")]
         public virtual string AcceptanceCriteria
         {
@@ -112,7 +110,10 @@ namespace WiLinq.ProcessTemplates.Scrum
             set => SetRefField("Microsoft.VSTS.TCM.SystemInfo", value);
         }
 
-        /// <summary>The type should be set to Business primarily to represent customer-facing issues. Work to change the architecture should be added as a Product Backlog Item</summary>
+        /// <summary>
+        ///     The type should be set to Business primarily to represent customer-facing issues. Work to change the
+        ///     architecture should be added as a Product Backlog Item
+        /// </summary>
         [Field("Microsoft.VSTS.Common.ValueArea")]
         public virtual string ValueArea
         {

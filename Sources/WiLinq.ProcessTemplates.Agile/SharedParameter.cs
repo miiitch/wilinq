@@ -6,7 +6,6 @@ namespace WiLinq.ProcessTemplates.Agile
     [WorkItemType("Shared Parameter")]
     public class SharedParameter : GenericWorkItem
     {
-
         [Field("System.AuthorizedAs")]
         public virtual string AuthorizedAs => GetRefField<string>("System.AuthorizedAs");
 

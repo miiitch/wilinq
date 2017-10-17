@@ -1,7 +1,6 @@
 namespace WiLinq.LinqProvider.Wiql
 {
-    public abstract class WhereStatement:Statement
+    public abstract class WhereStatement : Statement
     {
-    
     }
 }

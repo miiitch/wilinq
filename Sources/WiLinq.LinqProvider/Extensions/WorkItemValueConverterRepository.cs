@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace  WiLinq.LinqProvider.Extensions
+namespace WiLinq.LinqProvider.Extensions
 {
     public static class WorkItemValueConverterRepository
     {
-        private static readonly Dictionary<Type, WorkItemValueConverter> _converterDictionary = new Dictionary<Type, WorkItemValueConverter>();
+        private static readonly Dictionary<Type, WorkItemValueConverter> _converterDictionary =
+            new Dictionary<Type, WorkItemValueConverter>();
 
         static WorkItemValueConverterRepository()
         {
-            
             AddConverter(new ProjectToWorkItemValueConverter());
         }
 
@@ -37,5 +37,4 @@ namespace  WiLinq.LinqProvider.Extensions
             return result;
         }
     }
-
 }

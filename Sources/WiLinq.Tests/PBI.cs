@@ -5,9 +5,5 @@ namespace WiLinq.Tests
     [WorkItemType("Product Backlog Item")]
     public class PBI : GenericWorkItem
     {
-        public PBI()
-        {
-
-        }
     }
 }

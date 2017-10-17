@@ -8,11 +8,17 @@ namespace WiLinq.LinqProvider.Wiql
         {
             _parameterName = parameterName;
         }
-         
-
-        protected internal override string ConvertToQueryValue() => $"@{_parameterName}";
 
 
-        public override ValueStatement Copy() => new ParameterValueStatement(_parameterName);
+        protected internal override string ConvertToQueryValue()
+        {
+            return $"@{_parameterName}";
+        }
+
+
+        public override ValueStatement Copy()
+        {
+            return new ParameterValueStatement(_parameterName);
+        }
     }
 }

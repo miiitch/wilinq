@@ -20,6 +20,5 @@ namespace WiLinq.LinqProvider.Extensions
 
             return project.Name;
         }
-
     }
 }

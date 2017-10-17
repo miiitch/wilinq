@@ -8,7 +8,6 @@ namespace WiLinq.LinqProvider
     // ReSharper disable once InconsistentNaming
     internal sealed class TFSWorkItemHelper : ICustomWorkItemHelper<WorkItem>
     {
-
         #region ICustomWorkItemHelper<WorkItem> Members
 
         public WorkItem CreateItem(WorkItem workitem)
@@ -83,19 +82,16 @@ namespace WiLinq.LinqProvider
                     Name = fieldName.Value as string,
                     Type = returnType
                 };
-
             }
             return null;
         }
 
-        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock)
+        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall,
+            bool isInNotBlock)
         {
             throw new NotImplementedException();
         }
+
         #endregion
     }
-
-
-
-
 }

@@ -3,17 +3,53 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 
 namespace WiLinq.LinqProvider
 {
- 
     /// <summary>
-    /// Class used to build the query
+    ///     Class used to build the query
     /// </summary>
     internal class QueryBuilder
     {
+        private const string MACRO_FORMAT = "P{0}";
+        private const string DEFAULT_COLUMN = "[System.Id]";
+        private readonly List<string> _orderbyList = new List<string>();
+        private readonly QueryType _queryType;
+
+        private readonly List<string> _selectFieldList = null;
+        private readonly List<string> _whereList = new List<string>();
+
+
+        private QueryLinkMode _queryLinkMode;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="QueryBuilder" /> class.
+        /// </summary>
+        public QueryBuilder(QueryType queryType)
+        {
+            _queryType = queryType;
+            _queryLinkMode = QueryLinkMode.MustContain;
+        }
+
+        /// <summary>
+        ///     Gets or sets the select method. This is used to generate the final list of work item
+        /// </summary>
+        /// <value>The select method.</value>
+        public MethodInfo SelectMethod { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the select lambda. This is used to generate the final list of work item
+        /// </summary>
+        /// <value>The select lambda.</value>
+        public LambdaExpression SelectLambda { get; set; }
+
+        /// <summary>
+        ///     Gets the query.
+        /// </summary>
+        /// <value>The query.</value>
+        public TPCQuery Query { get; private set; }
+
         internal static string EncodeValue(object value)
         {
             switch (value)
@@ -23,39 +59,18 @@ namespace WiLinq.LinqProvider
                 case double d:
                     return d.ToString("F");
                 case string s:
-                    return "'"+s.Replace("'", "''")+"'";
+                    return "'" + s.Replace("'", "''") + "'";
                 case bool b:
-                    return b ? "true" : "false";          
+                    return b ? "true" : "false";
                 case DateTime dt:
-                    return $"'"+dt.ToString("O")+"'";
+                    return $"'" + dt.ToString("O") + "'";
                 default:
                     throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
             }
         }
 
-        private const string MACRO_FORMAT = "P{0}";
-        private const string DEFAULT_COLUMN = "[System.Id]";
-
-        private readonly List<string> _selectFieldList = null;
-        private readonly List<string> _whereList = new List<string>();
-        private readonly List<string> _orderbyList = new List<string>();
-        private readonly QueryType _queryType;
-        private QueryLinkMode _queryLinkMode;
-        
-
-        private TPCQuery _query;
-     
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
-        /// </summary>
-        public QueryBuilder(QueryType queryType)
-        {
-            _queryType = queryType;
-            _queryLinkMode = QueryLinkMode.MustContain;
-        }
-
-        /// <summary>
-        /// Adds a where clause in the query
+        ///     Adds a where clause in the query
         /// </summary>
         /// <param name="whereClause">The where clause.</param>
         public void AddWhereClause(string whereClause)
@@ -68,7 +83,7 @@ namespace WiLinq.LinqProvider
         }
 
         /// <summary>
-        /// Adds an order clause in the query
+        ///     Adds an order clause in the query
         /// </summary>
         /// <param name="field">The field.</param>
         /// <param name="isAscending">if set to <c>true</c> [is ascending].</param>
@@ -82,22 +97,22 @@ namespace WiLinq.LinqProvider
             _orderbyList.Add(field + (isAscending ? " asc" : " desc"));
         }
 
-     
+
         /// <summary>
-        /// Builds the query.
+        ///     Builds the query.
         /// </summary>
         /// <param name="tpc">The server.</param>
         /// <param name="projectName">The project name</param>
         /// <param name="asOf">As of.</param>
         /// <returns></returns>
         public TPCQuery BuildQuery(WorkItemTrackingHttpClient tpc, string projectName, DateTime? asOf)
-        {            
-            if (_query != null)
+        {
+            if (Query != null)
             {
-                return _query;
+                return Query;
             }
             var builder = new StringBuilder();
-        
+
 
             builder.Append("SELECT ");
             if (_selectFieldList == null)
@@ -127,18 +142,18 @@ namespace WiLinq.LinqProvider
             {
                 builder.Append("WHERE ");
                 builder.Append("(");
-                builder.Append(string.Join(") AND (",_whereList.ToArray()));
-                builder.AppendLine(")");                
+                builder.Append(string.Join(") AND (", _whereList.ToArray()));
+                builder.AppendLine(")");
             }
 
             if (_orderbyList.Count > 0)
-            {                
+            {
                 builder.Append(" ORDER BY ");
                 builder.AppendLine(string.Join(", ", _orderbyList.ToArray()));
             }
             if (asOf.HasValue)
             {
-                builder.AppendFormat(" ASOF {0}", QueryBuilder.EncodeValue(asOf.Value));
+                builder.AppendFormat(" ASOF {0}", EncodeValue(asOf.Value));
             }
 
             if (_queryType == QueryType.Link)
@@ -161,38 +176,12 @@ namespace WiLinq.LinqProvider
 
             var wiql = builder.ToString();
 
-            _query = new TPCQuery(tpc, wiql, _queryType, projectName, null)
+            Query = new TPCQuery(tpc, wiql, _queryType, projectName, null)
             {
                 SelectLambda = SelectLambda
             };
-            return _query;
+            return Query;
         }
-
-        /// <summary>
-        /// Gets or sets the select method. This is used to generate the final list of work item
-        /// </summary>
-        /// <value>The select method.</value>
-        public MethodInfo SelectMethod
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the select lambda. This is used to generate the final list of work item
-        /// </summary>
-        /// <value>The select lambda.</value>
-        public LambdaExpression SelectLambda
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets the query.
-        /// </summary>
-        /// <value>The query.</value>
-        public TPCQuery Query => _query;
 
 
         internal void AddQueryLinkMode(QueryLinkMode mode)
@@ -205,5 +194,4 @@ namespace WiLinq.LinqProvider
             _queryLinkMode = mode;
         }
     }
-
 }

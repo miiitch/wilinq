@@ -12,35 +12,55 @@ namespace WiLinq.LinqProvider.Wiql
             Today = new TodayValueStatement();
         }
 
-        public abstract ValueStatement Copy();
-
-        public override string ToString() => ConvertToQueryValue();
-
 
         public static ValueStatement Me { get; }
         public static ValueStatement Project { get; }
         public static ValueStatement Today { get; }
 
-        public static ValueStatement Create(string value) => new StringValueStatement(value);
+        public abstract ValueStatement Copy();
 
-        public static ValueStatement Create(DateTime value) => new DateValueStatement(value);
+        public override string ToString()
+        {
+            return ConvertToQueryValue();
+        }
 
-        public static ValueStatement CreateToday(int delta) => delta == 0 ? Today : new TodayValueStatement(delta);
+        public static ValueStatement Create(string value)
+        {
+            return new StringValueStatement(value);
+        }
 
-        public static ValueStatement Create(int value) => new IntegerValueStatement(value);
+        public static ValueStatement Create(DateTime value)
+        {
+            return new DateValueStatement(value);
+        }
 
-        public static ValueStatement Create(params ValueStatement[] statements) => new ListValueStatement(statements.ToList());
+        public static ValueStatement CreateToday(int delta)
+        {
+            return delta == 0 ? Today : new TodayValueStatement(delta);
+        }
+
+        public static ValueStatement Create(int value)
+        {
+            return new IntegerValueStatement(value);
+        }
+
+        public static ValueStatement Create(params ValueStatement[] statements)
+        {
+            return new ListValueStatement(statements.ToList());
+        }
 
         public static ValueStatement CreateParameter(string parameterName)
         {
             if (string.IsNullOrEmpty(parameterName))
+            {
                 throw new ArgumentException("parameterName is null or empty.", nameof(parameterName));
+            }
 
-            if (parameterName.Equals("me",StringComparison.InvariantCultureIgnoreCase))
+            if (parameterName.Equals("me", StringComparison.InvariantCultureIgnoreCase))
             {
                 return Me;
             }
-            if (parameterName.Equals("project",StringComparison.InvariantCultureIgnoreCase))
+            if (parameterName.Equals("project", StringComparison.InvariantCultureIgnoreCase))
             {
                 return Project;
             }
@@ -50,6 +70,5 @@ namespace WiLinq.LinqProvider.Wiql
             }
             return new ParameterValueStatement(parameterName);
         }
-
     }
 }

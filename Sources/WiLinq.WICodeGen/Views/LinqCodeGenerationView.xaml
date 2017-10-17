@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm ="clr-namespace:WiLinq.CodeGen.ViewModels"
+             xmlns:vm="clr-namespace:WiLinq.CodeGen.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:LinqCodeGenerationViewModel}"
-                Height="500"
-             Width="600" >
+             Height="500"
+             Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
@@ -41,20 +41,20 @@
                         VerticalAlignment="Center"
                         Grid.Row="1"
                         Grid.Column="1">
-                <RadioButton  Content="C#"
-                              Margin="5,0"
-                              GroupName="Language"
-                              IsChecked="{Binding Path=CSharpCode}" />
-                <RadioButton  Content="VB.Net"
-                              GroupName="Language"
-                              IsChecked="{Binding Path=VbNetCode}"
-                              Margin="5,0" />
+                <RadioButton Content="C#"
+                             Margin="5,0"
+                             GroupName="Language"
+                             IsChecked="{Binding Path=CSharpCode}" />
+                <RadioButton Content="VB.Net"
+                             GroupName="Language"
+                             IsChecked="{Binding Path=VbNetCode}"
+                             Margin="5,0" />
             </StackPanel>
 
         </Grid>
-        <TabControl ItemsSource="{Binding Path=Classes}" 
+        <TabControl ItemsSource="{Binding Path=Classes}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Grid.Row="1" 
+                    Grid.Row="1"
                     TabStripPlacement="Left"
                     HorizontalContentAlignment="Left">
             <TabControl.ItemTemplate>
@@ -72,10 +72,10 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Border  Margin="2"
-                                 Background="#DDEFF9"
-                                 BorderThickness="1"
-                                 BorderBrush="#5AC5FF">
+                        <Border Margin="2"
+                                Background="#DDEFF9"
+                                BorderThickness="1"
+                                BorderBrush="#5AC5FF">
                             <Grid
                                 Margin="6">
                                 <Grid.RowDefinitions>
@@ -103,12 +103,12 @@
                                             VerticalAlignment="Center"
                                             Grid.Row="1"
                                             Grid.Column="1">
-                                    <RadioButton  Content="Public"
-                                                  Margin="5,0"                                                 
-                                                  IsChecked="{Binding Path=IsPublic}" />
-                                    <RadioButton  Content="Internal"                                                
-                                                  IsChecked="{Binding Path=IsInternal}"
-                                                  Margin="5,0" />
+                                    <RadioButton Content="Public"
+                                                 Margin="5,0"
+                                                 IsChecked="{Binding Path=IsPublic}" />
+                                    <RadioButton Content="Internal"
+                                                 IsChecked="{Binding Path=IsInternal}"
+                                                 Margin="5,0" />
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -158,8 +158,8 @@
                                             </Grid>
                                         </Grid>
                                         <DataTemplate.Triggers>
-                                            <DataTrigger  Binding="{Binding Path=IsReadOnly}"
-                                                          Value="true">
+                                            <DataTrigger Binding="{Binding Path=IsReadOnly}"
+                                                         Value="true">
                                                 <Setter TargetName="writeImg"
                                                         Property="Visibility"
                                                         Value="Collapsed" />

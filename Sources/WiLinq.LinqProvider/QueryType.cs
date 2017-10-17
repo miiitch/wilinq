@@ -1,8 +1,8 @@
 namespace WiLinq.LinqProvider
 {
-	internal enum QueryType
-	{
-		WorkItem,
-		Link
-	}
+    internal enum QueryType
+    {
+        WorkItem,
+        Link
+    }
 }
