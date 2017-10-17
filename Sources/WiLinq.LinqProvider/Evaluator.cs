@@ -79,9 +79,7 @@ namespace WiLinq.LinqProvider
                     return e;
                 }
 
-                var me = e as MemberExpression;
-
-                if (me != null)
+                if (e is MemberExpression me)
                 {
                     if (me.Member.DeclaringType == typeof(QueryConstant))
                     {

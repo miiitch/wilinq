@@ -152,6 +152,8 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AsyncExtensions.cs" />
+    <Compile Include="Extensions\CustomWorkItemResolver.cs" />
+    <Compile Include="Extensions\ProcessTemplateHelper.cs" />
     <Compile Include="IgnoreFieldAttribute.cs" />
     <Compile Include="Extensions\ProjectToWorkItemValueConverter.cs" />
     <Compile Include="Evaluator.cs" />
@@ -173,8 +175,8 @@
     <Compile Include="QueryTranslator.cs" />
     <Compile Include="QueryType.cs" />
     <Compile Include="SystemField.cs" />
-    <Compile Include="TFSWorkItemExtensions.cs" />
-    <Compile Include="TFSWorkItemHelper.cs" />
+    <Compile Include="WorkItemExtensions.cs" />
+    <Compile Include="WorkItemHelper.cs" />
     <Compile Include="WhereClauseTranslator.cs" />
     <Compile Include="WhereLocation.cs" />
     <Compile Include="Wiql\BooleanOperationStatement.cs" />

@@ -24,17 +24,7 @@ namespace WiLinq.LinqProvider
 
         private bool IsInNotBlock => _notBlockStack.Peek();
 
-        private WhereLocation CurrentLocation
-        {
-            get
-            {
-                if (_locationStack.Count == 0)
-                {
-                    return WhereLocation.ElseWhere;
-                }
-                return _locationStack.Peek();
-            }
-        }
+        private WhereLocation CurrentLocation => _locationStack.Count == 0 ? WhereLocation.ElseWhere : _locationStack.Peek();
 
         private void PushLocation(WhereLocation location)
         {
@@ -66,13 +56,12 @@ namespace WiLinq.LinqProvider
 
         internal bool IsWhereParameter(Expression expression)
         {
-            var pe = expression as ParameterExpression;
-            if (pe == null)
+            if (expression is ParameterExpression pe)
             {
-                return false;
+                return pe.Name == _parameterName;
             }
-
-            return pe.Name == _parameterName;
+            return false;
+            
         }
 
         internal string Translate(Expression expression, QueryBuilder queryBuilder, string parameterName)
@@ -98,26 +87,10 @@ namespace WiLinq.LinqProvider
 
         private static bool IsTrueConstant(Expression expression)
         {
-            var ce = expression as ConstantExpression;
-            return ce != null
+            return expression is ConstantExpression ce
                    && ce.Type == typeof(bool)
                    && (bool) ce.Value;
         }
-
-#if false
-
-		private static Expression StripQuotes(Expression e)
-		{
-
-			while (e.NodeType == ExpressionType.Quote)
-			{
-
-				e = ((UnaryExpression)e).Operand;
-
-			}
-			return e;
-		}
-#endif
 
         protected override Expression VisitUnary(UnaryExpression u)
         {
@@ -409,7 +382,7 @@ namespace WiLinq.LinqProvider
                             if (wiType == typeof(WorkItem))
                             {
                                 throw new InvalidOperationException(
-                                    "Invalid usage of 'Is': it cannot be used with the class Fissum.TeamSystem.WorkItem");
+                                    "Invalid usage of 'Is': it cannot be used with the class WorkItem");
                             }
                             if (wiType.IsSubclassOf(typeof(WorkItem)))
                             {
@@ -436,10 +409,7 @@ namespace WiLinq.LinqProvider
                     }
                     else
                     {
-                        var me = m.Object as MemberExpression;
-
-
-                        if (me != null && IsWhereParameter(me.Expression))
+                        if (m.Object is MemberExpression me && IsWhereParameter(me.Expression))
                         {
                             //processing "wi.op(arg)" pattern
                             if (me.Type == typeof(string))
@@ -451,17 +421,6 @@ namespace WiLinq.LinqProvider
                                     handled = true;
                                 }
                             }
-#if false
-                                else if (me.Type == typeof(Node))
-                                {
-                                    if (m.Method.Name == "IsUnder" && argCount == 1)
-                                    {
-                                        var op = IsInNotBlock ? "not under" : "under";
-                                        BuildOperationFromMethodCall(m, me, op, true);
-                                        handled = true;
-                                    }
-                                }
-#endif
                         }
                         else
                         {

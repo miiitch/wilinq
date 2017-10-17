@@ -27,7 +27,7 @@ namespace WiLinq.LinqProvider
             }
 
             return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient, null,
-                new TFSWorkItemHelper()));
+                new WorkItemHelper()));
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }
             return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient, project.Name,
-                new TFSWorkItemHelper()));
+                new WorkItemHelper()));
         }
 
         public static IQueryable<WorkItem> All(this WorkItemTrackingHttpClient workItemTrackingHttpClient,
@@ -54,7 +54,7 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(project));
             }
             return new Query<WorkItem>(new WorkItemLinqQueryProvider<WorkItem>(workItemTrackingHttpClient, project.Name,
-                new TFSWorkItemHelper()));
+                new WorkItemHelper()));
         }
 
         public static IQueryable<GenericWorkItem> FromTemplate<T>(
@@ -242,7 +242,7 @@ namespace WiLinq.LinqProvider
             var targetLambda = targetPredicate as LambdaExpression;
 
 
-            var whereSourceTranslator = new WhereClauseTranslator(new TFSWorkItemHelper(), "Source");
+            var whereSourceTranslator = new WhereClauseTranslator(new WorkItemHelper(), "Source");
 
             var sourceFilter = whereSourceTranslator.Translate(sourceLambda.Body, qb, sourceLambda.Parameters[0].Name);
 
@@ -252,7 +252,7 @@ namespace WiLinq.LinqProvider
             }
 
 
-            var whereTargetTranslator = new WhereClauseTranslator(new TFSWorkItemHelper(), "Target");
+            var whereTargetTranslator = new WhereClauseTranslator(new WorkItemHelper(), "Target");
 
             var targetFilter = whereTargetTranslator.Translate(sourceLambda.Body, qb, targetLambda.Parameters[0].Name);
 

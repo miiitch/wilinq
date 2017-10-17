@@ -30,9 +30,7 @@ namespace WiLinq.LinqProvider.Extensions
 
         internal static WorkItemValueConverter GetConverter(Type type)
         {
-            WorkItemValueConverter result;
-
-            _converterDictionary.TryGetValue(type, out result);
+            _converterDictionary.TryGetValue(type, out var result);
 
             return result;
         }

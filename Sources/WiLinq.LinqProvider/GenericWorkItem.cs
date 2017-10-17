@@ -64,7 +64,7 @@ namespace WiLinq.LinqProvider
 
         protected void SetRefField<T>(string referenceName, T value) where T : class
         {
-            if (referenceName == "System.Id")
+            if (referenceName == SystemField.Id)
             {
                 throw new ArgumentException("Can't set Id field");
             }
@@ -242,10 +242,6 @@ namespace WiLinq.LinqProvider
             set => SetRefField(SystemField.Reason, value);
         }
 
-
-        //[Field(SystemField.WorkItemType)]
-        //public string Type => WorkItem.Type.Name;
-
         [Field(SystemField.State)]
         public string State
         {
@@ -344,29 +340,5 @@ namespace WiLinq.LinqProvider
         {
             return IsPathUnder(path, Iteration);
         }
-
-#if false
-        [Field(SystemField.AreaPath)]
-         public string Area => WorkItem.AreaPath;
-
-        [Field(SystemField.IterationPath)]
-         public string Iteration => WorkItem.IterationPath;
-
-        public bool IsUnderArea(string areaPath)
-         {
-             if (string.IsNullOrEmpty(areaPath))
-                 throw new ArgumentException("areaPath is null or empty.", nameof(areaPath));
-
-             return areaPath.Contains(Area);
-         }
-
-         public bool IsUnderIteration(string iterationPath)
-         {
-             if (string.IsNullOrEmpty(iterationPath))
-                 throw new ArgumentException("iterationPath is null or empty.", nameof(iterationPath));
-
-             return iterationPath.Contains(Iteration);
-         }
-#endif
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 namespace WiLinq.LinqProvider
 {
     // ReSharper disable once InconsistentNaming
-    public static class TFSWorkItemExtensions
+    public static class WorkItemExtensions
     {
         public static T Field<T>(this WorkItem wi, string referenceName)
         {
