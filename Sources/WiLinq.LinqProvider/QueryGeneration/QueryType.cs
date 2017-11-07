@@ -1,4 +1,4 @@
-namespace WiLinq.LinqProvider
+namespace WiLinq.LinqProvider.QueryGeneration
 {
     internal enum QueryType
     {

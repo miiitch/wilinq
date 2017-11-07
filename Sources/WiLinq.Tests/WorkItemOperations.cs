@@ -11,7 +11,7 @@ namespace WiLinq.Tests
         [Test]
         public async Task Create_A_Workitem_Then_Save_It()
         {
-            var bug = Project.New<Bug>();
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);
 
             bug.Title = "New bug created during test";
 
@@ -23,7 +23,7 @@ namespace WiLinq.Tests
         [Test]
         public async Task Create_A_Workitem_With_Iteration_And_Area_Then_Save_It()
         {
-            var bug = Project.New<Bug>(NewWorkItemOptions.FillAreaAndItertionPath);
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);
 
             bug.Title = "New bug created during test with area and iteration path";
 
@@ -36,7 +36,7 @@ namespace WiLinq.Tests
         [Test]
         public async Task Create_A_Workitem_And_Save_It_And_Update_It()
         {
-            var bug = Project.New<Bug>();
+            var bug = Project.New<TestBug>();
 
             bug.Title = "New bug created during test";
 

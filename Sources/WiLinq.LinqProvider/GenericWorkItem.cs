@@ -93,6 +93,8 @@ namespace WiLinq.LinqProvider
         {
             switch (value)
             {
+                case long l:
+                    return l.ToString("D");
                 case int i:
                     return i.ToString("D");
                 case double d:

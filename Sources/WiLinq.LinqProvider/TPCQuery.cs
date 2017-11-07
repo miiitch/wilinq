@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.WebApi;
+using QueryType = WiLinq.LinqProvider.QueryGeneration.QueryType;
 
 namespace WiLinq.LinqProvider
 {
@@ -15,6 +16,7 @@ namespace WiLinq.LinqProvider
     // ReSharper disable once InconsistentNaming
     internal class TPCQuery
     {
+        private const int WORKITEM_QUERY_BATCH_SIZE = 50;
         private readonly string _wiql;
         private readonly WorkItemTrackingHttpClient _workItemTrackingHttpClient;
         private string _projectName;
@@ -71,12 +73,32 @@ namespace WiLinq.LinqProvider
             }
         }
 
+        public static List<List<T>> Batch<T>(List<T> locations, int nSize = 30)
+        {
+            var list = new List<List<T>>();
+
+            for (int i = 0; i < locations.Count; i += nSize)
+            {
+                list.Add(locations.GetRange(i, Math.Min(nSize, locations.Count - i)));
+            }
+
+            return list;
+        }
+
         public async Task<List<WorkItem>> GetWorkItemsAsync()
         {
             var ids = await GetWorkItemIdsAsync();
             try
             {
-                var workitems = await _workItemTrackingHttpClient.GetWorkItemsAsync(ids);
+                var workitems = new List<WorkItem>(ids.Count);
+
+                var batches = Batch(ids, WORKITEM_QUERY_BATCH_SIZE);
+                foreach (var batch in batches)
+                {
+                    var batchedWorkItems = await _workItemTrackingHttpClient.GetWorkItemsAsync(batch);
+                    workitems.AddRange(batchedWorkItems);
+                }
+
                 return workitems;
             }
             catch (VssServiceResponseException notFoundResponseException) when (notFoundResponseException.Message ==

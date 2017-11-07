@@ -2,6 +2,7 @@ using System;
 
 namespace WiLinq.LinqProvider.Wiql
 {
+#if false
     public class QueryVisitor
     {
         public Query Visit(Query query)
@@ -29,20 +30,14 @@ namespace WiLinq.LinqProvider.Wiql
 
         private WhereStatement VisitWhereStatements(WhereStatement whereStatement)
         {
-            var fieldOperationStatement = whereStatement as FieldOperationStatement;
-
-            if (fieldOperationStatement != null)
+            switch (whereStatement)
             {
-                return VisitFieldOperationStatement(fieldOperationStatement);
+                case FieldOperationStatement fieldOperationStatement:
+                    return VisitFieldOperationStatement(fieldOperationStatement);
+                case BooleanOperationStatement booleanOperationStatement:
+                    return VisitBooleanOperationStatement(booleanOperationStatement);
             }
 
-            var booleanOperationStatement = whereStatement as BooleanOperationStatement;
-
-
-            if (booleanOperationStatement != null)
-            {
-                return VisitBooleanOperationStatement(booleanOperationStatement);
-            }
 
             throw new InvalidOperationException("Unknown wherestatement");
         }
@@ -60,7 +55,7 @@ namespace WiLinq.LinqProvider.Wiql
             FieldOperationStatement fieldOperationStatement)
         {
             return new FieldOperationStatement(fieldOperationStatement.Field, fieldOperationStatement.Type,
-                fieldOperationStatement.Value.Copy(), fieldOperationStatement.FieldType);
+                fieldOperationStatement.Value.Copy(), fieldOperationStatement.FieldOrigin);
         }
 
         protected virtual string VisitSelectField(string field)
@@ -77,4 +72,5 @@ namespace WiLinq.LinqProvider.Wiql
             };
         }
     }
+#endif
 }

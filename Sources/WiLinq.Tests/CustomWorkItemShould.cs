@@ -17,7 +17,7 @@ namespace WiLinq.Tests
         [TestCase("Foo", "Foo\\Foo2", false)]
         public void Compute_Area_Checks(string workItemArea, string reference, bool expected)
         {
-            var bug = Project.New<Bug>(NewWorkItemOptions.FillAreaPath);
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaPath);
 
             var areaToCheck = bug.Area;
 
@@ -46,7 +46,7 @@ namespace WiLinq.Tests
         [TestCase("Foo", "Foo\\Foo2", false)]
         public void Compute_Iteration_Checks(string workItemIteration, string reference, bool expected)
         {
-            var bug = Project.New<Bug>(NewWorkItemOptions.FillIterationPath);
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillIterationPath);
 
             var iterationToCheck = bug.Iteration;
 
@@ -68,7 +68,7 @@ namespace WiLinq.Tests
         [Test]
         public void Expose_The_Right_Area_When_Created_With_The_Fill_Area_Option()
         {
-            var bug = Project.New<Bug>(NewWorkItemOptions.FillAreaPath);
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaPath);
 
             Check.That(bug).IsNotNull();
 
@@ -78,7 +78,7 @@ namespace WiLinq.Tests
         [Test]
         public void Expose_The_Right_Iteration_When_Created_With_The_Fill_Iteration_Option()
         {
-            var bug = Project.New<Bug>(NewWorkItemOptions.FillIterationPath);
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillIterationPath);
 
             Check.That(bug).IsNotNull();
 
@@ -88,7 +88,7 @@ namespace WiLinq.Tests
         [Test]
         public void Expose_The_Right_Project_And_Type()
         {
-            var bug = Project.New<Bug>();
+            var bug = Project.New<TestBug>();
 
             Check.That(bug).IsNotNull();
             Check.That(bug.WorkItemType).IsEqualTo("Bug");

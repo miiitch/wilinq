@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 
-namespace WiLinq.LinqProvider
+namespace WiLinq.LinqProvider.QueryGeneration
 {
     /// <summary>
     ///     Translate the original expression tree into a WIQL request.
@@ -157,7 +157,7 @@ namespace WiLinq.LinqProvider
                 throw new InvalidOperationException("invalid where clase");
             }
 
-            var whereTranslator = new WhereClauseTranslator(_resolver, null);
+            var whereTranslator = new WhereClauseTranslator(_resolver);
 
             var whereClause = whereTranslator.Translate(lambda.Body, _builder, lambda.Parameters[0].Name);
             _builder.AddWhereClause(whereClause);

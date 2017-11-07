@@ -2,23 +2,23 @@ using System.Globalization;
 
 namespace WiLinq.LinqProvider.Wiql
 {
-    public sealed class IntegerValueStatement : ValueStatement
+    public sealed class DoubleValueStatement : ValueStatement
     {
-        internal IntegerValueStatement(long value)
+        internal DoubleValueStatement(double value)
         {
             Value = value;
         }
 
-        public long Value { get; }
+        public double Value { get; }
 
         protected internal override string ConvertToQueryValue()
         {
-            return Value.ToString("D",CultureInfo.InvariantCulture);
+            return Value.ToString("F", CultureInfo.InvariantCulture);
         }
 
         public override ValueStatement Clone()
         {
-            return new IntegerValueStatement(Value);
+            return new DoubleValueStatement(Value);
         }
     }
 }

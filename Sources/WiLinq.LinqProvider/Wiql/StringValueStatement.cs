@@ -38,7 +38,7 @@ namespace WiLinq.LinqProvider.Wiql
             return $"'{Quote(Value)}'";
         }
 
-        public override ValueStatement Copy()
+        public override ValueStatement Clone()
         {
             return new StringValueStatement(Value);
         }

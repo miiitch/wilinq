@@ -1,6 +1,6 @@
 namespace WiLinq.LinqProvider.Wiql
 {
-    public enum FieldType
+    public enum FieldOrigin
     {
         Source,
         Target,

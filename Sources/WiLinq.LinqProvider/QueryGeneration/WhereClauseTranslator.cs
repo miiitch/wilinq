@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using WiLinq.LinqProvider.Extensions;
+using WiLinq.LinqProvider.Wiql;
 
-namespace WiLinq.LinqProvider
+namespace WiLinq.LinqProvider.QueryGeneration
 {
     /// <summary>
     ///     Visitor used to translate the Where expression into the Where part of the WIQL
     /// </summary>
     internal class WhereClauseTranslator : ExpressionVisitor
     {
-        private StringBuilder _builder;
+        private Statement _statement;
         private string _parameterName;
-        private readonly string _prefix;
-        private QueryBuilder _queryBuilder;
+        private readonly FieldOrigin _origin;
+
         private readonly Stack<WhereLocation> _locationStack;
         private readonly Stack<bool> _notBlockStack;
         private readonly ILinqResolver _resolver;
@@ -24,34 +24,22 @@ namespace WiLinq.LinqProvider
 
         private bool IsInNotBlock => _notBlockStack.Peek();
 
-        private WhereLocation CurrentLocation => _locationStack.Count == 0 ? WhereLocation.ElseWhere : _locationStack.Peek();
+        private WhereLocation CurrentLocation => _locationStack.Count == 0 ? WhereLocation.BooleanOperation : _locationStack.Peek();
 
-        private void PushLocation(WhereLocation location)
-        {
-            _locationStack.Push(location);
-        }
+        private void PushLocation(WhereLocation location) => _locationStack.Push(location);
 
-        private void PopLocation()
-        {
-            _locationStack.Pop();
-        }
+        private void PopLocation() => _locationStack.Pop();
 
-        private void PushNot()
-        {
-            _notBlockStack.Push(!IsInNotBlock);
-        }
+        private void EnterNotBlock() => _notBlockStack.Push(!IsInNotBlock);
 
-        private void PopNot()
-        {
-            _notBlockStack.Pop();
-        }
+        private void LeaveNotBlock() => _notBlockStack.Pop();
 
-        internal WhereClauseTranslator(ILinqResolver resolver, string prefix)
+        internal WhereClauseTranslator(ILinqResolver resolver, FieldOrigin origin = FieldOrigin.Default)
         {
             _locationStack = new Stack<WhereLocation>();
             _notBlockStack = new Stack<bool>();
             _resolver = resolver;
-            _prefix = prefix;
+            _origin = origin;
         }
 
         internal bool IsWhereParameter(Expression expression)
@@ -61,13 +49,11 @@ namespace WiLinq.LinqProvider
                 return pe.Name == _parameterName;
             }
             return false;
-            
         }
 
         internal string Translate(Expression expression, QueryBuilder queryBuilder, string parameterName)
         {
             expression = Evaluator.PartialEval(expression);
-
 
             if (IsTrueConstant(expression))
             {
@@ -75,33 +61,40 @@ namespace WiLinq.LinqProvider
             }
 
 
-            _builder = new StringBuilder();
-            _queryBuilder = queryBuilder;
+
+
             _parameterName = parameterName;
             _notBlockStack.Push(false); //initialize the not stack
 
             Visit(expression);
+            if (!(_statement is WhereStatement whereStatement))
+            {
+                throw new InvalidOperationException("Invalid content");
+            }
 
-            return _builder.ToString();
+            var result = whereStatement.ConvertToQueryValue();
+            return result;
         }
 
         private static bool IsTrueConstant(Expression expression)
         {
             return expression is ConstantExpression ce
                    && ce.Type == typeof(bool)
-                   && (bool) ce.Value;
+                   && (bool)ce.Value;
         }
 
         protected override Expression VisitUnary(UnaryExpression u)
         {
-            if (u.NodeType == ExpressionType.Not)
+            switch (u.NodeType)
             {
-                PushNot();
-                Visit(u.Operand);
-                PopNot();
-                return u;
+                case ExpressionType.Not:
+                    EnterNotBlock();
+                    Visit(u.Operand);
+                    LeaveNotBlock();
+                    return u;
+                default:
+                    throw new NotSupportedException($"The unary operator '{u.NodeType}' is not supported");
             }
-            throw new NotSupportedException($"The unary operator '{u.NodeType}' is not supported");
         }
 
         protected override Expression VisitParameter(ParameterExpression p)
@@ -111,11 +104,11 @@ namespace WiLinq.LinqProvider
 
         protected override Expression VisitBinary(BinaryExpression b)
         {
-            string binaryOperator;
+
+            BooleanOperationStatementType? booleanOperator = null;
+            FieldOperationStatementType? fieldOperator = null;
             var propagateNotStatus = false;
             var isNot = IsInNotBlock;
-            var isFieldOperator = false;
-            _builder.Append("(");
 
 
             switch (b.NodeType)
@@ -123,44 +116,48 @@ namespace WiLinq.LinqProvider
                 case ExpressionType.And:
                 case ExpressionType.AndAlso:
                     propagateNotStatus = true;
-                    binaryOperator = !isNot ? "AND" : "OR";
+                    booleanOperator = !isNot ? BooleanOperationStatementType.And : BooleanOperationStatementType.Or;
                     break;
 
                 case ExpressionType.Or:
                 case ExpressionType.OrElse:
                     propagateNotStatus = true;
-                    binaryOperator = !isNot ? "OR" : "AND";
+                    booleanOperator = !isNot ? BooleanOperationStatementType.Or : BooleanOperationStatementType.And;
 
                     break;
 
                 case ExpressionType.Equal:
-                    binaryOperator = !isNot ? "=" : "<>";
-                    isFieldOperator = true;
+                    fieldOperator =
+                        !isNot ? FieldOperationStatementType.Equals : FieldOperationStatementType.IsDifferent;
                     break;
 
                 case ExpressionType.NotEqual:
-                    binaryOperator = !isNot ? "<>" : "=";
-                    isFieldOperator = true;
+                    fieldOperator =
+                        !isNot ? FieldOperationStatementType.IsDifferent : FieldOperationStatementType.Equals;
                     break;
 
                 case ExpressionType.LessThan:
-                    binaryOperator = !isNot ? "<" : ">=";
-                    isFieldOperator = true;
+                    fieldOperator = !isNot
+                        ? FieldOperationStatementType.IsLess
+                        : FieldOperationStatementType.IsGreaterOrEqual;
                     break;
 
                 case ExpressionType.LessThanOrEqual:
-                    binaryOperator = !isNot ? "<=" : ">";
-                    isFieldOperator = true;
+                    fieldOperator = !isNot
+                        ? FieldOperationStatementType.IsLessOrEqual
+                        : FieldOperationStatementType.IsGreater;
                     break;
 
                 case ExpressionType.GreaterThan:
-                    binaryOperator = !isNot ? ">" : "<=";
-                    isFieldOperator = true;
+                    fieldOperator = !isNot
+                        ? FieldOperationStatementType.IsGreater
+                        : FieldOperationStatementType.IsLessOrEqual;
                     break;
 
                 case ExpressionType.GreaterThanOrEqual:
-                    binaryOperator = !isNot ? ">=" : "<";
-                    isFieldOperator = true;
+                    fieldOperator = !isNot
+                        ? FieldOperationStatementType.IsGreaterOrEqual
+                        : FieldOperationStatementType.IsLess;
                     break;
 
                 default:
@@ -170,29 +167,58 @@ namespace WiLinq.LinqProvider
 
             if (isNot && !propagateNotStatus)
             {
-                PushNot();
+                EnterNotBlock();
             }
 
-            PushLocation(isFieldOperator ? WhereLocation.LeftOperatorClause : WhereLocation.ElseWhere);
+            PushLocation(fieldOperator.HasValue ? WhereLocation.LeftOperatorClause : WhereLocation.BooleanOperation);
             Visit(b.Left);
             PopLocation();
 
-            _builder.Append(" ");
-            _builder.Append(binaryOperator);
-            _builder.Append(" ");
+            var leftStatement = _statement;
 
-            PushLocation(isFieldOperator ? WhereLocation.RightOperatorClause : WhereLocation.ElseWhere);
+            PushLocation(fieldOperator.HasValue ? WhereLocation.RightOperatorClause : WhereLocation.BooleanOperation);
             Visit(b.Right);
             PopLocation();
 
+            var rightStatement = _statement;
+
+            if (fieldOperator.HasValue)
+            {
+                CreateFieldOperatorStatement(fieldOperator, leftStatement, rightStatement);
+            }
+            else
+            {
+                _statement = new BooleanOperationStatement(leftStatement as WhereStatement, booleanOperator.Value, rightStatement as WhereStatement);
+            }
 
             if (isNot && !propagateNotStatus)
             {
-                PopNot();
+                LeaveNotBlock();
             }
-            _builder.Append(")");
+
 
             return b;
+        }
+
+        private void CreateFieldOperatorStatement(FieldOperationStatementType? fieldOperator, Statement leftStatement, Statement rightStatement)
+        {
+            if (!(leftStatement is FieldStatement fieldStatement))
+            {
+                throw new InvalidOperationException($"Statement: '{leftStatement.ConvertToQueryValue()}' should be a WorkItem field");
+            }
+
+            switch (rightStatement)
+            {
+                case ValueStatement valueStatement:
+                    _statement = new FieldOperationStatement(fieldStatement, fieldOperator.Value, valueStatement);
+                    break;
+                case FieldStatement rigthFieldStaement:
+                    _statement = new FieldOperationStatement(fieldStatement, fieldOperator.Value, rigthFieldStaement);
+                    break;
+                default:
+
+                    throw new InvalidOperationException("");
+            }
         }
 
         /// <summary>
@@ -217,9 +243,9 @@ namespace WiLinq.LinqProvider
 
             if (IsInNotBlock)
             {
-                if (value is bool)
+                if (value is bool b)
                 {
-                    value = !(bool) value;
+                    value = !b;
                 }
                 else
                 {
@@ -227,13 +253,46 @@ namespace WiLinq.LinqProvider
                 }
             }
 
-            var encodedValue = QueryBuilder.EncodeValue(value);
+            if (value == null)
+            {
+                value = string.Empty;
+            }
 
-            _builder.Append(encodedValue);
+            _statement = CreateValueStatement(value);
 
             return c;
         }
 
+        private ValueStatement CreateValueStatement(object value)
+        {
+            switch (value)
+            {
+                case long l:
+                    return new IntegerValueStatement(l);
+
+                case int i:
+                    return new IntegerValueStatement(i);
+
+                case float f:
+                    return new DoubleValueStatement(f);
+
+                case double d:
+                    return new DoubleValueStatement(d);
+
+                case DateTime dt:
+                    return new DateValueStatement(dt);
+
+                case string str:
+                    return new StringValueStatement(str);
+
+                case bool boolean:
+                    return new BooleanValueStatement(boolean);
+
+                default:
+                    throw new NotSupportedException($"Not supported value type '{value.GetType()}");
+
+            }
+        }
 
         protected override Expression VisitMember(MemberExpression m)
         {
@@ -256,14 +315,8 @@ namespace WiLinq.LinqProvider
                 {
                     throw new NotSupportedException("Non-mapped field not supported");
                 }
-                if (_prefix != null)
-                {
-                    _builder.AppendFormat("[{0}].[{1}]", _prefix, field.Name);
-                }
-                else
-                {
-                    _builder.Append(field.Name);
-                }
+
+                _statement = new FieldStatement(field.Name, _origin);
                 return m;
             }
 
@@ -274,40 +327,46 @@ namespace WiLinq.LinqProvider
                     throw new NotSupportedException("Member position not supported");
                 }
 
-                _builder.Append("@" + m.Member.Name);
+                _statement = new ParameterValueStatement(m.Member.Name);
                 return m;
             }
 
             throw new NotSupportedException($"The member '{m.Member.Name}' is not supported");
         }
 
-        private void BuildOperationFromMethodCall(MethodCallExpression m, MemberExpression me, string op,
+        private void BuildOperationFromMethodCall(MethodCallExpression m, MemberExpression me, FieldOperationStatementType fieldOperator,
             bool isFieldOperator)
         {
-            PushLocation(isFieldOperator ? WhereLocation.LeftOperatorClause : WhereLocation.ElseWhere);
+            PushLocation(isFieldOperator ? WhereLocation.LeftOperatorClause : WhereLocation.BooleanOperation);
             var isNot = IsInNotBlock;
             if (isNot)
             {
-                PushNot();
+                EnterNotBlock();
             }
             Visit(me);
+            var leftStatement = _statement;
             if (isNot)
             {
-                PopNot();
+                LeaveNotBlock();
             }
             PopLocation();
-            _builder.Append($" {op} ");
+
             if (isNot)
             {
-                PushNot();
+                EnterNotBlock();
             }
-            PushLocation(isFieldOperator ? WhereLocation.RightOperatorClause : WhereLocation.ElseWhere);
+            PushLocation(isFieldOperator ? WhereLocation.RightOperatorClause : WhereLocation.BooleanOperation);
             Visit(m.Arguments[0]);
             PopLocation();
+
+            var rightStatement = _statement;
             if (isNot)
             {
-                PopNot();
+                LeaveNotBlock();
             }
+
+            CreateFieldOperatorStatement(fieldOperator, leftStatement, rightStatement);
+
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression m)
@@ -323,126 +382,113 @@ namespace WiLinq.LinqProvider
             switch (CurrentLocation)
             {
                 case WhereLocation.LeftOperatorClause:
-                {
-                    var fieldInfo = _resolver.Resolve(_parameterName, m);
-                    if (fieldInfo != null)
                     {
-                        if (_prefix != null)
+                        var fieldInfo = _resolver.Resolve(_parameterName, m);
+                        if (fieldInfo != null)
                         {
-                            _builder.AppendFormat("[{0}].[{1}]", _prefix, fieldInfo.Name);
+                            _statement = new FieldStatement(fieldInfo.Name, _origin);
+
                         }
                         else
                         {
-                            _builder.Append(fieldInfo.Name);
+                            throw new NotSupportedException("Invalid expression");
                         }
                     }
-                    else
-                    {
-                        throw new NotSupportedException("Invalid expression");
-                    }
-                }
                     break;
                 case WhereLocation.RightOperatorClause:
-                {
-                    var fieldInfo = _resolver.Resolve(_parameterName, m);
-                    if (fieldInfo != null)
                     {
-                        if (_prefix != null)
+                        var fieldInfo = _resolver.Resolve(_parameterName, m);
+                        if (fieldInfo != null)
                         {
-                            _builder.AppendFormat("[{0}].[{1}]", _prefix, fieldInfo.Name);
-                        }
-                        else
-                        {
-                            _builder.Append(fieldInfo.Name);
+
+                            _statement = new FieldStatement(fieldInfo.Name, _origin);
                         }
                     }
-                }
                     break;
-                case WhereLocation.ElseWhere:
-                {
-                    var handled = false;
-
-
-                    var argCount = m.Arguments.Count;
-
-                    if (m.Object == null)
+                case WhereLocation.BooleanOperation:
                     {
-                        if (m.Method.Name == "Is" &&
-                            m.Arguments.Count == 1 &&
-                            IsWhereParameter(m.Arguments[0]) &&
-                            m.Method.DeclaringType == typeof(QueryExtender) &&
-                            m.Method.IsGenericMethod)
+                        var handled = false;
+
+
+                        var argCount = m.Arguments.Count;
+
+                        if (m.Object == null)
                         {
-                            var genericParameters = m.Method.GetGenericArguments();
-                            if (genericParameters.Length != 1)
+                            if (m.Method.Name == "Is" &&
+                                m.Arguments.Count == 1 &&
+                                IsWhereParameter(m.Arguments[0]) &&
+                                m.Method.DeclaringType == typeof(QueryExtender) &&
+                                m.Method.IsGenericMethod)
                             {
-                                throw new InvalidOperationException("Invalid 'Is' operator");
-                            }
-                            var wiType = genericParameters[0];
-                            if (wiType == typeof(WorkItem))
-                            {
-                                throw new InvalidOperationException(
-                                    "Invalid usage of 'Is': it cannot be used with the class WorkItem");
-                            }
-                            if (wiType.IsSubclassOf(typeof(WorkItem)))
-                            {
-                                var wiPropUtilityType = typeof(WorkItemPropertyUtility<>).MakeGenericType(wiType);
-
-                                var wiTypeNamePropInfo = wiPropUtilityType.GetProperty("WorkItemTypeName",
-                                    BindingFlags.Static | BindingFlags.Public);
-
-                                var wiTypeName = wiTypeNamePropInfo.GetValue(null, null) as string;
-
-                                var op = !IsInNotBlock ? "==" : "<>";
-
-                                var test =
-                                    $"{SystemField.WorkItemType} {op} {QueryBuilder.EncodeValue(wiTypeName)}";
-
-                                _builder.Append(test);
-                                handled = true;
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException("Invalid 'Is' operator");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (m.Object is MemberExpression me && IsWhereParameter(me.Expression))
-                        {
-                            //processing "wi.op(arg)" pattern
-                            if (me.Type == typeof(string))
-                            {
-                                if (m.Method.Name == "Contains" && argCount == 1)
+                                var genericParameters = m.Method.GetGenericArguments();
+                                if (genericParameters.Length != 1)
                                 {
-                                    var op = IsInNotBlock ? "not contains" : "contains";
-                                    BuildOperationFromMethodCall(m, me, op, true);
+                                    throw new InvalidOperationException("Invalid 'Is' operator");
+                                }
+                                var wiType = genericParameters[0];
+                                if (wiType == typeof(WorkItem))
+                                {
+                                    throw new InvalidOperationException(
+                                        "Invalid usage of 'Is': it cannot be used with the class WorkItem");
+                                }
+                                if (wiType.IsSubclassOf(typeof(GenericWorkItem)))
+                                {
+                                    var wiTypeName = GenericWorkItemHelpersCore.GetWorkItemType(wiType);
+
+                                    if (string.IsNullOrWhiteSpace(wiTypeName))
+                                    {
+                                        throw new InvalidOperationException($"Missing workitem type for '{wiType.FullName}'");
+                                    }
+                                    var op = !IsInNotBlock ? FieldOperationStatementType.Equals : FieldOperationStatementType.IsDifferent;
+
+                                    _statement = new FieldOperationStatement(
+                                        new FieldStatement(SystemField.WorkItemType, _origin),
+                                        op,
+                                        new StringValueStatement(wiTypeName));
+
                                     handled = true;
+                                }
+                                else
+                                {
+                                    throw new InvalidOperationException("Invalid 'Is' operator");
                                 }
                             }
                         }
                         else
                         {
-                            var call = m;
-                            if (IsWhereParameter(call.Object))
+                            if (m.Object is MemberExpression me && IsWhereParameter(me.Expression))
                             {
-                                var operation = _resolver.Resolve(call, IsInNotBlock);
+                                //processing "wi.op(arg)" pattern
+                                if (me.Type == typeof(string))
+                                {
+                                    if (m.Method.Name == "Contains" && argCount == 1)
+                                    {
+                                        var op = IsInNotBlock ? FieldOperationStatementType.NotContains : FieldOperationStatementType.Contains;
+                                        BuildOperationFromMethodCall(m, me, op, true);
+                                        handled = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var call = m;
+                                if (IsWhereParameter(call.Object))
+                                {
+                                    var operation = _resolver.Resolve(call, IsInNotBlock);
 
-                                handled = true;
+                                    handled = true;
 
-                                var test =
-                                    $"[{operation.field.Name}] {operation.op} {QueryBuilder.EncodeValue(operation.value)}";
+                                    var valueStatement = CreateValueStatement(operation.value);
 
-                                _builder.Append(test);
+                                    _statement = new FieldOperationStatement(new FieldStatement(operation.field.Name,_origin),operation.op,valueStatement );
+                                }
                             }
                         }
+                        if (!handled)
+                        {
+                            throw new NotSupportedException($"MethodCall: {m.Method.Name}");
+                        }
                     }
-                    if (!handled)
-                    {
-                        throw new NotSupportedException($"MethodCall: {m.Method.Name}");
-                    }
-                }
                     break;
                 default:
                     throw new InvalidOperationException();

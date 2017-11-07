@@ -29,9 +29,9 @@ namespace WiLinq.LinqProvider.Wiql
             return ret;
         }
 
-        public override ValueStatement Copy()
+        public override ValueStatement Clone()
         {
-            return new ListValueStatement(Value.Select(v => v.Copy()).ToList());
+            return new ListValueStatement(Value.Select(v => v.Clone()).ToList());
         }
     }
 }

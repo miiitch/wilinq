@@ -19,7 +19,7 @@ namespace WiLinq.LinqProvider.Wiql
             return $"'{Value:O}'";
         }
 
-        public override ValueStatement Copy()
+        public override ValueStatement Clone()
         {
             return new DateValueStatement(Value);
         }

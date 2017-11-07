@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using WiLinq.LinqProvider.Wiql;
 
 namespace WiLinq.LinqProvider
 {
@@ -67,7 +68,7 @@ namespace WiLinq.LinqProvider
             return null;
         }
 
-        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall,
+        public (WorkItemFieldInfo field, FieldOperationStatementType op, object value) Resolve(MethodCallExpression methodCall,
             bool isInNotBlock)
         {
             throw new NotImplementedException();

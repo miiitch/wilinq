@@ -5,11 +5,33 @@ using WiLinq.LinqProvider.Extensions;
 
 namespace WiLinq.LinqProvider
 {
+    internal static class GenericWorkItemHelpersCore
+    {
+        public static string GetWorkItemType(Type workItemType)
+        {
+
+            if (!(workItemType.GetCustomAttributes(typeof(WorkItemTypeAttribute), false) is WorkItemTypeAttribute[]
+                    modelAttribs) || modelAttribs.Length != 1)
+            {
+                return null;
+            }
+            else
+            {
+                return  modelAttribs[0].TypeName;
+            }
+        }
+
+        public static string GetWorkItemType<T>() where T: GenericWorkItem
+        {
+            return GetWorkItemType(typeof(T));
+        }
+    }
+
     /// <summary>
     ///     Utility class used to discover and manipulate specialized workitem
     /// </summary>
     /// <typeparam name="T">Subclass of WorkItemObject</typeparam>
-    public static class WorkItemPropertyUtility<T> where T : GenericWorkItem, new()
+    public static class GenericWorkItemHelpers<T> where T : GenericWorkItem, new()
     {
         internal class FieldData
         {
@@ -70,17 +92,9 @@ namespace WiLinq.LinqProvider
                 return;
             }
             _typeProcessed = true;
-            var modelAttribs =
-                typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
 
-            if (modelAttribs == null || modelAttribs.Length != 1)
-            {
-                _workItemTypeName = null;
-            }
-            else
-            {
-                _workItemTypeName = modelAttribs[0].TypeName;
-            }
+            _workItemTypeName = GenericWorkItemHelpersCore.GetWorkItemType<T>();
+          
         }
 
 

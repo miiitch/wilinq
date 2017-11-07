@@ -14,6 +14,7 @@ namespace WiLinq.LinqProvider.Wiql
         IsDifferent,
         IsUnder,
         IsNotUnder,
-        WasEver
+        WasEver,
+        NotContains
     }
 }

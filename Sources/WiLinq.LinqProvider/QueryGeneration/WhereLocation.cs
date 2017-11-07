@@ -1,4 +1,4 @@
-namespace WiLinq.LinqProvider
+namespace WiLinq.LinqProvider.QueryGeneration
 {
     /// <summary>
     ///     Used to verify query constraints in the where part
@@ -7,6 +7,6 @@ namespace WiLinq.LinqProvider
     {
         LeftOperatorClause,
         RightOperatorClause,
-        ElseWhere
+        BooleanOperation
     }
 }

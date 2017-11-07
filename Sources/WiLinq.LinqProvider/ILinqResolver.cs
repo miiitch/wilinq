@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using WiLinq.LinqProvider.Wiql;
 
 namespace WiLinq.LinqProvider
 {
@@ -14,6 +15,6 @@ namespace WiLinq.LinqProvider
         /// <param name="methodCall"></param>
         /// <param name="isInNotBlock"></param>
         /// <returns></returns>
-        (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
+        (WorkItemFieldInfo field, FieldOperationStatementType op, object value) Resolve(MethodCallExpression methodCall, bool isInNotBlock);
     }
 }

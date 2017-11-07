@@ -16,7 +16,7 @@ namespace WiLinq.LinqProvider.Wiql
         }
 
 
-        public override ValueStatement Copy()
+        public override ValueStatement Clone()
         {
             return new ParameterValueStatement(_parameterName);
         }

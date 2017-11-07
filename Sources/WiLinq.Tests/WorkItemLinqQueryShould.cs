@@ -11,19 +11,211 @@ namespace WiLinq.Tests
     [TestFixture]
     public class WorkItemLinqQueryShould : TestFixtureBase
     {
+        private int _totalTestSessionTaskCount = 0;
+        private int _totalTestSessionBugCount = 0;
+
+
+        public override async Task SetUp()
+        {
+            await base.SetUp();
+
+            for (var i = 0; i < 10; i++)
+            {
+                var task = Project.New<TestTask>(NewWorkItemOptions.FillAreaAndIterationPath);
+
+                task.TestSessionId = TestSessionId;
+                task.Title = $"Task #{i}";
+                task.Priority = i % 4 + 1;
+                await Client.Save(task);
+
+            };
+
+            _totalTestSessionTaskCount += 10;
+
+
+            for (var i = 0; i < 20; i++)
+            {
+                var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);
+
+                bug.TestSessionId = TestSessionId;
+                bug.Title = $"Bug #{i}";
+                bug.Priority = i % 4 + 1;
+                await Client.Save(bug);
+
+            };
+            _totalTestSessionBugCount += 20;
+        }
+
+
+        [Test]
+        public void Return_only_Tasks_From_The_Test_Session()
+        {
+            var q = from workitem in Client.SetOf<TestTask>()
+                    where workitem.TestSessionId == TestSessionId
+                    select workitem;
+
+
+            var result = q.ToList();
+
+            Check.That(result.Count).Equals(_totalTestSessionTaskCount);
+            foreach (var workitem in result)
+            {
+                Check.That(workitem.TestSessionId).Equals(TestSessionId);
+                Check.That(workitem.WorkItemType).Equals("Task");
+            }
+        }
+
+        [Test]
+        public void Return_only_Tasks_From_The_Test_Session_With_Is_Operator()
+        {
+            var q = from workitem in Client.All()
+                    where workitem.Is<TestTask>() && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    select workitem;
+
+
+            var result = q.ToList();
+
+            Check.That(result.Count).Equals(_totalTestSessionTaskCount);
+            foreach (var workitem in result)
+            {
+                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(SystemField.WorkItemType)).Equals("Task");
+            }
+        }
+
+        [Test]
+        public void Return_only_Tasks_And_Bugs_From_The_Test_Session_With_Is_Operator()
+        {
+            var q = from workitem in Client.All()
+                    where (workitem.Is<TestTask>() || workitem.Is<TestBug>()) && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    select workitem;
+
+
+            var result = q.ToList();
+
+            Check.That(result.Count).Equals(_totalTestSessionTaskCount + _totalTestSessionBugCount);
+            foreach (var workitem in result)
+            {
+                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(SystemField.WorkItemType)).IsOneOfThese("Task", "Bug");
+            }
+        }
+
+        [Test]
+        public void Return_only_Tasks_And_Bugs_From_The_Test_Session_With_Is_Operator_With_Specific_Tests()
+        {
+            var q = from workitem in Client.All()
+                    where ((workitem.Is<TestTask>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1) ||
+                            (workitem.Is<TestBug>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 2))
+                            && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    select workitem;
+
+
+            var result = q.ToList();
+
+            foreach (var workitem in result)
+            {
+                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                var type = workitem.Field<string>(SystemField.WorkItemType);
+                Check.That(type).IsOneOfThese("Task", "Bug");
+                var priority = workitem.Field<long>("Microsoft.VSTS.Common.Priority");
+                if (type == "Task")
+                {
+                    Check.That(priority).Equals(1);
+
+                }
+                else
+                {
+                    Check.That(priority).Equals(2);
+                }
+
+
+            }
+        }
+
+        [Test]
+        public void Return_only_Tasks_And_Bugs_From_The_Test_Session_With_Tests_Involving_Not_Operator_At_Field_Operation_Level()
+        {
+            var q = from workitem in Client.All()
+                        // ReSharper disable once NegativeEqualityExpression
+                    where ((workitem.Is<TestTask>() && !(workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1)) ||
+                           (workitem.Is<TestBug>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 2))
+                          && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    select workitem;
+
+
+            var result = q.ToList();
+
+            foreach (var workitem in result)
+            {
+                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                var type = workitem.Field<string>(SystemField.WorkItemType);
+                Check.That(type).IsOneOfThese("Task", "Bug");
+                var priority = workitem.Field<long>("Microsoft.VSTS.Common.Priority");
+                if (type == "Task")
+                {
+                    Check.That(priority).Not.Equals(1);
+
+                }
+                else
+                {
+                    Check.That(priority).Equals(2);
+                }
+
+
+            }
+        }
+
+        [Test]
+        public void Return_only_Tasks_And_Bugs_From_The_Test_Session_With_Tests_Involving_Not_Operator_At_Boolean_Operation_Level()
+        {
+            var q = from workitem in Client.All()
+                        // ReSharper disable once NegativeEqualityExpression
+                    where !((workitem.Is<TestTask>() && (workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1)) ||
+                           (workitem.Is<TestBug>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 2))
+                          && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    select workitem;
+
+
+            var result = q.ToList();
+
+            foreach (var workitem in result)
+            {
+                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                var type = workitem.Field<string>(SystemField.WorkItemType);
+                Check.That(type).IsOneOfThese("Task", "Bug");
+                var priority = workitem.Field<long>("Microsoft.VSTS.Common.Priority");
+                if (type == "Task")
+                {
+                    Check.That(priority).Not.Equals(1);
+
+                }
+                else
+                {
+                    Check.That(priority).Not.Equals(2);
+                }
+
+
+            }
+        }
+
+
+
         [Test]
         public void Return_Only_One_Element_With_The_Right_Id()
         {
             //all workitems;
             var q = from workitem in Client.All()
-                where workitem.Id == 3
-                select workitem;
+                    where workitem.Id == 3 || workitem.Id == 6
+                    orderby workitem.Id descending
+                    select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = q.ToList();
 
-            Check.That(result).HasSize(1);
-            Check.That(result[0].Id).Equals(3);
+            Check.That(result).HasSize(2);
+            Check.That(result[1].Id).Equals(3);
+            Check.That(result[0].Id).Equals(6);
         }
 
         [Test]
@@ -31,8 +223,8 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.All()
-                where workitem.Id == 3
-                select workitem;
+                    where workitem.Id == 3
+                    select workitem;
 
             var result = await q.ToListAsync();
 
@@ -44,9 +236,9 @@ namespace WiLinq.Tests
         public async Task Return_Only_One_Element_Of_Type_Bug_With_The_Right_Id()
         {
             //all workitems;
-            var q = from workitem in Client.SetOf<Bug>(Project)
-                where workitem.Id == 174
-                select workitem;
+            var q = from workitem in Client.SetOf<TestBug>(Project)
+                    where workitem.Id == 174
+                    select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await q.ToListAsync();
@@ -59,9 +251,9 @@ namespace WiLinq.Tests
         public async Task Return_No_Element_Of_Type_PBI_With_The_Id_Of_Bug()
         {
             //all workitems;
-            var q = from workitem in Client.SetOf<Bug>(Project)
-                where workitem.Id == 173
-                select workitem;
+            var q = from workitem in Client.SetOf<TestBug>(Project)
+                    where workitem.Id == 173
+                    select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await q.ToListAsync();
@@ -75,7 +267,7 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All(Project)
-                select workitem;
+                                 select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -86,7 +278,8 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All()
-                select workitem;
+                                 where workitem.Id < 200
+                                 select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -97,7 +290,8 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var projectWiQuery = from workitem in Client.All()
-                select workitem;
+                                 where workitem.Id < 200
+                                 select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -111,8 +305,8 @@ namespace WiLinq.Tests
         public async Task Return_All_Workitems_Assigned_To_Me()
         {
             var projectWiQuery = from workitem in Client.All()
-                where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
-                select workitem;
+                                 where workitem.Field<string>("System.AssignedTo") == QueryConstant.Me
+                                 select workitem;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
         }
@@ -122,8 +316,8 @@ namespace WiLinq.Tests
         {
             var minCreationDate = new DateTime(2017, 7, 1);
             var projectWiQuery = from workitem in Client.All()
-                where workitem.Field<DateTime>(SystemField.CreatedDate) > minCreationDate
-                select workitem;
+                                 where workitem.Field<DateTime>(SystemField.CreatedDate) > minCreationDate
+                                 select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -141,8 +335,8 @@ namespace WiLinq.Tests
         [Test]
         public async Task Return_All_Bugs_Of_The_Project()
         {
-            var projectWiQuery = from workitem in Client.SetOf<Bug>(Project)
-                select workitem;
+            var projectWiQuery = from workitem in Client.SetOf<TestBug>(Project)
+                                 select workitem;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
 
@@ -154,9 +348,9 @@ namespace WiLinq.Tests
         public async Task Return_Bugs_Of_The_Project_Created_After_A_Specific_Date()
         {
             var minCreationDate = new DateTime(2017, 7, 1);
-            var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
-                where bug.CreatedDate > minCreationDate
-                select bug;
+            var projectWiQuery = from bug in Client.SetOf<TestBug>(Project)
+                                 where bug.CreatedDate > minCreationDate
+                                 select bug;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -171,9 +365,9 @@ namespace WiLinq.Tests
         {
             var iteration = $@"{Project.Name}\Sprint 1";
 
-            var projectWiQuery = from bug in Client.SetOf<Bug>(Project)
-                where bug.IsUnderIteration(iteration)
-                select bug;
+            var projectWiQuery = from bug in Client.SetOf<TestBug>(Project)
+                                 where bug.IsUnderIteration(iteration)
+                                 select bug;
 
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
@@ -188,9 +382,9 @@ namespace WiLinq.Tests
         [Test]
         public async Task Return_Bug_With_Created_Is_Equal_To_ChangedBy()
         {
-            var projectWiQuery = from bug in Client.SetOf<Bug>()
-                where bug.CreatedBy == bug.ChangedBy
-                select bug;
+            var projectWiQuery = from bug in Client.SetOf<TestBug>()
+                                 where bug.CreatedBy == bug.ChangedBy
+                                 select bug;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
 
@@ -205,8 +399,8 @@ namespace WiLinq.Tests
         public async Task Return_All_Workitems_With_Created_Is_Equal_To_ChangedBy()
         {
             var projectWiQuery = from bug in Client.SetOf<GenericWorkItem>()
-                where bug.CreatedBy == bug.ChangedBy
-                select bug;
+                                 where bug.CreatedBy == bug.ChangedBy
+                                 select bug;
             // ReSharper disable once UnusedVariable
             var result = await projectWiQuery.ToListAsync();
 
@@ -222,7 +416,7 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.FromTemplate<ScrumTemplate>()
-                select workitem;
+                    select workitem;
 
             var result = await q.ToListAsync();
 

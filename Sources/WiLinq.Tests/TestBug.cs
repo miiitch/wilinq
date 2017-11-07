@@ -3,11 +3,34 @@ using WiLinq.LinqProvider;
 
 namespace WiLinq.Tests
 {
+
+    public class TestWorkItem : GenericWorkItem
+    {
+
+        [Field("ScrumForWiqlTests.TestSessionId")]
+        public virtual string TestSessionId
+        {
+            get => GetRefField<string>("ScrumForWiqlTests.TestSessionId");
+            set => SetRefField("ScrumForWiqlTests.TestSessionId", value);
+        }
+    }
+
     [WorkItemType("Bug")]
-    public class Bug : GenericWorkItem
+    public class TestBug : TestWorkItem
     {
         [Field("Microsoft.VSTS.Common.Priority")]
-        public virtual int? Priority
+        public virtual long? Priority
+        {
+            get => GetStructField<int>("Microsoft.VSTS.Common.Priority");
+            set => SetStructField("Microsoft.VSTS.Common.Priority", value);
+        }
+    }
+
+    [WorkItemType("Product Backlog Item")]
+    public class TestPBI : TestWorkItem
+    {
+        [Field("Microsoft.VSTS.Common.Priority")]
+        public virtual long? Priority
         {
             get => GetStructField<int>("Microsoft.VSTS.Common.Priority");
             set => SetStructField("Microsoft.VSTS.Common.Priority", value);
@@ -16,7 +39,7 @@ namespace WiLinq.Tests
 
 
     [WorkItemType("Task")]
-    public class ScrumTask : GenericWorkItem
+    public class TestTask : TestWorkItem
     {
         /// <summary>Type of work involved</summary>
         [Field("Microsoft.VSTS.Common.Activity")]

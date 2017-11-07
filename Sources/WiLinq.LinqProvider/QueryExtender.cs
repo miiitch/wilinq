@@ -108,13 +108,13 @@ namespace WiLinq.LinqProvider
         public static IQueryable<T> SetOf<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient)
             where T : GenericWorkItem, new()
         {
-            if (!WorkItemPropertyUtility<T>.IsValid)
+            if (!GenericWorkItemHelpers<T>.IsValid)
             {
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
             return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, null,
-                WorkItemPropertyUtility<T>.Provider));
+                GenericWorkItemHelpers<T>.Provider));
         }
 
         /// <summary>
@@ -131,13 +131,13 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(projectName));
             }
 
-            if (!WorkItemPropertyUtility<T>.IsValid)
+            if (!GenericWorkItemHelpers<T>.IsValid)
             {
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
             return new Query<T>(new WorkItemLinqQueryProvider<T>(workItemTrackingHttpClient, projectName,
-                WorkItemPropertyUtility<T>.Provider));
+                GenericWorkItemHelpers<T>.Provider));
         }
 
 
@@ -190,7 +190,7 @@ namespace WiLinq.LinqProvider
                 throw new ArgumentNullException(nameof(projectName));
             }
 
-            var typeName = WorkItemPropertyUtility<T>.WorkItemTypeName;
+            var typeName = GenericWorkItemHelpers<T>.WorkItemTypeName;
 
             if (string.IsNullOrWhiteSpace(typeName))
             {
@@ -223,7 +223,7 @@ namespace WiLinq.LinqProvider
             where U : GenericWorkItem, new()
         {
             WorkItemLinqQueryProvider<U> wiQP = (query as IQueryable<U>).Provider as WorkItemLinqQueryProvider<U>;
-            return new Query<T>(new WorkItemLinqQueryProvider<T>(wiQP.TPC,wiQP.Project, WorkItemPropertyUtility<T>.Provider));
+            return new Query<T>(new WorkItemLinqQueryProvider<T>(wiQP.TPC,wiQP.Project, GenericWorkItemHelpers<T>.Provider));
         }
 #endif
 #if false
@@ -289,12 +289,12 @@ namespace WiLinq.LinqProvider
         /// <returns></returns>
         public static bool Is<T>(this WorkItem wi) where T : GenericWorkItem, new()
         {
-            if (!WorkItemPropertyUtility<T>.IsValid)
+            if (!GenericWorkItemHelpers<T>.IsValid)
             {
                 throw new InvalidOperationException($"Type '{typeof(T)}' does not have a the required attributes");
             }
 
-            return wi.Field<string>(SystemField.WorkItemType) == WorkItemPropertyUtility<T>.WorkItemTypeName;
+            return wi.Field<string>(SystemField.WorkItemType) == GenericWorkItemHelpers<T>.WorkItemTypeName;
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace WiLinq.LinqProvider
         /// <returns></returns>
         public static T ConvertIn<T>(this WorkItem wi) where T : GenericWorkItem, new()
         {
-            if (!WorkItemPropertyUtility<T>.IsValid)
+            if (!GenericWorkItemHelpers<T>.IsValid)
             {
                 throw new ArgumentException($"Type '{typeof(T)}' does not have a the needed attributes");
             }
@@ -313,7 +313,7 @@ namespace WiLinq.LinqProvider
             if (!Is<T>(wi))
             {
                 throw new ArgumentException(nameof(wi),
-                    $"Source type is '{wi.Field<string>(SystemField.WorkItemType)}' but the target type is {WorkItemPropertyUtility<T>.WorkItemTypeName}");
+                    $"Source type is '{wi.Field<string>(SystemField.WorkItemType)}' but the target type is {GenericWorkItemHelpers<T>.WorkItemTypeName}");
             }
 
             var ret = new T();
@@ -336,7 +336,7 @@ namespace WiLinq.LinqProvider
             {
                 throw new ArgumentNullException(nameof(project));
             }
-            return WorkItemPropertyUtility<T>.CheckProjectUsability(project);
+            return GenericWorkItemHelpers<T>.CheckProjectUsability(project);
         }
 #endif
 
@@ -349,6 +349,6 @@ namespace WiLinq.LinqProvider
         Nothing = 0,
         FillAreaPath = 0b1,
         FillIterationPath = 0b10,
-        FillAreaAndItertionPath = FillAreaPath | FillIterationPath
+        FillAreaAndIterationPath = FillAreaPath | FillIterationPath
     }
 }

@@ -5,14 +5,13 @@ using System.Reflection;
 using System.Text;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 
-namespace WiLinq.LinqProvider
+namespace WiLinq.LinqProvider.QueryGeneration
 {
     /// <summary>
     ///     Class used to build the query
     /// </summary>
     internal class QueryBuilder
-    {
-        private const string MACRO_FORMAT = "P{0}";
+    {        
         private const string DEFAULT_COLUMN = "[System.Id]";
         private readonly List<string> _orderbyList = new List<string>();
         private readonly QueryType _queryType;

@@ -14,6 +14,10 @@ namespace WiLinq.Tests
         protected WorkItemTrackingHttpClient Client { get; private set; }
         protected TeamProject Project { get; private set; }
 
+        protected const string TestSessionIdFieldReferenceName = "ScrumForWiqlTests.TestSessionId";
+        protected string TestSessionId { get; set; }
+
+
         [OneTimeSetUp]
         public virtual async Task SetUp()
         {
@@ -45,6 +49,8 @@ namespace WiLinq.Tests
             var projectHttpClient = await connection.GetClientAsync<ProjectHttpClient>();
 
             Project = await projectHttpClient.GetProject("WiLinqTestProject");
+
+            TestSessionId = Guid.NewGuid().ToString();
         }
     }
 }

@@ -17,13 +17,14 @@ namespace WiLinq.LinqProvider.Wiql
         public static ValueStatement Project { get; }
         public static ValueStatement Today { get; }
 
-        public abstract ValueStatement Copy();
+        public abstract ValueStatement Clone();
 
         public override string ToString()
         {
             return ConvertToQueryValue();
         }
 
+  
         public static ValueStatement Create(string value)
         {
             return new StringValueStatement(value);

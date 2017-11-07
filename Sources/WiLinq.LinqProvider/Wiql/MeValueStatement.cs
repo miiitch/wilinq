@@ -11,7 +11,7 @@ namespace WiLinq.LinqProvider.Wiql
             return "@Me";
         }
 
-        public override ValueStatement Copy()
+        public override ValueStatement Clone()
         {
             return this;
         }

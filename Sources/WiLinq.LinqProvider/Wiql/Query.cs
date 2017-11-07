@@ -76,10 +76,13 @@ namespace WiLinq.LinqProvider.Wiql
 			throw new NotImplementedException();
 		}
 #endif
+#if false
         public Query Copy()
         {
             var visitor = new QueryVisitor();
             return visitor.Visit(this);
         }
+#endif
     }
+
 }

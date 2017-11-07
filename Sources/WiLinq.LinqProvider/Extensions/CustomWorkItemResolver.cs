@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using WiLinq.LinqProvider.Wiql;
 
 namespace WiLinq.LinqProvider.Extensions
 {
@@ -34,7 +35,7 @@ namespace WiLinq.LinqProvider.Extensions
             throw new NotImplementedException();
         }
 
-        public (WorkItemFieldInfo field, string op, object value) Resolve(MethodCallExpression methodCall,
+        public (WorkItemFieldInfo field, FieldOperationStatementType op, object value) Resolve(MethodCallExpression methodCall,
             bool isInNotBlock)
         {
             switch (methodCall.Method.Name)
@@ -42,7 +43,7 @@ namespace WiLinq.LinqProvider.Extensions
                 case nameof(GenericWorkItem.IsUnderIteration):
                 {
                     const string refName = SystemField.IterationPath;
-                    var op = isInNotBlock ? "not under" : "under";
+                    var op = isInNotBlock ? FieldOperationStatementType.IsNotUnder : FieldOperationStatementType.IsUnder;
                     if (!(methodCall.Arguments[0] is ConstantExpression valEx))
                     {
                         throw new InvalidOperationException();
@@ -53,8 +54,8 @@ namespace WiLinq.LinqProvider.Extensions
                 case nameof(GenericWorkItem.IsUnderArea):
                 {
                     const string refName = SystemField.AreaPath;
-                    var op = isInNotBlock ? "not under" : "under";
-                    if (!(methodCall.Arguments[0] is ConstantExpression valEx))
+                    var op = isInNotBlock ? FieldOperationStatementType.IsNotUnder : FieldOperationStatementType.IsUnder;
+                        if (!(methodCall.Arguments[0] is ConstantExpression valEx))
                     {
                         throw new InvalidOperationException();
                     }

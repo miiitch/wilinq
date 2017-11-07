@@ -15,7 +15,7 @@ namespace WiLinq.LinqProvider.Process
 
         public void AddWorkItemType<T>() where T : GenericWorkItem, new()
         {
-            var workItemType = WorkItemPropertyUtility<T>.WorkItemTypeName;
+            var workItemType = GenericWorkItemHelpers<T>.WorkItemTypeName;
 
             if (string.IsNullOrWhiteSpace(workItemType))
             {
