@@ -154,6 +154,7 @@
     <Compile Include="AsyncExtensions.cs" />
     <Compile Include="Extensions\CustomWorkItemResolver.cs" />
     <Compile Include="Extensions\ProcessTemplateHelper.cs" />
+    <Compile Include="GenericWorkItemHelpersCore.cs" />
     <Compile Include="IgnoreFieldAttribute.cs" />
     <Compile Include="Extensions\ProjectToWorkItemValueConverter.cs" />
     <Compile Include="Evaluator.cs" />

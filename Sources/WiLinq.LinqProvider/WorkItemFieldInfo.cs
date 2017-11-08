@@ -2,7 +2,7 @@ using System;
 
 namespace WiLinq.LinqProvider
 {
-    public class WorkItemFieldInfo
+    internal class WorkItemFieldInfo
     {
         public string Name { get; set; }
         public Type Type { get; set; }
