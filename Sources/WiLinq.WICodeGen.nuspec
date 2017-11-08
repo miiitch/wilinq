@@ -6,12 +6,12 @@
     <title>Code Generator for WiLinq</title>
     <authors>Michel Perfetti</authors>
     <owners>Michel Perfetti</owners>
-    <licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
+    <licenseUrl>https://github.com/miiitch/wilinq/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/miiitch/wilinq/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>WiLinq is a workitem linq provider targeting VSTS Rest API</description>
-    <releaseNotes>Development version</releaseNotes>
-    <copyright>Copyright 2017</copyright>
+    <releaseNotes></releaseNotes>
+    <copyright></copyright>
     <tags>Linq WorkItem TFS VSTS</tags>
     <dependencies>     
     </dependencies>
