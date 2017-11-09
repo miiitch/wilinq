@@ -8,7 +8,7 @@
     <owners>Michel Perfetti</owners>
     <licenseUrl>https://github.com/miiitch/wilinq/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/miiitch/wilinq/</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>WiLinq is a workitem linq provider targeting VSTS Rest API</description>
     <releaseNotes></releaseNotes>
     <copyright></copyright>
