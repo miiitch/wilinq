@@ -9,7 +9,7 @@
 		<licenseUrl>https://github.com/miiitch/wilinq/blob/master/LICENSE.md</licenseUrl>
 		<projectUrl>https://github.com/miiitch/wilinq/</projectUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
-		<description>Agile Template for WiLinq</description>
+		<description>Agile process template for WiLinq</description>
 		<releaseNotes></releaseNotes>
 		<copyright></copyright>
 		<tags>Wilinq Linq WorkItem TFS VSTS Process Template Agile</tags>
