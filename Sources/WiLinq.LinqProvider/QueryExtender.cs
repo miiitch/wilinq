@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.Core.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
@@ -141,32 +142,35 @@ namespace WiLinq.LinqProvider
         }
 
 
-        public static async Task Save<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, T workitem)
+        public static async Task CreateOrUpdateWorkItemAsync<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, T workitem,CancellationToken cancellationToken = default)
             where T : GenericWorkItem
         {
-            var patchDocument = workitem.CreatePatchDocument();
-            try
+            if (workItemTrackingHttpClient == null)
             {
-                Task<WorkItem> task;
-                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                if (workitem.Id.HasValue)
-                {
-                    task = workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workitem.Id.Value);
-                }
-                else
-                {
-                    task = workItemTrackingHttpClient.CreateWorkItemAsync(patchDocument, workitem.Project,
-                        workitem.WorkItemType);
-                }
-                var savedOrCreatedWorkItem = await task;
+                throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
+            }
+            if (workitem == null)
+            {
+                throw new ArgumentNullException(nameof(workitem));
+            }
 
-                workitem.CopyValuesFromWorkItem(savedOrCreatedWorkItem);
-            }
-            catch (Exception e)
+
+            var patchDocument = workitem.CreatePatchDocument();
+
+            Task<WorkItem> task;
+            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+            if (workitem.Id.HasValue)
             {
-                Console.WriteLine(e);
-                throw;
+                task = workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workitem.Id.Value,null,null,null,cancellationToken);
             }
+            else
+            {
+                task = workItemTrackingHttpClient.CreateWorkItemAsync(patchDocument, workitem.Project,workitem.WorkItemType,null,null,null,cancellationToken);
+            }
+            var savedOrCreatedWorkItem = await task;
+
+            workitem.CopyValuesFromWorkItem(savedOrCreatedWorkItem);
+
         }
 
 

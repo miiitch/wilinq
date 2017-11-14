@@ -15,7 +15,7 @@ namespace WiLinq.Tests
 
             bug.Title = "New bug created during test";
 
-            await Client.Save(bug);
+            await Client.CreateOrUpdateWorkItemAsync(bug);
 
             Check.That(bug.Id).HasAValue();
         }
@@ -27,7 +27,7 @@ namespace WiLinq.Tests
 
             bug.Title = "New bug created during test with area and iteration path";
 
-            await Client.Save(bug);
+            await Client.CreateOrUpdateWorkItemAsync(bug);
 
             Check.That(bug.Id).HasAValue();
         }
@@ -40,11 +40,11 @@ namespace WiLinq.Tests
 
             bug.Title = "New bug created during test";
 
-            await Client.Save(bug);
+            await Client.CreateOrUpdateWorkItemAsync(bug);
 
             bug.Title = "Title Changed";
 
-            await Client.Save(bug);
+            await Client.CreateOrUpdateWorkItemAsync(bug);
         }
 
 
