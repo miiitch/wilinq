@@ -167,6 +167,7 @@
     <Compile Include="ICustomWorkItemHelper.cs" />
     <Compile Include="ILinqResolver.cs" />
     <Compile Include="IWorkItemLinqQueryProvider.cs" />
+    <Compile Include="NewWorkItemOptions.cs" />
     <Compile Include="Process\ProcessTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />

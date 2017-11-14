@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WiLinq.LinqProvider
@@ -12,7 +13,7 @@ namespace WiLinq.LinqProvider
         string GetQueryText(Expression expression);
         TPCQuery TransformAsWorkItemQuery(Expression expression);
 
-        Task<object> ExecuteAync(Expression expression);
-        Task<List<int>> ExecuteAndGetIdsAsync(Expression expression);
+        Task<object> ExecuteAync(Expression expression, CancellationToken cancellationToken);
+        Task<List<int>> ExecuteAndGetIdsAsync(Expression expression, CancellationToken cancellationToken);
     }
 }

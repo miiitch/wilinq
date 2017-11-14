@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -66,21 +67,22 @@ namespace WiLinq.LinqProvider
             throw new NotImplementedException();
         }
 
-        public async Task<List<int>> ExecuteAndGetIdsAsync(Expression expression)
+        public async Task<List<int>> ExecuteAndGetIdsAsync(Expression expression,CancellationToken cancellationToken)
         {
             var query = BuildQuery(expression);
 
-            var result = await query.GetWorkItemIdsAsync();
+            var result = await query.GetWorkItemIdsAsync(cancellationToken);
 
             return result;
         }
 
-        public async Task<object> ExecuteAync(Expression expression)
+        public async Task<object> ExecuteAync(Expression expression, CancellationToken cancellationToken)
         {
             var query = BuildQuery(expression);
 
-            var tmpResult = await query.GetWorkItemsAsync();
+            var tmpResult = await query.GetWorkItemsAsync(cancellationToken);
 
+            cancellationToken.ThrowIfCancellationRequested();
             List<T> wiResult;
             if (_creatorProvider != null)
             {
@@ -95,7 +97,6 @@ namespace WiLinq.LinqProvider
                 }
                 wiResult = tmpResult as List<T>;
             }
-
 
             if (query.SelectLambda == null)
             {
@@ -137,7 +138,7 @@ namespace WiLinq.LinqProvider
 
         private object Execute(Expression expression)
         {
-            return Task.Run(() => ExecuteAync(expression)).Result;
+            return Task.Run(() => ExecuteAync(expression, CancellationToken.None)).Result;
         }
 
         private TPCQuery BuildQuery(Expression expression)
@@ -154,10 +155,7 @@ namespace WiLinq.LinqProvider
 
         private void ConfigureExtraFilters(QueryBuilder queryBuilder)
         {
-            var attribs =
-                typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) as WorkItemTypeAttribute[];
-
-            if (attribs != null && attribs.Length == 1)
+            if (typeof(T).GetCustomAttributes(typeof(WorkItemTypeAttribute), false) is WorkItemTypeAttribute[] attribs && attribs.Length == 1)
             {
                 queryBuilder.AddWhereClause($"{SystemField.WorkItemType} = '{attribs[0].TypeName}'");
             }
