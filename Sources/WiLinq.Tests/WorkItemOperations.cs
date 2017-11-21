@@ -6,6 +6,7 @@ using WiLinq.LinqProvider;
 namespace WiLinq.Tests
 {
     [TestFixture]
+    
     public class WorkitemClientShould : TestFixtureBase
     {
         [Test]
@@ -45,6 +46,39 @@ namespace WiLinq.Tests
             bug.Title = "Title Changed";
 
             await Client.CreateOrUpdateWorkItemAsync(bug);
+        }
+
+        [Test]
+        public async Task Create_A_Workitem_And_Check_The_Floating_Point_Value()
+        {
+            const double expectedRemainingWork = 45.6;
+            var task = Project.New<TestTask>();
+
+            task.Title = "New task created during test";
+
+            task.RemainingWork = expectedRemainingWork;
+            await Client.CreateOrUpdateWorkItemAsync(task);
+            Check.That(task.RemainingWork).HasAValue();
+            Check.That(task.RemainingWork.Value).Equals(expectedRemainingWork);
+
+
+        }
+
+        [Test]
+        [SetCulture("fr-FR")]
+        public async Task Create_A_Workitem_And_Update_It_And_Check_The_Floating_Point_Value()
+        {
+            const double expectedRemainingWork = 45.6;
+            var task = Project.New<TestTask>();
+
+            task.Title = "New task created during test";
+            task.RemainingWork = 60;
+
+            await Client.CreateOrUpdateWorkItemAsync(task);
+            task.RemainingWork = expectedRemainingWork;
+            await Client.CreateOrUpdateWorkItemAsync(task);
+            Check.That(task.RemainingWork).HasAValue();
+            Check.That(task.RemainingWork.Value).Equals(expectedRemainingWork);
         }
 
 

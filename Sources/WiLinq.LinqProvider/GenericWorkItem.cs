@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.WebApi.Patch;
@@ -19,6 +20,8 @@ namespace WiLinq.LinqProvider
     [IgnoreField(SystemField.History)]
     public class GenericWorkItem
     {
+        private static CultureInfo _jsonCulture = new CultureInfo("en-us");
+
         private Dictionary<string, object> _initialFieldValues;
 
         private Dictionary<string, object> _fieldValues;
@@ -94,17 +97,17 @@ namespace WiLinq.LinqProvider
             switch (value)
             {
                 case long l:
-                    return l.ToString("D");
+                    return l.ToString("D", _jsonCulture);
                 case int i:
-                    return i.ToString("D");
+                    return i.ToString("D", _jsonCulture);
                 case double d:
-                    return d.ToString("F");
+                    return d.ToString("F", _jsonCulture);
                 case string s:
                     return s;
                 case bool b:
                     return b ? "true" : "false";
                 case DateTime dt:
-                    return dt.ToString("O");
+                    return dt.ToString("O", _jsonCulture);
                 default:
                     throw new InvalidOperationException($"Type {value.GetType().FullName} not supported as value");
             }
