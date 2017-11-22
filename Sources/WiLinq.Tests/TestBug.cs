@@ -24,6 +24,17 @@ namespace WiLinq.Tests
             get => GetStructField<int>("Microsoft.VSTS.Common.Priority");
             set => SetStructField("Microsoft.VSTS.Common.Priority", value);
         }
+
+
+        [Field("ScrumForWiqlTests.DiscoveryDate")]
+        public virtual DateTime? DiscoveryDate
+        {
+            get => GetStructField<DateTime>("ScrumForWiqlTests.DiscoveryDate");
+            set => SetStructField("ScrumForWiqlTests.DiscoveryDate", value);
+        }
+
+
+        
     }
 
     [WorkItemType("Product Backlog Item")]
