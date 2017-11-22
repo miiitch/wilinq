@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WiLinq.LinqProvider
@@ -51,16 +52,16 @@ namespace WiLinq.LinqProvider
             return ((IEnumerable) _provider.Execute(_expression)).GetEnumerator();
         }
 
-        public async Task<List<int>> ExecuteAndGetIdsAsync()
+        public async Task<List<int>> ExecuteAndGetIdsAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _provider.ExecuteAndGetIdsAsync(_expression);
+            var result = await _provider.ExecuteAndGetIdsAsync(_expression, cancellationToken);
 
             return result;
         }
 
-        public async Task<IEnumerable<T>> ExecuteAsync()
+        public async Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _provider.ExecuteAync(_expression);
+            var result = await _provider.ExecuteAync(_expression, cancellationToken);
 
             return (IEnumerable<T>) result;
         }

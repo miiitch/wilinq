@@ -6,12 +6,12 @@
 		<title>Agile process template for Workitem linq provider Wilinq</title>
 		<authors>Michel Perfetti</authors>
 		<owners>Michel Perfetti</owners>
-		<licenseUrl>https://wilinq.codeplex.com/license</licenseUrl>
+		<licenseUrl>https://github.com/miiitch/wilinq/blob/master/LICENSE.md</licenseUrl>
 		<projectUrl>https://github.com/miiitch/wilinq/</projectUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>WiLinq is a workitem linq provider targeting VSTS Extended API</description>
-		<releaseNotes>Development version</releaseNotes>
-		<copyright>Copyright 2017</copyright>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>Agile process template for WiLinq</description>
+		<releaseNotes></releaseNotes>
+		<copyright></copyright>
 		<tags>Wilinq Linq WorkItem TFS VSTS Process Template Agile</tags>
 		<dependencies>
 			<group targetFramework="net461">

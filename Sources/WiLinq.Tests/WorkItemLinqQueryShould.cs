@@ -26,7 +26,7 @@ namespace WiLinq.Tests
                 task.TestSessionId = TestSessionId;
                 task.Title = $"Task #{i}";
                 task.Priority = i % 4 + 1;
-                await Client.Save(task);
+                await Client.CreateOrUpdateWorkItemAsync(task);
 
             };
 
@@ -40,7 +40,7 @@ namespace WiLinq.Tests
                 bug.TestSessionId = TestSessionId;
                 bug.Title = $"Bug #{i}";
                 bug.Priority = i % 4 + 1;
-                await Client.Save(bug);
+                await Client.CreateOrUpdateWorkItemAsync(bug);
 
             };
             _totalTestSessionBugCount += 20;
@@ -257,7 +257,7 @@ namespace WiLinq.Tests
 
             // ReSharper disable once UnusedVariable
             var result = await q.ToListAsync();
-
+            
             Check.That(result).IsEmpty();
         }
 

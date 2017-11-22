@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -49,7 +50,7 @@ namespace WiLinq.LinqProvider
         }
 
 #endif
-        public Task<List<int>> GetWorkItemIdsAsync()
+        public Task<List<int>> GetWorkItemIdsAsync(CancellationToken cancellationToken)
         {
             if (_type != QueryType.WorkItem)
             {
@@ -61,7 +62,12 @@ namespace WiLinq.LinqProvider
             async Task<List<int>> GetWorkItemsAsyncCore()
             {
                 var result = await _workItemTrackingHttpClient.QueryByWiqlAsync(
-                    new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql {Query = _wiql});
+                    new Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.Wiql {Query = _wiql},
+                    null,
+                    null,
+                    null,
+                    cancellationToken);
+
                 if (_type == QueryType.WorkItem && result.QueryType !=
                     Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.QueryType.Flat)
                 {
@@ -85,9 +91,9 @@ namespace WiLinq.LinqProvider
             return list;
         }
 
-        public async Task<List<WorkItem>> GetWorkItemsAsync()
+        public async Task<List<WorkItem>> GetWorkItemsAsync(CancellationToken cancellationToken)
         {
-            var ids = await GetWorkItemIdsAsync();
+            var ids = await GetWorkItemIdsAsync(cancellationToken);
             try
             {
                 var workitems = new List<WorkItem>(ids.Count);
@@ -95,7 +101,8 @@ namespace WiLinq.LinqProvider
                 var batches = Batch(ids, WORKITEM_QUERY_BATCH_SIZE);
                 foreach (var batch in batches)
                 {
-                    var batchedWorkItems = await _workItemTrackingHttpClient.GetWorkItemsAsync(batch);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var batchedWorkItems = await _workItemTrackingHttpClient.GetWorkItemsAsync(batch,null,null,null,null,null, cancellationToken);
                     workitems.AddRange(batchedWorkItems);
                 }
 
