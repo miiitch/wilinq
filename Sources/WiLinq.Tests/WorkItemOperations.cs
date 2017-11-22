@@ -23,6 +23,26 @@ namespace WiLinq.Tests
         }
 
         [Test]
+        public async Task Create_A_Workitem_Then_Save_It_And_Get_It()
+        {
+            var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);
+
+            bug.Title = "New bug created during test";
+
+            await Client.CreateOrUpdateWorkItemAsync(bug);
+
+            var sameBug = await Client.GetWorkItemAsync<TestBug>(bug.Id.Value);
+
+            Check.That(sameBug.Id).HasAValue();
+            Check.That(sameBug.Id.Value).Equals(bug.Id.Value);
+            Check.That(sameBug.Title).Equals(bug.Title);
+            Check.That(sameBug.Area).Equals(bug.Area);
+            Check.That(sameBug.Iteration).Equals(bug.Iteration);
+
+
+        }
+
+        [Test]
         public async Task Create_A_Workitem_With_Iteration_And_Area_Then_Save_It()
         {
             var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);

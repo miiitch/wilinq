@@ -173,6 +173,35 @@ namespace WiLinq.LinqProvider
 
         }
 
+        public static async Task<T> GetWorkItemAsync<T>(this WorkItemTrackingHttpClient workItemTrackingHttpClient, int id, CancellationToken cancellationToken = default) where T : GenericWorkItem, new()
+        {
+            if (workItemTrackingHttpClient == null)
+            {
+                throw new ArgumentNullException(nameof(workItemTrackingHttpClient));
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentException(nameof(id));
+            }
+
+            var workItem = await workItemTrackingHttpClient.GetWorkItemAsync(id,cancellationToken:cancellationToken);
+
+            var expectedWorkItemType = GenericWorkItemHelpers<T>.WorkItemTypeName;
+            if (!string.IsNullOrWhiteSpace(expectedWorkItemType))
+            {
+                var type = (string)workItem.Fields[SystemField.WorkItemType];
+                if (type != expectedWorkItemType)
+                {
+                    throw new InvalidOperationException($"Expected workitem type '{expectedWorkItemType}' but received '{type}'");
+                }
+            }           
+
+            var result = new T();
+            result.CopyValuesFromWorkItem(workItem);
+            return result;
+        }
+
 
         public static T New<T>(this ProjectInfo project, NewWorkItemOptions options = NewWorkItemOptions.Nothing)
             where T : GenericWorkItem, new()
