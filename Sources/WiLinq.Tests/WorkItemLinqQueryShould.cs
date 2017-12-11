@@ -341,7 +341,7 @@ namespace WiLinq.Tests
             var result = await projectWiQuery.ToListAsync();
 
             Check.That(result).Not.IsEmpty();
-            Check.That(result).Not.HasElementThatMatches(bug => bug.WorkItemType != "Bug");
+            Check.That(result).ContainsOnlyElementsThatMatch(bug => bug.WorkItemType == "Bug");
         }
 
         [Test]
@@ -356,8 +356,7 @@ namespace WiLinq.Tests
             var result = await projectWiQuery.ToListAsync();
 
             Check.That(result).Not.IsEmpty();
-            Check.That(result).Not
-                .HasElementThatMatches(bug => bug.WorkItemType != "Bug" || bug.CreatedDate <= minCreationDate);
+            Check.That(result).ContainsOnlyElementsThatMatch(bug => bug.WorkItemType == "Bug" && bug.CreatedDate > minCreationDate);
         }
 
         [Test]
