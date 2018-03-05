@@ -64,10 +64,22 @@ namespace WiLinq.Tests
 
             await Client.CreateOrUpdateWorkItemAsync(bug);
 
-            bug.Title = "Title Changed";
+            bug.Title = $"Title Changed ({Guid.NewGuid()})";
 
             await Client.CreateOrUpdateWorkItemAsync(bug);
         }
+
+        
+        [Test]
+        public async Task Open_A_Workitem_And_Update_It()
+        {
+            var wi = await Client.GetWorkItemAsync<GenericWorkItem>(175);
+
+            wi.Title = $"Title Changed ({Guid.NewGuid()})";
+
+            await Client.CreateOrUpdateWorkItemAsync(wi);
+        }
+
 
         [Test]
         public async Task Create_A_Workitem_And_Check_The_Floating_Point_Value()
