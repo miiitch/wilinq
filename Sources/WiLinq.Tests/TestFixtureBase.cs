@@ -14,7 +14,6 @@ namespace WiLinq.Tests
         protected WorkItemTrackingHttpClient Client { get; private set; }
         protected TeamProject Project { get; private set; }
 
-        protected const string TestSessionIdFieldReferenceName = "ScrumForWiqlTests.TestSessionId";
         protected string TestSessionId { get; set; }
 
 
@@ -26,6 +25,8 @@ namespace WiLinq.Tests
             {
                 throw new InvalidOperationException("Environment variable 'WILINQ_TEST_TPCURL' is missing");
             }
+
+            var projectName = Environment.GetEnvironmentVariable("WILINQ_TEST_PROJECT");
             var personnalAccessToken = Environment.GetEnvironmentVariable("WILINQ_TEST_PAT");
             VssCredentials vssCredentials;
             if (string.IsNullOrWhiteSpace(personnalAccessToken))
@@ -48,7 +49,7 @@ namespace WiLinq.Tests
 
             var projectHttpClient = await connection.GetClientAsync<ProjectHttpClient>();
 
-            Project = await projectHttpClient.GetProject("WiLinqTestProject");
+            Project = await projectHttpClient.GetProject(projectName);
 
             TestSessionId = Guid.NewGuid().ToString();
         }

@@ -85,9 +85,9 @@ namespace WiLinq.Tests
         public async Task Create_A_Workitem_And_Check_The_Floating_Point_Value()
         {
             const double expectedRemainingWork = 45.6;
-            var task = Project.New<TestTask>();
+            var task = Project.New<TestBug>();
 
-            task.Title = "New task created during test";
+            task.Title = "New bug created during test";
 
             task.RemainingWork = expectedRemainingWork;
             await Client.CreateOrUpdateWorkItemAsync(task);
@@ -104,10 +104,10 @@ namespace WiLinq.Tests
         public async Task Create_A_Workitem_And_Update_It_And_Check_The_Floating_Point_Value()
         {           
             const double expectedRemainingWork = 45.6;
-            var task = Project.New<TestTask>();
+            var task = Project.New<TestBug>();
 
-            task.Title = "New task created during test";
-            task.RemainingWork = 60000000.9;
+            task.Title = "New bug created during test";
+            task.RemainingWork = 6.5;
 
             await Client.CreateOrUpdateWorkItemAsync(task);
             task.RemainingWork = expectedRemainingWork;

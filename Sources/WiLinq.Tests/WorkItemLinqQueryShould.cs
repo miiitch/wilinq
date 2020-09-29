@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using NFluent;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using WiLinq.LinqProvider;
 using WiLinq.ProcessTemplates.Scrum;
 using Task = System.Threading.Tasks.Task;
@@ -13,7 +14,7 @@ namespace WiLinq.Tests
     {
         private int _totalTestSessionTaskCount = 0;
         private int _totalTestSessionBugCount = 0;
-
+        private int _firstId = 0;
 
         public override async Task SetUp()
         {
@@ -21,12 +22,16 @@ namespace WiLinq.Tests
 
             for (var i = 0; i < 10; i++)
             {
-                var task = Project.New<TestTask>(NewWorkItemOptions.FillAreaAndIterationPath);
+                var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);
 
-                task.TestSessionId = TestSessionId;
-                task.Title = $"Task #{i}";
-                task.Priority = i % 4 + 1;
-                await Client.CreateOrUpdateWorkItemAsync(task);
+                bug.TestSessionId = TestSessionId;
+                bug.Title = $"Bug #{i}";
+                bug.Priority = i % 4 + 1;
+                await Client.CreateOrUpdateWorkItemAsync(bug);
+                if (_firstId == 0)
+                {
+                    _firstId = bug.Id.Value;
+                }
 
             };
 
@@ -35,12 +40,12 @@ namespace WiLinq.Tests
 
             for (var i = 0; i < 20; i++)
             {
-                var bug = Project.New<TestBug>(NewWorkItemOptions.FillAreaAndIterationPath);
+                var pbi = Project.New<TestPBI>(NewWorkItemOptions.FillAreaAndIterationPath);
 
-                bug.TestSessionId = TestSessionId;
-                bug.Title = $"Bug #{i}";
-                bug.Priority = i % 4 + 1;
-                await Client.CreateOrUpdateWorkItemAsync(bug);
+                pbi.TestSessionId = TestSessionId;
+                pbi.Title = $"PBI #{i}";
+                pbi.Priority = i % 4 + 1;
+                await Client.CreateOrUpdateWorkItemAsync(pbi);
 
             };
             _totalTestSessionBugCount += 20;
@@ -48,9 +53,9 @@ namespace WiLinq.Tests
 
 
         [Test]
-        public void Return_only_Tasks_From_The_Test_Session()
+        public void Return_only_Bugs_From_The_Test_Session()
         {
-            var q = from workitem in Client.SetOf<TestTask>()
+            var q = from workitem in Client.SetOf<TestBug>()
                     where workitem.TestSessionId == TestSessionId
                     select workitem;
 
@@ -61,15 +66,15 @@ namespace WiLinq.Tests
             foreach (var workitem in result)
             {
                 Check.That(workitem.TestSessionId).Equals(TestSessionId);
-                Check.That(workitem.WorkItemType).Equals("Task");
+                Check.That(workitem.WorkItemType).Equals("Bug");
             }
         }
 
         [Test]
-        public void Return_only_Tasks_From_The_Test_Session_With_Is_Operator()
+        public void Return_only_Bugs_From_The_Test_Session_With_Is_Operator()
         {
             var q = from workitem in Client.All()
-                    where workitem.Is<TestTask>() && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    where workitem.Is<TestBug>() && workitem.Field<string>(CustomFieldsName.SessionId) == TestSessionId
                     select workitem;
 
 
@@ -78,16 +83,16 @@ namespace WiLinq.Tests
             Check.That(result.Count).Equals(_totalTestSessionTaskCount);
             foreach (var workitem in result)
             {
-                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
-                Check.That(workitem.Field<string>(SystemField.WorkItemType)).Equals("Task");
+                Check.That(workitem.Field<string>(CustomFieldsName.SessionId)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(SystemField.WorkItemType)).Equals("Bug");
             }
         }
 
         [Test]
-        public void Return_only_Tasks_And_Bugs_From_The_Test_Session_With_Is_Operator()
+        public void Return_only_PBI_And_Bugs_From_The_Test_Session_With_Is_Operator()
         {
             var q = from workitem in Client.All()
-                    where (workitem.Is<TestTask>() || workitem.Is<TestBug>()) && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                    where (workitem.Is<TestPBI>() || workitem.Is<TestBug>()) && workitem.Field<string>(CustomFieldsName.SessionId) == TestSessionId
                     select workitem;
 
 
@@ -96,18 +101,18 @@ namespace WiLinq.Tests
             Check.That(result.Count).Equals(_totalTestSessionTaskCount + _totalTestSessionBugCount);
             foreach (var workitem in result)
             {
-                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
-                Check.That(workitem.Field<string>(SystemField.WorkItemType)).IsOneOfThese("Task", "Bug");
+                Check.That(workitem.Field<string>(CustomFieldsName.SessionId)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(SystemField.WorkItemType)).IsOneOfThese("Product Backlog Item", "Bug");
             }
         }
 
         [Test]
-        public void Return_only_Tasks_And_Bugs_From_The_Test_Session_With_Is_Operator_With_Specific_Tests()
+        public void Return_only_PBI_And_Bugs_From_The_Test_Session_With_Is_Operator_With_Specific_Tests()
         {
             var q = from workitem in Client.All()
-                    where ((workitem.Is<TestTask>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1) ||
+                    where ((workitem.Is<TestPBI>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1) ||
                             (workitem.Is<TestBug>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 2))
-                            && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                            && workitem.Field<string>(CustomFieldsName.SessionId) == TestSessionId
                     select workitem;
 
 
@@ -115,11 +120,11 @@ namespace WiLinq.Tests
 
             foreach (var workitem in result)
             {
-                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(CustomFieldsName.SessionId)).Equals(TestSessionId);
                 var type = workitem.Field<string>(SystemField.WorkItemType);
-                Check.That(type).IsOneOfThese("Task", "Bug");
+                Check.That(type).IsOneOfThese("Product Backlog Item", "Bug");
                 var priority = workitem.Field<long>("Microsoft.VSTS.Common.Priority");
-                if (type == "Task")
+                if (type == "Product Backlog Item")
                 {
                     Check.That(priority).Equals(1);
 
@@ -138,9 +143,9 @@ namespace WiLinq.Tests
         {
             var q = from workitem in Client.All()
                         // ReSharper disable once NegativeEqualityExpression
-                    where ((workitem.Is<TestTask>() && !(workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1)) ||
+                    where ((workitem.Is<TestPBI>() && !(workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1)) ||
                            (workitem.Is<TestBug>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 2))
-                          && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                          && workitem.Field<string>(CustomFieldsName.SessionId) == TestSessionId
                     select workitem;
 
 
@@ -148,11 +153,11 @@ namespace WiLinq.Tests
 
             foreach (var workitem in result)
             {
-                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(CustomFieldsName.SessionId)).Equals(TestSessionId);
                 var type = workitem.Field<string>(SystemField.WorkItemType);
-                Check.That(type).IsOneOfThese("Task", "Bug");
+                Check.That(type).IsOneOfThese("Product Backlog Item", "Bug");
                 var priority = workitem.Field<long>("Microsoft.VSTS.Common.Priority");
-                if (type == "Task")
+                if (type == "Product Backlog Item")
                 {
                     Check.That(priority).Not.Equals(1);
 
@@ -171,9 +176,9 @@ namespace WiLinq.Tests
         {
             var q = from workitem in Client.All()
                         // ReSharper disable once NegativeEqualityExpression
-                    where !((workitem.Is<TestTask>() && (workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1)) ||
+                    where !((workitem.Is<TestPBI>() && (workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 1)) ||
                            (workitem.Is<TestBug>() && workitem.Field<long>("Microsoft.VSTS.Common.Priority") == 2))
-                          && workitem.Field<string>(TestSessionIdFieldReferenceName) == TestSessionId
+                          && workitem.Field<string>(CustomFieldsName.SessionId) == TestSessionId
                     select workitem;
 
 
@@ -181,11 +186,11 @@ namespace WiLinq.Tests
 
             foreach (var workitem in result)
             {
-                Check.That(workitem.Field<string>(TestSessionIdFieldReferenceName)).Equals(TestSessionId);
+                Check.That(workitem.Field<string>(CustomFieldsName.SessionId)).Equals(TestSessionId);
                 var type = workitem.Field<string>(SystemField.WorkItemType);
-                Check.That(type).IsOneOfThese("Task", "Bug");
+                Check.That(type).IsOneOfThese("Product Backlog Item", "Bug");
                 var priority = workitem.Field<long>("Microsoft.VSTS.Common.Priority");
-                if (type == "Task")
+                if (type == "Product Backlog Item")
                 {
                     Check.That(priority).Not.Equals(1);
 
@@ -204,9 +209,11 @@ namespace WiLinq.Tests
         [Test]
         public void Return_Only_One_Element_With_The_Right_Id()
         {
+            var id1 = _firstId;
+            var id2 = _firstId + 5;
             //all workitems;
             var q = from workitem in Client.All()
-                    where workitem.Id == 3 || workitem.Id == 6
+                    where workitem.Id == id1 || workitem.Id == id2
                     orderby workitem.Id descending
                     select workitem;
 
@@ -214,8 +221,8 @@ namespace WiLinq.Tests
             var result = q.ToList();
 
             Check.That(result).HasSize(2);
-            Check.That(result[1].Id).Equals(3);
-            Check.That(result[0].Id).Equals(6);
+            Check.That(result[1].Id).Equals(id1);
+            Check.That(result[0].Id).Equals(id2);
         }
 
         [Test]
@@ -223,13 +230,13 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.All()
-                    where workitem.Id == 3
+                    where workitem.Id == _firstId
                     select workitem;
 
             var result = await q.ToListAsync();
 
             Check.That(result).HasSize(1);
-            Check.That(result[0].Id).Equals(3);
+            Check.That(result[0].Id).Equals(_firstId);
         }
 
         [Test]
@@ -237,14 +244,14 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.SetOf<TestBug>(Project)
-                    where workitem.Id == 174
+                    where workitem.Id == _firstId
                     select workitem;
 
             // ReSharper disable once UnusedVariable
             var result = await q.ToListAsync();
 
             Check.That(result).HasSize(1);
-            Check.That(result[0].Id).Equals(174);
+            Check.That(result[0].Id).Equals(_firstId);
         }
 
         [Test]
@@ -252,7 +259,7 @@ namespace WiLinq.Tests
         {
             //all workitems;
             var q = from workitem in Client.SetOf<TestBug>(Project)
-                    where workitem.Id == 173
+                    where workitem.Id == _firstId+21303030
                     select workitem;
 
             // ReSharper disable once UnusedVariable
@@ -390,7 +397,7 @@ namespace WiLinq.Tests
             Check.That(result).Not.IsEmpty();
             foreach (var bug in result)
             {
-                Check.That(bug.CreatedBy).Equals(bug.ChangedBy);
+                Check.That(bug.CreatedBy.Id).IsEqualTo(bug.ChangedBy.Id);
             }
         }
 
@@ -406,7 +413,7 @@ namespace WiLinq.Tests
             Check.That(result).Not.IsEmpty();
             foreach (var bug in result)
             {
-                Check.That(bug.CreatedBy).Equals(bug.ChangedBy);
+                Check.That(bug.CreatedBy.Id).IsEqualTo(bug.ChangedBy.Id);
             }
         }
 
@@ -419,7 +426,7 @@ namespace WiLinq.Tests
 
             var result = await q.ToListAsync();
 
-            foreach (var workItem in result.OfType<ProcessTemplates.Scrum.Bug>())
+            foreach (var workItem in result.OfType<Bug>())
             {
                 Check.That(workItem.WorkItemType).Equals("Bug");
                 var prio = workItem.Priority;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.VisualStudio.Services.WebApi;
 using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 
@@ -92,16 +93,16 @@ namespace WiLinq.LinqProvider
             Id = workitem.Id;
         }
 
-        private static string EncodeValueForJSonDocument(object value)
+        private static object EncodeValueForJSonDocument(object value)
         {
             switch (value)
             {
                 case long l:
-                    return l.ToString("D", _jsonCulture);
+                    return l;
                 case int i:
-                    return i.ToString("D", _jsonCulture);
+                    return i;
                 case double d:
-                    return d.ToString("F", _jsonCulture);
+                    return d;
                 case string s:
                     return s;
                 case bool b:
@@ -200,14 +201,14 @@ namespace WiLinq.LinqProvider
         /// </summary>
         /// <value>The created by.</value>
         [Field(SystemField.CreatedBy)]
-        public string CreatedBy => GetRefField<string>(SystemField.CreatedBy);
+        public IdentityRef CreatedBy => GetRefField<IdentityRef>(SystemField.CreatedBy);
 
         /// <summary>
         ///     Gets the changed by value of the work item.
         /// </summary>
         /// <value>The changed by.</value>
         [Field(SystemField.ChangedBy)]
-        public string ChangedBy => GetRefField<string>(SystemField.ChangedBy);
+        public IdentityRef ChangedBy => GetRefField<IdentityRef>(SystemField.ChangedBy);
 
         /// <summary>
         ///     Gets the created date.
